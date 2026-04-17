@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Enums\UserRoleEnum;
+use Spatie\Permission\Traits\HasRoles;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'division_id',
     ];
 
     /**
@@ -46,14 +47,15 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => UserRoleEnum::class,
         ];
     }
 
-    public function hasRole(UserRoleEnum|string $role): bool
+    /**
+     * The division this user (manager) belongs to
+     */
+    public function division(): BelongsTo
     {
-        $roleValue = $role instanceof UserRoleEnum ? $role->value : $role;
-
-        return $this->role?->value === $roleValue;
+        return $this->belongsTo(Division::class);
     }
+
 }

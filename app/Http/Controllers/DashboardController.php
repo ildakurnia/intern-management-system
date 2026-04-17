@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserRoleEnum;
 use App\Services\DashboardService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,16 +21,16 @@ class DashboardController extends Controller
 
     public function admin(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), UserRoleEnum::ADMIN));
+        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'admin'));
     }
 
-    public function mentor(Request $request): View
+    public function manager(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), UserRoleEnum::MENTOR));
+        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'manager'));
     }
 
     public function intern(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), UserRoleEnum::INTERN));
+        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'intern'));
     }
 }

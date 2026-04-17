@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -18,30 +17,32 @@ class UserSeeder extends Seeder
             [
                 'name' => 'IMS Admin',
                 'email' => 'admin@ims.test',
-                'role' => UserRoleEnum::ADMIN,
+                'roleName' => 'admin',
             ],
             [
-                'name' => 'IMS Mentor',
-                'email' => 'mentor@ims.test',
-                'role' => UserRoleEnum::MENTOR,
+                'name' => 'IMS Manager',
+                'email' => 'manager@ims.test',
+                'roleName' => 'manager',
             ],
             [
                 'name' => 'IMS Intern',
                 'email' => 'intern@ims.test',
-                'role' => UserRoleEnum::INTERN,
+                'roleName' => 'intern',
             ],
         ];
 
-        foreach ($users as $user) {
-            User::updateOrCreate(
-                ['email' => $user['email']],
+        foreach ($users as $userData) {
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
                 [
-                    'name' => $user['name'],
+                    'name' => $userData['name'],
                     'password' => Hash::make('password'),
-                    'role' => $user['role'],
                     'email_verified_at' => now(),
                 ],
             );
+
+            // Assign spatie role
+            $user->assignRole($userData['roleName']);
         }
     }
 }

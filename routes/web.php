@@ -21,15 +21,43 @@ Route::middleware('auth')->group(function (): void {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
-        ->middleware('role:admin')
-        ->name('dashboard.admin');
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('dashboard.admin');
+        Route::resource('roles', \App\Http\Controllers\RoleController::class);
+        Route::resource('permissions', \App\Http\Controllers\PermissionController::class);
+    });
 
-    Route::get('/mentor/dashboard', [DashboardController::class, 'mentor'])
-        ->middleware('role:mentor')
-        ->name('dashboard.mentor');
+    Route::middleware('role:manager')->group(function () {
+        Route::get('/manager/dashboard', [DashboardController::class, 'manager'])->name('dashboard.manager');
+    });
 
-    Route::get('/intern/dashboard', [DashboardController::class, 'intern'])
-        ->middleware('role:intern')
-        ->name('dashboard.intern');
+    Route::middleware('role:intern')->group(function () {
+        Route::get('/intern/dashboard', [DashboardController::class, 'intern'])->name('dashboard.intern');
+    });
+
+    // --- MANAGER PERMISSIONS ---
+    Route::middleware('permission:manage_interns')->get('/manager/interns', function () {
+        return view('pages.feature', ['title' => 'Data Intern']);
+    })->name('managers.interns');
+
+    Route::middleware('permission:review_daily_log')->get('/manager/reports', function () {
+        return view('pages.feature', ['title' => 'Review Laporan']);
+    })->name('managers.reports');
+
+    Route::middleware('permission:manage_attendance')->get('/manager/attendance', function () {
+        return view('pages.feature', ['title' => 'Monitoring Absensi']);
+    })->name('managers.attendance');
+
+    // --- INTERN PERMISSIONS (Daily Log, Checkin, Allowance) ---
+    Route::middleware('permission:submit_daily_log')->get('/intern/daily-log', function () {
+        return view('pages.feature', ['title' => 'Isi Daily Log']);
+    })->name('interns.daily_log');
+
+    Route::middleware('permission:submit_attendance')->get('/intern/checkin', function () {
+        return view('pages.feature', ['title' => 'Check In / Out']);
+    })->name('interns.checkin');
+
+    Route::middleware('permission:view_allowance')->get('/intern/allowance', function () {
+        return view('pages.feature', ['title' => 'Status Allowance']);
+    })->name('interns.allowance');
 });
