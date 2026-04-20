@@ -3,38 +3,47 @@
 @section('title', 'Edit Role')
 
 @section('content')
-    <div class="page-intro card-surface">
+    <div class="settings-page-head">
         <div>
-            <p class="eyebrow">System Management</p>
-            <h2>Edit Role</h2>
+            <h1>Edit</h1>
+            <div class="breadcrumb-line">
+                <span>Settings</span>
+                <span>&rsaquo;</span>
+                <span>Roles</span>
+                <span>&rsaquo;</span>
+                <span>Edit</span>
+            </div>
         </div>
-        <a href="{{ route('roles.index') }}" class="pill">Kembali</a>
+
+        <a href="{{ route('roles.index') }}" class="button button-blue">
+            <span>&lsaquo;</span>
+            Back
+        </a>
     </div>
 
-    <div class="card-surface" style="margin-top: 1.5rem; padding: 2rem;">
+    <div class="settings-form-card">
         <form action="{{ route('roles.update', $role) }}" method="POST" class="auth-form">
             @csrf
             @method('PUT')
-            <div class="form-group">
-                <label for="name">Nama Role</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $role->name) }}" required>
-                @error('name') <span class="form-error">{{ $message }}</span> @enderror
-            </div>
+            <div class="settings-form-grid">
+                <div class="form-group">
+                    <label for="name">Role name <span class="required-mark">*</span></label>
+                    <input type="text" name="name" id="name" value="{{ old('name', $role->name) }}" required>
+                    @error('name') <span class="form-error">{{ $message }}</span> @enderror
+                </div>
 
-            <div class="form-group" style="margin-top: 1rem;">
-                <label>Tetapkan Permissions</label>
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
-                    @foreach ($permissions as $permission)
-                        <label class="checkbox" style="cursor: pointer;">
-                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" 
-                                {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
-                            {{ $permission->name }}
-                        </label>
-                    @endforeach
+                <div class="form-group">
+                    <label for="guard_name">Guard name <span class="required-mark">*</span></label>
+                    <input type="text" name="guard_name" id="guard_name" value="{{ old('guard_name', $role->guard_name) }}" required>
+                    @error('guard_name') <span class="form-error">{{ $message }}</span> @enderror
                 </div>
             </div>
 
-            <button type="submit" class="button" style="margin-top: 1rem;">Perbarui Role</button>
+            @include('pages.roles._permission-groups')
+
+            <div class="form-actions">
+                <button type="submit" class="button button-success">Perbarui Role</button>
+            </div>
         </form>
     </div>
 @endsection

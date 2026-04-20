@@ -44,15 +44,15 @@
             <div class="auth-form-panel">
                 <div class="panel-card">
                     <h3>Sign in</h3>
-                    <p class="panel-subtitle">Gunakan akun role untuk review alur autentikasi tahap pertama.</p>
+                    <p class="panel-subtitle">Intern dapat masuk memakai email atau NIM/NIS setelah registrasi.</p>
 
                     <form action="{{ route('login.attempt') }}" method="POST" class="auth-form">
                         @csrf
 
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-                            @error('email')
+                            <label for="login">Email atau NIM/NIS</label>
+                            <input id="login" type="text" name="login" value="{{ old('login') }}" required autofocus>
+                            @error('login')
                                 <small class="form-error">{{ $message }}</small>
                             @enderror
                         </div>
@@ -72,11 +72,17 @@
 
                         <button type="submit" class="button">Login</button>
                     </form>
+
+                    <p class="panel-subtitle">
+                        Belum punya akun intern?
+                        <a href="{{ route('intern.register') }}" style="color: var(--primary); font-weight: 700;">Registrasi di sini</a>
+                    </p>
                 </div>
 
                 <div class="login-help">
                     <h3>Akun review</h3>
                     <ul>
+                        <li>superadmin@ims.test / password</li>
                         <li>admin@ims.test / password</li>
                         <li>mentor@ims.test / password</li>
                         <li>intern@ims.test / password</li>

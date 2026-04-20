@@ -7,6 +7,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -51,11 +52,15 @@ class User extends Authenticatable
     }
 
     /**
-     * The division this user (manager) belongs to
+     * The division this user (mentor) belongs to
      */
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }
 
+    public function intern(): HasOne
+    {
+        return $this->hasOne(Intern::class);
+    }
 }

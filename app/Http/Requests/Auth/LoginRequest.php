@@ -22,17 +22,17 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
         ];
     }
 
     /**
-     * @return array{email: string, password: string}
+     * @return array{login: string, password: string}
      */
     public function credentials(): array
     {
-        return $this->safe()->only(['email', 'password']);
+        return $this->safe()->only(['login', 'password']);
     }
 }

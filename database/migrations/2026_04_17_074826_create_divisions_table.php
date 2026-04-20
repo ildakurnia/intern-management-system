@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Add division_id to users so managers can be assigned to a division
+        // Add division_id to users so mentors can be assigned to a division
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('division_id')->nullable()->constrained('divisions')->nullOnDelete();
         });

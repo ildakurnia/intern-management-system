@@ -28,9 +28,9 @@ class Division extends Model
     }
 
     /**
-     * Managers (users) assigned to this division
+     * Mentors (users) assigned to this division
      */
-    public function managers(): HasMany
+    public function mentors(): HasMany
     {
         return $this->hasMany(User::class);
     }

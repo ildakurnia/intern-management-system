@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'hasAnyRoleOrPermission' => \App\Http\Middleware\HasAnyRoleOrPermission::class,
+            'intern.onboarding' => \App\Http\Middleware\EnsureInternOnboardingComplete::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));

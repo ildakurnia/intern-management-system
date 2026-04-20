@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Intern extends Model
@@ -35,6 +36,10 @@ class Intern extends Model
         'start_date',
         'end_date',
         'status',
+        'registration_status',
+        'registered_at',
+        'profile_completed_at',
+        'documents_completed_at',
         // Documents
         'ktp_path',
         'student_card_path',
@@ -48,6 +53,9 @@ class Intern extends Model
         'start_date'  => 'date',
         'end_date'    => 'date',
         'gpa'         => 'decimal:2',
+        'registered_at' => 'datetime',
+        'profile_completed_at' => 'datetime',
+        'documents_completed_at' => 'datetime',
     ];
 
     /**
@@ -64,6 +72,11 @@ class Intern extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function logbooks(): HasMany
+    {
+        return $this->hasMany(Logbook::class);
     }
 
     /**
@@ -83,14 +96,33 @@ class Intern extends Model
     }
 
     /**
-     * Scope: filter by division (for manager-level access)
+     * Scope: filter by division (for mentor-level access)
      */
-    public function scopeForManager($query, User $manager)
+    public function scopeForMentor($query, User $mentor)
     {
-        if ($manager->hasRole('admin')) {
-            return $query; // admin sees all
+        if ($mentor->hasAnyRole(['superadmin', 'admin'])) {
+            return $query;
         }
 
-        return $query->where('division_id', $manager->division_id);
+        return $query->where('division_id', $mentor->division_id);
+    }
+
+    public function hasCompletedProfile(): bool
+    {
+        return $this->profile_completed_at !== null;
+    }
+
+    public function hasCompletedDocuments(): bool
+    {
+        return $this->documents_completed_at !== null;
+    }
+
+    public function refreshDocumentCompletion(): void
+    {
+        $this->forceFill([
+            'documents_completed_at' => $this->ktp_path && $this->student_card_path && $this->bpjs_path
+                ? ($this->documents_completed_at ?? now())
+                : null,
+        ])->save();
     }
 }
