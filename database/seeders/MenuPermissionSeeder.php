@@ -84,7 +84,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Dashboard',
                 'route_name' => 'dashboard',
-                'icon' => 'DB',
+                'icon' => 'ri-dashboard-line',
                 'permissions' => [
                     ['name' => 'dashboard', 'label' => 'Access Dashboard'],
                     ['name' => 'dashboard.admin', 'label' => 'Admin Dashboard'],
@@ -95,7 +95,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Data Intern',
                 'route_name' => 'admin.interns.index',
-                'icon' => 'DI',
+                'icon' => 'ri-graduation-cap-line',
                 'permissions' => [
                     ['name' => 'admin.interns.index', 'label' => 'Read List'],
                     ['name' => 'admin.interns.show', 'label' => 'Detail'],
@@ -107,7 +107,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Berkas Intern',
                 'route_name' => 'admin.intern-documents.index',
-                'icon' => 'BI',
+                'icon' => 'ri-file-list-3-line',
                 'permissions' => [
                     ['name' => 'admin.intern-documents.index', 'label' => 'Read List'],
                 ],
@@ -115,7 +115,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Profil Intern',
                 'route_name' => 'intern.profile.edit',
-                'icon' => 'PI',
+                'icon' => 'ri-user-settings-line',
                 'permissions' => [
                     ['name' => 'intern.profile.edit', 'label' => 'Edit Profile'],
                     ['name' => 'intern.profile.update', 'label' => 'Update Profile'],
@@ -124,7 +124,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Berkas Saya',
                 'route_name' => 'intern.documents.edit',
-                'icon' => 'BS',
+                'icon' => 'ri-file-upload-line',
                 'permissions' => [
                     ['name' => 'intern.documents.edit', 'label' => 'Upload Form'],
                     ['name' => 'intern.documents.update', 'label' => 'Save Upload'],
@@ -133,7 +133,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Logbook',
                 'route_name' => 'intern.logbooks.index',
-                'icon' => 'LB',
+                'icon' => 'ri-book-read-line',
                 'permissions' => [
                     ['name' => 'intern.logbooks.index', 'label' => 'Read Own List'],
                     ['name' => 'intern.logbooks.create', 'label' => 'Create Form'],
@@ -151,19 +151,19 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Absensi Intern',
                 'route_name' => null,
-                'icon' => 'AI',
+                'icon' => 'ri-calendar-check-line',
                 'permissions' => [],
             ],
             [
                 'title' => 'Uang Saku',
                 'route_name' => null,
-                'icon' => 'US',
+                'icon' => 'ri-money-dollar-circle-line',
                 'permissions' => [],
             ],
             [
                 'title' => 'Manajemen Role',
                 'route_name' => 'roles.index',
-                'icon' => 'RL',
+                'icon' => 'ri-shield-user-line',
                 'permissions' => [
                     ['name' => 'roles.index', 'label' => 'Read List'],
                     ['name' => 'roles.create', 'label' => 'Create'],
@@ -176,7 +176,7 @@ class MenuPermissionSeeder extends Seeder
             [
                 'title' => 'Manajemen Permission',
                 'route_name' => 'permissions.index',
-                'icon' => 'PL',
+                'icon' => 'ri-lock-password-line',
                 'permissions' => [
                     ['name' => 'permissions.index', 'label' => 'Read List'],
                     ['name' => 'permissions.create', 'label' => 'Create'],
@@ -184,6 +184,32 @@ class MenuPermissionSeeder extends Seeder
                     ['name' => 'permissions.edit', 'label' => 'Edit'],
                     ['name' => 'permissions.update', 'label' => 'Update'],
                     ['name' => 'permissions.destroy', 'label' => 'Delete'],
+                ],
+            ],
+            [
+                'title' => 'Manajemen Pengguna',
+                'route_name' => 'admin.users.index',
+                'icon' => 'ri-group-line',
+                'permissions' => [
+                    ['name' => 'admin.users.index', 'label' => 'Read List'],
+                    ['name' => 'admin.users.create', 'label' => 'Create Form'],
+                    ['name' => 'admin.users.store', 'label' => 'Save User'],
+                    ['name' => 'admin.users.edit', 'label' => 'Edit Form'],
+                    ['name' => 'admin.users.update', 'label' => 'Update User'],
+                    ['name' => 'admin.users.destroy', 'label' => 'Delete User'],
+                ],
+            ],
+            [
+                'title' => 'Divisi / Departemen',
+                'route_name' => 'admin.divisions.index',
+                'icon' => 'ri-community-line',
+                'permissions' => [
+                    ['name' => 'admin.divisions.index', 'label' => 'Read List'],
+                    ['name' => 'admin.divisions.create', 'label' => 'Create Form'],
+                    ['name' => 'admin.divisions.store', 'label' => 'Save Divisi'],
+                    ['name' => 'admin.divisions.edit', 'label' => 'Edit Form'],
+                    ['name' => 'admin.divisions.update', 'label' => 'Update Divisi'],
+                    ['name' => 'admin.divisions.destroy', 'label' => 'Delete Divisi'],
                 ],
             ],
         ];

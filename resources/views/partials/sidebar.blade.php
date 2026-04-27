@@ -29,7 +29,7 @@
     @canany(['admin.interns.index', 'admin.logbooks.index'])
     <div class="sidebar-section-label">Manajemen Intern</div>
     <nav class="menu">
-        @can('admin.interns.index')
+        {{-- @can('admin.interns.index')
         <a href="{{ route('admin.interns.index') }}" class="{{ request()->routeIs('admin.interns.index') || request()->routeIs('admin.interns.show') ? 'active' : '' }}">
             <span class="menu-icon">DI</span>
             <span class="menu-label">Data Intern</span>
@@ -46,7 +46,7 @@
                 <span class="menu-icon">BI</span>
                 <span class="menu-label">Berkas Intern</span>
             </a>
-        @endcan
+        @endcan --}}
         @can('admin.logbooks.index')
             <a href="{{ route('admin.logbooks.index') }}" class="{{ request()->routeIs('admin.logbooks.*') ? 'active' : '' }}">
                 <span class="menu-icon">LB</span>
@@ -85,29 +85,24 @@
 
     @role('mentor')
     @can('mentor.logbooks.index')
-    <div class="sidebar-section-label">Monitoring Intern</div>
+    <div class="sidebar-section-label">Monitoring Intern (Mentor)</div>
     <nav class="menu">
         <a href="{{ route('mentor.logbooks.index') }}" class="{{ request()->routeIs('mentor.logbooks.*') ? 'active' : '' }}">
             <span class="menu-icon">LB</span>
-            <span class="menu-label">Logbook Intern</span>
+            <span class="menu-label">Logbook Mentee</span>
         </a>
     </nav>
     @endcan
     @endrole
 
     @role('intern')
-    <div class="sidebar-section-label">Onboarding Intern</div>
+    @canany(['intern.profile.edit', 'intern.logbooks.index'])
+    <div class="sidebar-section-label">Menu Anak Magang</div>
     <nav class="menu">
         @can('intern.profile.edit')
         <a href="{{ route('intern.profile.edit') }}" class="{{ request()->routeIs('intern.profile.*') ? 'active' : '' }}">
             <span class="menu-icon">PS</span>
             <span class="menu-label">Profil Saya</span>
-        </a>
-        @endcan
-        @can('intern.documents.edit')
-        <a href="{{ route('intern.documents.edit') }}" class="{{ request()->routeIs('intern.documents.*') ? 'active' : '' }}">
-            <span class="menu-icon">BS</span>
-            <span class="menu-label">Berkas Saya</span>
         </a>
         @endcan
         @can('intern.logbooks.index')
@@ -117,5 +112,6 @@
         </a>
         @endcan
     </nav>
+    @endcanany
     @endrole
 </aside>

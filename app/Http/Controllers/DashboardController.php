@@ -33,6 +33,6 @@ class DashboardController extends Controller
 
     public function intern(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'intern'));
+        return view('pages.intern.dashboard', $this->dashboardService->buildPageData($request->user(), 'intern'));
     }
 }

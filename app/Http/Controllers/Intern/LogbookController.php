@@ -3,129 +3,74 @@
 namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
-use App\Models\Logbook;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\StoreLogbookRequest;
+use App\Models\User;
+use App\Services\LogbookService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\View\View;
 
 class LogbookController extends Controller
 {
-    public function index(Request $request): View
+    public function __construct(
+        protected LogbookService $logbookService
+    ) {}
+
+    public function index(Request $request)
     {
-        $intern = $request->user()->intern;
-
-        abort_if(! $intern, 403, 'Akun intern belum terhubung dengan data magang.');
-
-        return view('pages.intern.logbooks.index', [
-            'intern' => $intern,
-            'logbooks' => $intern->logbooks()
-                ->latest('tanggal')
-                ->paginate(10),
-        ]);
+        $logbooks = $this->logbookService->getLogbooksForUser($request->user());
+        return view('pages.intern.logbooks.index', compact('logbooks'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('pages.intern.logbooks.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function show($id)
     {
-        $intern = $request->user()->intern;
-
-        abort_if(! $intern, 403, 'Akun intern belum terhubung dengan data magang.');
-
-        $validated = $request->validate([
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today',
-                Rule::unique('logbooks', 'tanggal')->where('intern_id', $intern->id),
-            ],
-            'uraian_aktivitas' => ['required', 'string', 'min:100'],
-            'pembelajaran_diperoleh' => ['required', 'string', 'min:100'],
-            'kendala_dialami' => ['nullable', 'string'],
-            'confirmation' => ['accepted'],
-        ]);
-
-        $intern->logbooks()->create([
-            'tanggal' => $validated['tanggal'],
-            'uraian_aktivitas' => $validated['uraian_aktivitas'],
-            'pembelajaran_diperoleh' => $validated['pembelajaran_diperoleh'],
-            'kendala_dialami' => $validated['kendala_dialami'] ?? null,
-        ]);
-
-        return redirect()
-            ->route('intern.logbooks.index')
-            ->with('status', 'Logbook berhasil disimpan.');
+        $logbook = $this->logbookService->getLogbookById($id);
+        return view('pages.intern.logbooks.show', compact('logbook'));
     }
 
-    public function show(Request $request, Logbook $logbook): View
+    public function store(StoreLogbookRequest $request)
     {
-        $intern = $request->user()->intern;
+        $data = $request->validated();
+        $data['intern_id'] = $request->user()->intern->id;
+        
+        $logbook = $this->logbookService->createLogbook($data);
 
-        abort_if(! $intern || $logbook->intern_id !== $intern->id, 403, 'Logbook ini bukan milik akun Anda.');
+        // Kirim notifikasi ke semua admin & superadmin
+        $admins = User::role(['admin', 'superadmin'])->get();
+        foreach ($admins as $admin) {
+            NotificationService::send(
+                userId: $admin->id,
+                title: 'Logbook Baru Diterima',
+                body: $request->user()->name . ' mengupload logbook untuk tanggal ' . \Carbon\Carbon::parse($data['tanggal'])->translatedFormat('d M Y'),
+                type: 'info',
+                icon: 'ri-file-text-line'
+            );
+        }
 
-        return view('pages.intern.logbooks.show', [
-            'logbook' => $logbook,
-        ]);
+        return redirect()->route('intern.logbooks.index')->with('status', 'Logbook berhasil disimpan!');
     }
 
-    public function edit(Request $request, Logbook $logbook): View
+    public function edit($id)
     {
-        $intern = $request->user()->intern;
-
-        abort_if(! $intern || $logbook->intern_id !== $intern->id, 403, 'Logbook ini bukan milik akun Anda.');
-
-        return view('pages.intern.logbooks.edit', [
-            'logbook' => $logbook,
-        ]);
+        $logbook = $this->logbookService->getLogbookById($id);
+        return view('pages.intern.logbooks.edit', compact('logbook'));
     }
 
-    public function update(Request $request, Logbook $logbook): RedirectResponse
+    public function update(StoreLogbookRequest $request, $id)
     {
-        $intern = $request->user()->intern;
+        $data = $request->validated();
+        $this->logbookService->updateLogbook($id, $data);
 
-        abort_if(! $intern || $logbook->intern_id !== $intern->id, 403, 'Logbook ini bukan milik akun Anda.');
-
-        $validated = $request->validate([
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today',
-                Rule::unique('logbooks', 'tanggal')
-                    ->where('intern_id', $intern->id)
-                    ->ignore($logbook->id),
-            ],
-            'uraian_aktivitas' => ['required', 'string', 'min:100'],
-            'pembelajaran_diperoleh' => ['required', 'string', 'min:100'],
-            'kendala_dialami' => ['nullable', 'string'],
-            'confirmation' => ['accepted'],
-        ]);
-
-        $logbook->update([
-            'tanggal' => $validated['tanggal'],
-            'uraian_aktivitas' => $validated['uraian_aktivitas'],
-            'pembelajaran_diperoleh' => $validated['pembelajaran_diperoleh'],
-            'kendala_dialami' => $validated['kendala_dialami'] ?? null,
-        ]);
-
-        return redirect()
-            ->route('intern.logbooks.show', $logbook)
-            ->with('status', 'Logbook berhasil diperbarui.');
+        return redirect()->route('intern.logbooks.index')->with('status', 'Logbook berhasil diperbarui!');
     }
 
-    public function destroy(Request $request, Logbook $logbook): RedirectResponse
+    public function destroy($id)
     {
-        $intern = $request->user()->intern;
-
-        abort_if(! $intern || $logbook->intern_id !== $intern->id, 403, 'Logbook ini bukan milik akun Anda.');
-
-        $logbook->delete();
-
-        return redirect()
-            ->route('intern.logbooks.index')
-            ->with('status', 'Logbook berhasil dihapus.');
+        $this->logbookService->deleteLogbook($id);
+        return redirect()->route('intern.logbooks.index')->with('status', 'Logbook berhasil dihapus!');
     }
 }

@@ -19,6 +19,91 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $menu = [];
+            
+            // Dashboard (All)
+            $menu[] = (object)[
+                'name' => 'Dashboard',
+                'url' => 'dashboard',
+                'icon' => 'menu-icon tf-icons ri ri-pie-chart-2-line',
+                'slug' => 'dashboard'
+            ];
+            
+            // Admin Menu
+            if (auth()->check() && auth()->user()->can('admin.logbooks.index')) {
+                $menu[] = (object)[ 'menuHeader' => 'Manajemen Intern' ];
+                $menu[] = (object)[
+                    'name' => 'Logbook Intern',
+                    'url' => 'admin/logbooks',
+                    'icon' => 'menu-icon tf-icons ri ri-graduation-cap-line',
+                    'slug' => 'admin.logbooks'
+                ];
+            }
+            
+            // Superadmin Menu
+            if (auth()->check() && auth()->user()->hasRole('superadmin')) {
+                $menu[] = (object)[ 'menuHeader' => 'System' ];
+                $menu[] = (object)[
+                    'name' => 'Roles & Permissions',
+                    'icon' => 'menu-icon tf-icons ri ri-lock-2-line',
+                    'slug' => ['roles', 'permissions'],
+                    'submenu' => [
+                        (object)[
+                            'name' => 'Kelola Role',
+                            'url' => 'roles',
+                            'slug' => 'roles.index',
+                        ],
+                        (object)[
+                            'name' => 'Kelola Permission',
+                            'url' => 'permissions',
+                            'slug' => 'permissions.index',
+                        ],
+                    ]
+                ];
+                $menu[] = (object)[
+                    'name' => 'Manajemen Pengguna',
+                    'url' => 'admin/users',
+                    'icon' => 'menu-icon tf-icons ri ri-group-line',
+                    'slug' => 'admin.users',
+                ];
+                $menu[] = (object)[
+                    'name' => 'Divisi / Departemen',
+                    'url' => 'admin/divisions',
+                    'icon' => 'menu-icon tf-icons ri ri-community-line',
+                    'slug' => 'admin.divisions',
+                ];
+            }
+            
+            // Mentor Menu
+            if (auth()->check() && auth()->user()->hasRole('mentor')) {
+                $menu[] = (object)[ 'menuHeader' => 'Monitoring Mentor' ];
+                $menu[] = (object)[
+                    'name' => 'Logbook Mentee',
+                    'url' => 'mentor/logbooks',
+                    'icon' => 'menu-icon tf-icons ri ri-book-read-line',
+                    'slug' => 'mentor.logbooks'
+                ];
+            }
+
+            // Intern Menu
+            if (auth()->check() && auth()->user()->hasRole('intern')) {
+                $menu[] = (object)[ 'menuHeader' => 'Area Anak Magang' ];
+                $menu[] = (object)[
+                    'name' => 'Profil Saya',
+                    'url' => 'intern/profile',
+                    'icon' => 'menu-icon tf-icons ri ri-user-3-line',
+                    'slug' => 'intern.profile'
+                ];
+                $menu[] = (object)[
+                    'name' => 'Logbook Saya',
+                    'url' => 'intern/logbooks',
+                    'icon' => 'menu-icon tf-icons ri ri-draft-line',
+                    'slug' => 'intern.logbooks'
+                ];
+            }
+
+            $view->with('menuData', [ (object)[ 'menu' => $menu ] ]);
+        });
     }
 }

@@ -209,230 +209,172 @@
     <!-- Quick links -->
 
     <!-- Notification -->
+    @php
+      $notifications = Auth::check()
+        ? \App\Models\Notification::forUser(Auth::id())->limit(10)->get()
+        : collect();
+      $unreadCount = $notifications->whereNull('read_at')->count();
+    @endphp
     <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4 me-xl-1">
       <a class="nav-link dropdown-toggle hide-arrow btn btn-icon btn-text-secondary rounded-pill"
         href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
         <i class="icon-base ri ri-notification-2-line icon-22px"></i>
-        <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
+        @if ($unreadCount > 0)
+          <span class="position-absolute top-0 start-50 translate-middle-y badge badge-dot bg-danger mt-2 border"></span>
+        @endif
       </a>
       <ul class="dropdown-menu dropdown-menu-end py-0">
         <li class="dropdown-menu-header border-bottom py-50">
           <div class="dropdown-header d-flex align-items-center py-2">
-            <h6 class="mb-0 me-auto">Notification</h6>
+            <h6 class="mb-0 me-auto">Notifikasi</h6>
             <div class="d-flex align-items-center h6 mb-0">
-              <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">8 New</span>
-              <a href="javascript:void(0)" class="dropdown-notifications-all p-2" data-bs-toggle="tooltip"
-                data-bs-placement="top" title="Mark all as read"><i
-                  class="icon-base ri ri-mail-open-line text-heading"></i> </a>
+              @if ($unreadCount > 0)
+                <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">{{ $unreadCount }} Baru</span>
+              @endif
+              <a href="javascript:void(0)" id="mark-all-read-btn"
+                class="dropdown-notifications-all p-2" data-bs-toggle="tooltip"
+                data-bs-placement="top" title="Tandai semua dibaca">
+                <i class="icon-base ri ri-mail-open-line text-heading"></i>
+              </a>
             </div>
           </div>
         </li>
         <li class="dropdown-notifications-list scrollable-container">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item list-group-item-action dropdown-notifications-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt="avatar" class="rounded-circle" />
+          <ul class="list-group list-group-flush" id="notification-list">
+            @forelse ($notifications as $notif)
+              <li class="list-group-item list-group-item-action dropdown-notifications-item {{ $notif->isRead() ? 'marked-as-read' : '' }}"
+                  id="notif-{{ $notif->id }}">
+                <div class="d-flex">
+                  <div class="flex-shrink-0 me-3">
+                    <div class="avatar">
+                      <span class="avatar-initial rounded-circle bg-label-{{ $notif->type }}">
+                        <i class="icon-base ri {{ $notif->icon }} icon-18px"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="small mb-1">{{ $notif->title }}</h6>
+                    @if ($notif->body)
+                      <small class="mb-1 d-block text-body">{{ $notif->body }}</small>
+                    @endif
+                    <small class="text-body-secondary">{{ $notif->created_at->diffForHumans() }}</small>
+                  </div>
+                  <div class="flex-shrink-0 dropdown-notifications-actions">
+                    @if (!$notif->isRead())
+                      <a href="javascript:void(0)" class="dropdown-notifications-read notif-read-btn"
+                        data-notif-id="{{ $notif->id }}">
+                        <span class="badge badge-dot"></span>
+                      </a>
+                    @endif
+                    <a href="javascript:void(0)" class="dropdown-notifications-archive notif-delete-btn"
+                      data-notif-id="{{ $notif->id }}">
+                      <span class="icon-base ri ri-close-line"></span>
+                    </a>
                   </div>
                 </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Congratulation Lettie 🎉</h6>
-                  <small class="mb-1 d-block text-body">Won the monthly best seller gold
-                    badge</small>
-                  <small class="text-body-secondary">1h ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <span class="avatar-initial rounded-circle bg-label-danger">CF</span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Charles Franklin</h6>
-                  <small class="mb-1 d-block text-body">Accepted your connection</small>
-                  <small class="text-body-secondary">12hr ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <img src="{{ asset('assets/img/avatars/2.png') }}" alt="avatar" class="rounded-circle" />
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">New Message ✉️</h6>
-                  <small class="mb-1 d-block text-body">You have new message from Natalie</small>
-                  <small class="text-body-secondary">1h ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <span class="avatar-initial rounded-circle bg-label-success"><i
-                        class="icon-base ri ri-shopping-cart-2-line icon-18px"></i> </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Whoo! You have new order 🛒</h6>
-                  <small class="mb-1 d-block text-body">ACME Inc. made new order $1,154</small>
-                  <small class="text-body-secondary">1 day ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <img src="{{ asset('assets/img/avatars/9.png') }}" alt="avatar" class="rounded-circle" />
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Application has been approved 🚀</h6>
-                  <small class="mb-1 d-block text-body">Your ABC project application has been
-                    approved.</small>
-                  <small class="text-body-secondary">2 days ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <span class="avatar-initial rounded-circle bg-label-success"><i
-                        class="icon-base ri ri-pie-chart-2-line icon-18px"></i> </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Monthly report is generated</h6>
-                  <small class="mb-1 d-block text-body">July monthly financial report is generated
-                  </small>
-                  <small class="text-body-secondary">3 days ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <img src="{{ asset('assets/img/avatars/5.png') }}" alt="avatar" class="rounded-circle" />
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">Send connection request</h6>
-                  <small class="mb-1 d-block text-body">Peter sent you connection request</small>
-                  <small class="text-body-secondary">4 days ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <img src="{{ asset('assets/img/avatars/6.png') }}" alt="avatar" class="rounded-circle" />
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">New message from Jane</h6>
-                  <small class="mb-1 d-block text-body">Your have new message from Jane</small>
-                  <small class="text-body-secondary">5 days ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar">
-                    <span class="avatar-initial rounded-circle bg-label-warning"><i
-                        class="icon-base ri ri-error-warning-line icon-18px"></i> </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="small mb-1">CPU is running high</h6>
-                  <small class="mb-1 d-block text-body">CPU Utilization Percent is currently at
-                    88.63%,</small>
-                  <small class="text-body-secondary">5 days ago</small>
-                </div>
-                <div class="flex-shrink-0 dropdown-notifications-actions">
-                  <a href="javascript:void(0)" class="dropdown-notifications-read"><span
-                      class="badge badge-dot"></span></a>
-                  <a href="javascript:void(0)" class="dropdown-notifications-archive"><span
-                      class="icon-base ri ri-close-line"></span></a>
-                </div>
-              </div>
-            </li>
+              </li>
+            @empty
+              <li class="list-group-item text-center py-5" id="no-notif-msg">
+                <i class="icon-base ri ri-notification-off-line icon-36px text-body-secondary mb-2 d-block mx-auto"></i>
+                <small class="text-body-secondary">Tidak ada notifikasi</small>
+              </li>
+            @endforelse
           </ul>
         </li>
         <li class="border-top">
           <div class="d-grid p-4">
-            <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);">
-              <small class="align-middle">View all notifications</small>
+            <a class="btn btn-primary btn-sm d-flex justify-content-center" href="javascript:void(0);">
+              <small class="align-middle">Lihat semua notifikasi</small>
             </a>
           </div>
         </li>
       </ul>
     </li>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      // Mark single as read
+      document.querySelectorAll('.notif-read-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.dataset.notifId;
+          fetch(`/notifications/${id}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              const item = document.getElementById(`notif-${id}`);
+              if (item) {
+                item.classList.add('marked-as-read');
+                this.remove();
+              }
+              updateBadge();
+            }
+          });
+        });
+      });
+
+      // Mark all as read
+      const markAllBtn = document.getElementById('mark-all-read-btn');
+      if (markAllBtn) {
+        markAllBtn.addEventListener('click', function () {
+          fetch('/notifications/read-all', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              document.querySelectorAll('.list-group-item.dropdown-notifications-item').forEach(el => {
+                el.classList.add('marked-as-read');
+              });
+              document.querySelectorAll('.notif-read-btn').forEach(el => el.remove());
+              updateBadge(true);
+            }
+          });
+        });
+      }
+
+      // Delete / archive
+      document.querySelectorAll('.notif-delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const id = this.dataset.notifId;
+          fetch(`/notifications/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+          }).then(r => r.json()).then(data => {
+            if (data.success) {
+              const item = document.getElementById(`notif-${id}`);
+              if (item) item.remove();
+              if (document.querySelectorAll('.list-group-item.dropdown-notifications-item').length === 0) {
+                document.getElementById('notification-list').innerHTML = `
+                  <li class="list-group-item text-center py-5">
+                    <i class="icon-base ri ri-notification-off-line icon-36px text-body-secondary mb-2 d-block mx-auto"></i>
+                    <small class="text-body-secondary">Tidak ada notifikasi</small>
+                  </li>`;
+              }
+              updateBadge();
+            }
+          });
+        });
+      });
+
+      function updateBadge(forceZero = false) {
+        const unread = forceZero ? 0 : document.querySelectorAll('.dropdown-notifications-item:not(.marked-as-read)').length;
+        const dot = document.querySelector('.badge.badge-dot.bg-danger');
+        const countBadge = document.querySelector('.badge.rounded-pill.bg-label-primary.fs-xsmall');
+        if (dot) dot.style.display = unread > 0 ? '' : 'none';
+        if (countBadge) {
+          if (unread > 0) { countBadge.textContent = `${unread} Baru`; }
+          else { countBadge.remove(); }
+        }
+      }
+    });
+    </script>
     <!--/ Notification -->
     <!-- User -->
     <li class="nav-item navbar-dropdown dropdown-user dropdown">
       <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
-          <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}"
+          <img src="{{ Auth::check() && Auth::user()->profile_photo_path ? Storage::url(Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user() ? Auth::user()->name : 'User').'&background=666cff&color=fff' }}"
             alt="avatar" class="rounded-circle" />
         </div>
       </a>
@@ -443,8 +385,8 @@
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0 me-2">
                 <div class="avatar avatar-online">
-                  <img src="{{ Auth::user() ? Auth::user()->profile_photo_url : asset('assets/img/avatars/1.png') }}"
-                    alt="alt" class="w-px-40 h-auto rounded-circle" />
+                  <img src="{{ Auth::check() && Auth::user()->profile_photo_path ? Storage::url(Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user() ? Auth::user()->name : 'User').'&background=666cff&color=fff' }}"
+                    alt="avatar" class="w-px-40 h-auto rounded-circle" />
                 </div>
               </div>
               <div class="flex-grow-1">
@@ -469,64 +411,7 @@
             <i class="icon-base ri ri-user-3-line icon-22px me-2"></i> <span class="align-middle">My
               Profile</span> </a>
         </li>
-        @if (Auth::check() && Laravel\Jetstream\Jetstream::hasApiFeatures())
-          <li>
-            <a class="dropdown-item" href="{{ route('api-tokens.index') }}"> <i
-                class="icon-base ri ri-settings-4-line icon-22px me-3"></i><span class="align-middle">Settings</span>
-            </a>
-          </li>
-        @endif
-        <li>
-          <a class="dropdown-item" href="{{ url('pages/account-settings-billing') }}">
-            <span class="d-flex align-items-center align-middle">
-              <i class="flex-shrink-0 icon-base ri ri-file-text-line icon-22px me-3"></i>
-              <span class="flex-grow-1 align-middle">Billing Plan</span>
-              <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger">4</span>
-            </span>
-          </a>
-        </li>
-        @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
-          <li>
-            <div class="dropdown-divider"></div>
-          </li>
-          <li>
-            <h6 class="dropdown-header">Manage Team</h6>
-          </li>
-          <li>
-            <div class="dropdown-divider my-1"></div>
-          </li>
-          <li>
-            <a class="dropdown-item"
-              href="{{ Auth::user() ? route('teams.show', Auth::user()->currentTeam->id) : 'javascript:void(0)' }}">
-              <i class="icon-base ri ri-settings-3-line icon-md me-3"></i><span>Team Settings</span>
-            </a>
-          </li>
-          @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-            <li>
-              <a class="dropdown-item" href="{{ route('teams.create') }}">
-                <i class="icon-base ri ri-group-line icon-md me-3"></i><span>Create New Team</span>
-              </a>
-            </li>
-          @endcan
-          @if (Auth::user()->allTeams()->count() > 1)
-            <li>
-              <div class="dropdown-divider my-1"></div>
-            </li>
-            <li>
-              <h6 class="dropdown-header">Switch Teams</h6>
-            </li>
-            <li>
-              <div class="dropdown-divider my-1"></div>
-            </li>
-          @endif
-          @if (Auth::user())
-            @foreach (Auth::user()->allTeams() as $team)
-              {{-- Below commented code read by artisan command while installing jetstream. !! Do not remove if you want to use jetstream. --}}
 
-              {{-- <x-switchable-team :team="$team" /> --}}
-            @endforeach
-          @endif
-        @endif
         <li>
           <div class="dropdown-divider my-1"></div>
         </li>

@@ -25,5 +25,4 @@
 @yield('page-style')
 
 <!-- app CSS -->
-@vite(['resources/css/app.css'])
 <!-- END: app CSS-->

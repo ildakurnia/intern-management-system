@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -51,6 +53,18 @@ class ProfileController extends Controller
         $validated['profile_completed_at'] = $intern->profile_completed_at ?? now();
 
         $intern->update($validated);
+
+        // Notifikasi ke Admin
+        $admins = User::role(['admin', 'superadmin'])->get();
+        foreach ($admins as $admin) {
+            NotificationService::send(
+                userId: $admin->id,
+                title: 'Update Profil Intern',
+                body: $intern->user->name . ' baru saja memperbarui data profilnya.',
+                type: 'info',
+                icon: 'ri-user-follow-line'
+            );
+        }
 
         return redirect()
             ->route('intern.documents.edit')
