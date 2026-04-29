@@ -26,6 +26,7 @@ class DocumentController extends Controller
             'ktp' => [$intern->ktp_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
             'student_card' => [$intern->student_card_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
             'bpjs' => [$intern->bpjs_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'recommendation_letter' => [$intern->recommendation_letter_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ];
 
         $request->validate($rules);
@@ -42,6 +43,10 @@ class DocumentController extends Controller
 
         if ($request->hasFile('bpjs')) {
             $updateData['bpjs_path'] = $request->file('bpjs')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('recommendation_letter')) {
+            $updateData['recommendation_letter_path'] = $request->file('recommendation_letter')->store("intern-documents/{$intern->id}", 'public');
         }
         
         $wasCompleted = $intern->hasCompletedDocuments();

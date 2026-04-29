@@ -184,7 +184,7 @@
               <td class="text-body-secondary py-3">KTP</td>
               <td class="text-end py-3">
                 @if($intern->ktp_path)
-                  <a href="{{ asset('storage/' . $intern->ktp_path) }}" target="_blank" class="badge bg-label-success rounded-pill text-decoration-none">Tersedia</a>
+                  <a href="javascript:void(0);" onclick="showDocument('{{ asset('storage/' . $intern->ktp_path) }}', 'KTP')" class="badge bg-label-success rounded-pill text-decoration-none">Lihat Berkas</a>
                 @else
                   <span class="badge bg-label-secondary rounded-pill">Kosong</span>
                 @endif
@@ -194,7 +194,7 @@
               <td class="text-body-secondary py-3">KTM/Kartu Pelajar</td>
               <td class="text-end py-3">
                 @if($intern->student_card_path)
-                  <a href="{{ asset('storage/' . $intern->student_card_path) }}" target="_blank" class="badge bg-label-success rounded-pill text-decoration-none">Tersedia</a>
+                  <a href="javascript:void(0);" onclick="showDocument('{{ asset('storage/' . $intern->student_card_path) }}', 'KTM/Kartu Pelajar')" class="badge bg-label-success rounded-pill text-decoration-none">Lihat Berkas</a>
                 @else
                   <span class="badge bg-label-secondary rounded-pill">Kosong</span>
                 @endif
@@ -204,7 +204,17 @@
               <td class="text-body-secondary py-3">BPJS</td>
               <td class="text-end py-3">
                 @if($intern->bpjs_path)
-                  <a href="{{ asset('storage/' . $intern->bpjs_path) }}" target="_blank" class="badge bg-label-success rounded-pill text-decoration-none">Tersedia</a>
+                  <a href="javascript:void(0);" onclick="showDocument('{{ asset('storage/' . $intern->bpjs_path) }}', 'BPJS Ketenagakerjaan')" class="badge bg-label-success rounded-pill text-decoration-none">Lihat Berkas</a>
+                @else
+                  <span class="badge bg-label-secondary rounded-pill">Kosong</span>
+                @endif
+              </td>
+            </tr>
+            <tr>
+              <td class="text-body-secondary py-3">Surat Pengantar</td>
+              <td class="text-end py-3">
+                @if($intern->recommendation_letter_path)
+                  <a href="javascript:void(0);" onclick="showDocument('{{ asset('storage/' . $intern->recommendation_letter_path) }}', 'Surat Pengantar')" class="badge bg-label-success rounded-pill text-decoration-none">Lihat Berkas</a>
                 @else
                   <span class="badge bg-label-secondary rounded-pill">Kosong</span>
                 @endif
@@ -216,4 +226,39 @@
     </div>
   </div>
 </div>
+
+<!-- Document Modal -->
+<div class="modal fade" id="documentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalTitle">Preview Dokumen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center p-0" style="height: 80vh; background: #f8f9fa;">
+        <iframe id="documentIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+@endsection
+
+@section('page-script')
+<script>
+  function showDocument(url, title) {
+    document.getElementById('documentModalTitle').innerText = 'Preview Dokumen: ' + title;
+    document.getElementById('documentIframe').src = url;
+    var myModal = new bootstrap.Modal(document.getElementById('documentModal'));
+    myModal.show();
+  }
+  
+  // Bersihkan iframe saat modal ditutup
+  var documentModalEl = document.getElementById('documentModal');
+  if(documentModalEl) {
+    documentModalEl.addEventListener('hidden.bs.modal', function (event) {
+      document.getElementById('documentIframe').src = '';
+    });
+  }
+</script>
 @endsection

@@ -175,7 +175,7 @@ class DashboardService
             if ($intern->hasCompletedDocuments()) $completeness += 25;
             $steps[] = [
                 'title' => 'Unggah Berkas', 
-                'desc' => 'KTP, KTM, BPJS', 
+                'desc' => 'KTP, KTM, BPJS & Surat Pengantar', 
                 'status' => $intern->hasCompletedDocuments() ? 'completed' : 'pending'
             ];
 

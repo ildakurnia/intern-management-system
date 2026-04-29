@@ -53,6 +53,17 @@
                         @error('bpjs') <small class="form-error">{{ $message }}</small> @enderror
                     </div>
                 </div>
+
+                <div class="document-row">
+                    <div>
+                        <h3>Surat Pengantar</h3>
+                        <p>{{ $intern->recommendation_letter_path ? 'Sudah upload. Upload file baru jika ingin mengganti.' : 'Belum upload.' }}</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="recommendation_letter" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->recommendation_letter_path ? '' : 'required' }}>
+                        @error('recommendation_letter') <small class="form-error">{{ $message }}</small> @enderror
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="button">Simpan Berkas</button>
