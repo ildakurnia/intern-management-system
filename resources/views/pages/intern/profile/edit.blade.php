@@ -8,13 +8,15 @@
     <div class="card mb-4 shadow-sm border-0">
         <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between p-4 gap-3">
             <div>
-                <p class="text-primary text-uppercase fw-semibold mb-1 small" style="letter-spacing: 0.5px;">Intern Onboarding</p>
-                <h4 class="mb-1">Lengkapi Profil</h4>
-                <p class="text-body-secondary mb-0">Profil wajib dilengkapi sebelum kamu bisa upload berkas dan masuk dashboard.</p>
+                <p class="text-primary text-uppercase fw-semibold mb-1 small" style="letter-spacing: 0.5px;">{{ $intern->hasCompletedProfile() ? 'Pengaturan Akun' : 'Intern Onboarding' }}</p>
+                <h4 class="mb-1">{{ $intern->hasCompletedProfile() ? 'Edit Profil' : 'Lengkapi Profil' }}</h4>
+                <p class="text-body-secondary mb-0">{{ $intern->hasCompletedProfile() ? 'Perbarui data diri dan kontak kamu jika ada perubahan.' : 'Profil wajib dilengkapi sebelum kamu bisa upload berkas dan masuk dashboard.' }}</p>
             </div>
+            @if(!$intern->hasCompletedProfile())
             <div>
                 <span class="badge bg-label-primary rounded-pill px-3 py-2 fw-medium">Langkah 1 dari 2</span>
             </div>
+            @endif
         </div>
     </div>
 
@@ -133,7 +135,7 @@
 
                     <div class="col-12 mt-5">
                         <button type="submit" class="btn btn-primary d-flex align-items-center">
-                            <i class="icon-base ri ri-save-line me-2"></i> Simpan & Lanjutkan
+                            <i class="icon-base ri ri-save-line me-2"></i> {{ $intern->hasCompletedProfile() ? 'Simpan Perubahan' : 'Simpan & Lanjutkan' }}
                         </button>
                     </div>
                 </div>

@@ -74,16 +74,17 @@ Route::middleware('auth')->group(function (): void {
     });
 
     Route::prefix('admin')->middleware(['role:superadmin|admin', 'hasAnyRoleOrPermission'])->name('admin.')->group(function () {
-        // Route::prefix('interns')->name('interns.')->group(function () {
-        //     Route::get('/', [AdminInternController::class, 'index'])->name('index');
-        //     Route::get('/import', [AdminInternController::class, 'import'])->name('import');
-        //     Route::get('/template', [AdminInternController::class, 'template'])->name('template');
-        //     Route::post('/import', [AdminInternController::class, 'storeImport'])->name('import.store');
-        //     Route::get('/{intern}', [AdminInternController::class, 'show'])->name('show');
-        // });
+        Route::prefix('interns')->name('interns.')->group(function () {
+            Route::get('/', [AdminInternController::class, 'index'])->name('index');
+            Route::get('/import', [AdminInternController::class, 'import'])->name('import');
+            Route::get('/template', [AdminInternController::class, 'template'])->name('template');
+            Route::post('/import', [AdminInternController::class, 'storeImport'])->name('import.store');
+            Route::get('/{intern}', [AdminInternController::class, 'show'])->name('show');
+            Route::put('/{intern}/approve', [AdminInternController::class, 'approve'])->name('approve');
+        });
 
         // Route::get('/intern-documents', [AdminInternDocumentController::class, 'index'])
-        //     ->name('intern-documents.index');
+        //    ->name('intern-documents.index');
 
         Route::get('/logbooks', [AdminLogbookController::class, 'index'])->name('logbooks.index')->middleware('can:admin.logbooks.index');
         Route::get('/logbooks/{logbook}', [AdminLogbookController::class, 'show'])->name('logbooks.show')->middleware('can:admin.logbooks.show');
@@ -126,8 +127,8 @@ Route::middleware('auth')->group(function (): void {
         ->group(function () {
             Route::get('/profile', [InternProfileController::class, 'edit'])->name('profile.edit');
             Route::put('/profile', [InternProfileController::class, 'update'])->name('profile.update');
-            // Route::get('/documents', [InternDocumentController::class, 'edit'])->name('documents.edit');
-            // Route::put('/documents', [InternDocumentController::class, 'update'])->name('documents.update');
+            Route::get('/documents', [InternDocumentController::class, 'edit'])->name('documents.edit');
+            Route::put('/documents', [InternDocumentController::class, 'update'])->name('documents.update');
             
             // INTERN LOGBOOKS
             Route::prefix('logbooks')->name('logbooks.')->group(function () {

@@ -6,11 +6,13 @@
 @section('content')
     <section class="page-intro card-surface">
         <div>
-            <p class="eyebrow">Intern Onboarding</p>
-            <h2>Upload Berkas Wajib</h2>
-            <p>Upload KTP, kartu siswa/mahasiswa, dan BPJS Ketenagakerjaan agar dashboard terbuka.</p>
+            <p class="eyebrow">{{ $intern->hasCompletedDocuments() ? 'Pengaturan Akun' : 'Intern Onboarding' }}</p>
+            <h2>{{ $intern->hasCompletedDocuments() ? 'Edit Berkas' : 'Upload Berkas Wajib' }}</h2>
+            <p>{{ $intern->hasCompletedDocuments() ? 'Perbarui berkas KTP, kartu pelajar/mahasiswa, atau BPJS Ketenagakerjaan Anda jika diperlukan.' : 'Upload KTP, kartu siswa/mahasiswa, dan BPJS Ketenagakerjaan agar dashboard terbuka.' }}</p>
         </div>
+        @if(!$intern->hasCompletedDocuments())
         <span class="intro-badge">Langkah 2 dari 2</span>
+        @endif
     </section>
 
     <section class="card-surface form-card">

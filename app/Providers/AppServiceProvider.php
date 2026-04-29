@@ -30,9 +30,15 @@ class AppServiceProvider extends ServiceProvider
                 'slug' => 'dashboard'
             ];
             
-            // Admin Menu
-            if (auth()->check() && auth()->user()->can('admin.logbooks.index')) {
+            // Admin / Mentor Data Management
+            if (auth()->check() && auth()->user()->can('admin.interns.index')) {
                 $menu[] = (object)[ 'menuHeader' => 'Manajemen Intern' ];
+                $menu[] = (object)[
+                    'name' => 'Data Intern',
+                    'url' => 'admin/interns',
+                    'icon' => 'menu-icon tf-icons ri ri-group-line',
+                    'slug' => 'admin.interns'
+                ];
                 $menu[] = (object)[
                     'name' => 'Logbook Intern',
                     'url' => 'admin/logbooks',

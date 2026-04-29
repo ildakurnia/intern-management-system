@@ -58,7 +58,7 @@
   </div>
 
   {{-- Profile Incomplete Alert --}}
-  @if($profileCompleteness < 100)
+  @if(!$hasCompletedProfile || !$hasCompletedDocuments)
   <div class="col-12 mt-4">
     <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center mb-0" role="alert">
       <div class="avatar avatar-sm me-3">
@@ -69,6 +69,18 @@
         <span>Harap lengkapi data diri dan unggah berkas wajib agar proses magang dapat diverifikasi sepenuhnya.</span>
       </div>
       <a href="{{ route('intern.profile.edit') }}" class="btn btn-warning shadow-sm ms-auto">Lengkapi Sekarang</a>
+    </div>
+  </div>
+  @elseif($intern->registration_status !== 'approved')
+  <div class="col-12 mt-4">
+    <div class="alert alert-info border-0 shadow-sm d-flex align-items-center mb-0" role="alert">
+      <div class="avatar avatar-sm me-3">
+        <span class="avatar-initial bg-info rounded-circle"><i class="ri ri-time-line"></i></span>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <h6 class="alert-heading mb-1 fw-bold">Menunggu Verifikasi Admin</h6>
+        <span>Anda telah melengkapi semua profil & berkas. Silakan tunggu admin memverifikasi dan menyetujui akun Anda.</span>
+      </div>
     </div>
   </div>
   @endif

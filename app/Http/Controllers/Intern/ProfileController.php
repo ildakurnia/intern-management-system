@@ -50,6 +50,7 @@ class ProfileController extends Controller
             $validated['photo'] = $request->file('photo')->store("intern-photos/{$intern->id}", 'public');
         }
 
+        $wasCompleted = $intern->hasCompletedProfile();
         $validated['profile_completed_at'] = $intern->profile_completed_at ?? now();
 
         $intern->update($validated);
@@ -66,8 +67,14 @@ class ProfileController extends Controller
             );
         }
 
+        if (!$wasCompleted) {
+            return redirect()
+                ->route('intern.documents.edit')
+                ->with('status', 'Profil berhasil dilengkapi. Sekarang upload berkas wajib.');
+        }
+
         return redirect()
-            ->route('intern.documents.edit')
-            ->with('status', 'Profil berhasil dilengkapi. Sekarang upload berkas wajib.');
+            ->route('intern.profile.edit')
+            ->with('status', 'Data profil berhasil diperbarui.');
     }
 }
