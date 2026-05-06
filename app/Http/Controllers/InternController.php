@@ -46,8 +46,4 @@ class InternController extends Controller
         return view('pages.feature', ['title' => 'Daily Log Aktivitas']);
     }
 
-    public function tasks()
-    {
-        return view('pages.feature', ['title' => 'Daftar Tasks / Jobdesk']);
-    }
 }

@@ -15,10 +15,10 @@ class LogbookService
         return Logbook::where('intern_id', $internId)->latest()->paginate(10);
     }
     if ($user->hasRole('mentor')) {
-    return Logbook::whereHas('intern', function($q) use($user) {
-        $q->where('division_id', $user->division_id);
-    })->latest()->paginate(10);
-}
+        return Logbook::whereHas('intern', function($q) use($user) {
+            $q->where('mentor_id', $user->id);
+        })->latest()->paginate(10);
+    }
 
         return Logbook::latest()->paginate(10); // Admin lihat semua
     }

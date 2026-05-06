@@ -21,6 +21,6 @@ class Logbook extends Model
 
     public function intern(): BelongsTo
     {
-        return $this->belongsTo(Intern::class);
+        return $this->belongsTo(Intern::class)->withTrashed();
     }
 }

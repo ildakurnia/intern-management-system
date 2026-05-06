@@ -30,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
                 'slug' => 'dashboard'
             ];
             
-            // Admin / Mentor Data Management
-            if (auth()->check() && auth()->user()->can('admin.interns.index')) {
+            // Admin Data Management
+            if (auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin'])) {
                 $menu[] = (object)[ 'menuHeader' => 'Manajemen Intern' ];
                 $menu[] = (object)[
                     'name' => 'Data Intern',
@@ -44,6 +44,12 @@ class AppServiceProvider extends ServiceProvider
                     'url' => 'admin/logbooks',
                     'icon' => 'menu-icon tf-icons ri ri-graduation-cap-line',
                     'slug' => 'admin.logbooks'
+                ];
+                $menu[] = (object)[
+                    'name' => 'Task / Jobdesk',
+                    'url' => 'admin/tasks',
+                    'icon' => 'menu-icon tf-icons ri ri-task-line',
+                    'slug' => 'admin.tasks'
                 ];
             }
             
@@ -90,6 +96,12 @@ class AppServiceProvider extends ServiceProvider
                     'icon' => 'menu-icon tf-icons ri ri-book-read-line',
                     'slug' => 'mentor.logbooks'
                 ];
+                $menu[] = (object)[
+                    'name' => 'Task / Jobdesk',
+                    'url' => 'mentor/tasks',
+                    'icon' => 'menu-icon tf-icons ri ri-task-line',
+                    'slug' => 'mentor.tasks'
+                ];
             }
 
             // Intern Menu
@@ -106,6 +118,12 @@ class AppServiceProvider extends ServiceProvider
                     'url' => 'intern/logbooks',
                     'icon' => 'menu-icon tf-icons ri ri-draft-line',
                     'slug' => 'intern.logbooks'
+                ];
+                $menu[] = (object)[
+                    'name' => 'Tugas Saya',
+                    'url' => 'intern/tasks',
+                    'icon' => 'menu-icon tf-icons ri ri-task-line',
+                    'slug' => 'intern.tasks'
                 ];
             }
 

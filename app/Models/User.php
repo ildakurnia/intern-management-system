@@ -7,6 +7,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -59,8 +60,19 @@ class User extends Authenticatable
         return $this->belongsTo(Division::class);
     }
 
+    /**
+     * Get the intern profile if this user is an intern
+     */
     public function intern(): HasOne
     {
         return $this->hasOne(Intern::class);
+    }
+
+    /**
+     * Get the interns managed by this user (if this user is a mentor)
+     */
+    public function managedInterns(): HasMany
+    {
+        return $this->hasMany(Intern::class, 'mentor_id');
     }
 }

@@ -22,14 +22,8 @@ class EnsureInternOnboardingComplete
             abort(403, 'Akun intern belum terhubung dengan data magang. Hubungi admin.');
         }
 
-        if (! $intern->hasCompletedProfile() && ! $request->routeIs('intern.profile.*')) {
+        if ((! $intern->hasCompletedProfile() || ! $intern->hasCompletedDocuments()) && ! $request->routeIs('intern.profile.*')) {
             return redirect()->route('intern.profile.edit');
-        }
-
-        if ($intern->hasCompletedProfile()
-            && ! $intern->hasCompletedDocuments()
-            && ! $request->routeIs('intern.documents.*')) {
-            return redirect()->route('intern.documents.edit');
         }
 
         return $next($request);

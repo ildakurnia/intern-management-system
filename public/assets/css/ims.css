@@ -204,14 +204,17 @@ a {
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    width: 2rem;
-    height: 2rem;
+    width: 2.25rem;
+    height: 2.25rem;
     border-radius: 0.625rem;
     background: var(--surface-soft);
     color: currentColor;
-    font-size: 0.7rem;
-    font-weight: 800;
     letter-spacing: 0;
+}
+
+.menu-icon i {
+    font-size: 1.25rem;
+    font-weight: normal;
 }
 
 .menu-icon-outline {

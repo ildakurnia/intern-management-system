@@ -34,6 +34,11 @@ class ProfileController extends Controller
             'semester' => ['nullable', 'string', 'max:50'],
             'gpa' => ['nullable', 'numeric', 'between:0,4'],
             'photo' => ['nullable', 'image', 'max:2048'],
+            // Documents
+            'ktp' => [$intern->ktp_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'student_card' => [$intern->student_card_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'bpjs' => [$intern->bpjs_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'recommendation_letter' => [$intern->recommendation_letter_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
         ];
 
         if ($intern->type === 'siswa') {
@@ -50,10 +55,28 @@ class ProfileController extends Controller
             $validated['photo'] = $request->file('photo')->store("intern-photos/{$intern->id}", 'public');
         }
 
-        $wasCompleted = $intern->hasCompletedProfile();
+        if ($request->hasFile('ktp')) {
+            $validated['ktp_path'] = $request->file('ktp')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('student_card')) {
+            $validated['student_card_path'] = $request->file('student_card')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('bpjs')) {
+            $validated['bpjs_path'] = $request->file('bpjs')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('recommendation_letter')) {
+            $validated['recommendation_letter_path'] = $request->file('recommendation_letter')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        $wasCompletedProfile = $intern->hasCompletedProfile();
+        $wasCompletedDocs = $intern->hasCompletedDocuments();
         $validated['profile_completed_at'] = $intern->profile_completed_at ?? now();
 
         $intern->update($validated);
+        $intern->refreshDocumentCompletion();
 
         // Notifikasi ke Admin
         $admins = User::role(['admin', 'superadmin'])->get();
@@ -67,14 +90,14 @@ class ProfileController extends Controller
             );
         }
 
-        if (!$wasCompleted) {
+        if (!$wasCompletedDocs || !$wasCompletedProfile) {
             return redirect()
-                ->route('intern.documents.edit')
-                ->with('status', 'Profil berhasil dilengkapi. Sekarang upload berkas wajib.');
+                ->route('dashboard')
+                ->with('status', 'Profil dan berkas berhasil dilengkapi. Data Anda akan direview oleh admin.');
         }
 
         return redirect()
             ->route('intern.profile.edit')
-            ->with('status', 'Data profil berhasil diperbarui.');
+            ->with('status', 'Data profil dan berkas berhasil diperbarui.');
     }
 }

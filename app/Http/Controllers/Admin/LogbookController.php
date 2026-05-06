@@ -24,13 +24,15 @@ class LogbookController extends Controller
         $logbook = $this->logbookService->getLogbookById($id);
 
         // Notifikasi ke Intern: "Admin sudah melihat logbook kamu"
-        NotificationService::send(
-            userId: $logbook->intern->user_id,
-            title: 'Logbook Dilihat Admin',
-            body: 'Admin ' . auth()->user()->name . ' telah melihat logbook Anda tanggal ' . \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('d M Y'),
-            type: 'success',
-            icon: 'ri-eye-line'
-        );
+        if ($logbook->intern && $logbook->intern->user_id) {
+            NotificationService::send(
+                userId: $logbook->intern->user_id,
+                title: 'Logbook Dilihat Admin',
+                body: 'Admin ' . auth()->user()->name . ' telah melihat logbook Anda tanggal ' . \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('d M Y'),
+                type: 'success',
+                icon: 'ri-eye-line'
+            );
+        }
 
         return view('pages.admin.logbooks.show', compact('logbook'));
     }

@@ -3,13 +3,15 @@
 use App\Http\Controllers\Admin\InternController as AdminInternController;
 use App\Http\Controllers\Admin\InternDocumentController as AdminInternDocumentController;
 use App\Http\Controllers\Admin\LogbookController as AdminLogbookController;
+use App\Http\Controllers\Admin\TaskController as AdminTaskController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredInternController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Intern\DocumentController as InternDocumentController;
 use App\Http\Controllers\Intern\LogbookController as InternLogbookController;
 use App\Http\Controllers\Intern\ProfileController as InternProfileController;
+use App\Http\Controllers\Intern\TaskController as InternTaskController;
 use App\Http\Controllers\Mentor\LogbookController as MentorLogbookController;
+use App\Http\Controllers\Mentor\TaskController as MentorTaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
@@ -42,6 +44,9 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware(['hasAnyRoleOrPermission', 'intern.onboarding'])
         ->name('dashboard');
+
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])
+        ->name('profile.index');
 
     // NOTIFICATIONS
     Route::prefix('notifications')->name('notifications.')->group(function () {
@@ -80,6 +85,8 @@ Route::middleware('auth')->group(function (): void {
             Route::get('/template', [AdminInternController::class, 'template'])->name('template');
             Route::post('/import', [AdminInternController::class, 'storeImport'])->name('import.store');
             Route::get('/{intern}', [AdminInternController::class, 'show'])->name('show');
+            Route::get('/{intern}/edit', [AdminInternController::class, 'edit'])->name('edit');
+            Route::put('/{intern}', [AdminInternController::class, 'update'])->name('update');
             Route::put('/{intern}/approve', [AdminInternController::class, 'approve'])->name('approve');
         });
 
@@ -88,6 +95,17 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/logbooks', [AdminLogbookController::class, 'index'])->name('logbooks.index')->middleware('can:admin.logbooks.index');
         Route::get('/logbooks/{logbook}', [AdminLogbookController::class, 'show'])->name('logbooks.show')->middleware('can:admin.logbooks.show');
+
+        // ADMIN TASKS
+        Route::prefix('tasks')->name('tasks.')->group(function () {
+            Route::get('/', [AdminTaskController::class, 'index'])->name('index');
+            Route::get('/create', [AdminTaskController::class, 'create'])->name('create');
+            Route::post('/', [AdminTaskController::class, 'store'])->name('store');
+            Route::get('/{task}', [AdminTaskController::class, 'show'])->name('show');
+            Route::get('/{task}/edit', [AdminTaskController::class, 'edit'])->name('edit');
+            Route::put('/{task}', [AdminTaskController::class, 'update'])->name('update');
+            Route::delete('/{task}', [AdminTaskController::class, 'destroy'])->name('destroy');
+        });
     });
 
     Route::middleware(['role:superadmin', 'hasAnyRoleOrPermission'])->group(function () {
@@ -118,6 +136,17 @@ Route::middleware('auth')->group(function (): void {
         Route::prefix('mentor')->name('mentor.')->group(function () {
             Route::get('/logbooks', [MentorLogbookController::class, 'index'])->name('logbooks.index');
             Route::get('/logbooks/{logbook}', [MentorLogbookController::class, 'show'])->name('logbooks.show');
+            
+            // MENTOR TASKS
+            Route::prefix('tasks')->name('tasks.')->group(function () {
+                Route::get('/', [MentorTaskController::class, 'index'])->name('index');
+                Route::get('/create', [MentorTaskController::class, 'create'])->name('create');
+                Route::post('/', [MentorTaskController::class, 'store'])->name('store');
+                Route::get('/{task}', [MentorTaskController::class, 'show'])->name('show');
+                Route::get('/{task}/edit', [MentorTaskController::class, 'edit'])->name('edit');
+                Route::put('/{task}', [MentorTaskController::class, 'update'])->name('update');
+                Route::delete('/{task}', [MentorTaskController::class, 'destroy'])->name('destroy');
+            });
         });
     });
 
@@ -127,8 +156,7 @@ Route::middleware('auth')->group(function (): void {
         ->group(function () {
             Route::get('/profile', [InternProfileController::class, 'edit'])->name('profile.edit');
             Route::put('/profile', [InternProfileController::class, 'update'])->name('profile.update');
-            Route::get('/documents', [InternDocumentController::class, 'edit'])->name('documents.edit');
-            Route::put('/documents', [InternDocumentController::class, 'update'])->name('documents.update');
+            
             
             // INTERN LOGBOOKS
             Route::prefix('logbooks')->name('logbooks.')->group(function () {
@@ -139,6 +167,13 @@ Route::middleware('auth')->group(function (): void {
                 Route::get('/{logbook}/edit', [InternLogbookController::class, 'edit'])->name('edit');
                 Route::put('/{logbook}', [InternLogbookController::class, 'update'])->name('update');
                 Route::delete('/{logbook}', [InternLogbookController::class, 'destroy'])->name('destroy');
+            });
+
+            // INTERN TASKS
+            Route::prefix('tasks')->name('tasks.')->group(function () {
+                Route::get('/', [InternTaskController::class, 'index'])->name('index');
+                Route::get('/{task}', [InternTaskController::class, 'show'])->name('show');
+                Route::put('/{task}/update-status', [InternTaskController::class, 'updateStatus'])->name('update-status');
             });
         });
 

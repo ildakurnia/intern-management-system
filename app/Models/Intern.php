@@ -46,6 +46,7 @@ class Intern extends Model
         'bpjs_path',
         'recommendation_letter_path',
         'notes',
+        'mentor_id',
     ];
 
     protected $casts = [
@@ -72,6 +73,14 @@ class Intern extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The mentor assigned to this intern
+     */
+    public function mentor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'mentor_id');
     }
 
     public function logbooks(): HasMany
@@ -104,7 +113,7 @@ class Intern extends Model
             return $query;
         }
 
-        return $query->where('division_id', $mentor->division_id);
+        return $query->where('mentor_id', $mentor->id);
     }
 
     public function hasCompletedProfile(): bool

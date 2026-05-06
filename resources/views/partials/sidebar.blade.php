@@ -21,7 +21,7 @@
     <div class="sidebar-section-label">Menu Utama</div>
     <nav class="menu">
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard*') ? 'active' : '' }}">
-            <span class="menu-icon">DB</span>
+            <span class="menu-icon"><i class="ri-dashboard-line"></i></span>
             <span class="menu-label">Dashboard</span>
         </a>
     </nav>
@@ -49,7 +49,7 @@
         @endcan --}}
         @can('admin.logbooks.index')
             <a href="{{ route('admin.logbooks.index') }}" class="{{ request()->routeIs('admin.logbooks.*') ? 'active' : '' }}">
-                <span class="menu-icon">LB</span>
+                <span class="menu-icon"><i class="ri-book-read-line"></i></span>
                 <span class="menu-label">Logbook Intern</span>
             </a>
         @endcan
@@ -61,20 +61,20 @@
     <nav class="menu">
         <div class="menu-dropdown">
             <button type="button" class="menu-toggle {{ request()->routeIs('roles*') || request()->routeIs('permissions*') ? 'active' : '' }}" data-menu-dropdown-toggle aria-expanded="{{ request()->routeIs('roles*') || request()->routeIs('permissions*') ? 'true' : 'false' }}">
-                <span class="menu-icon">RB</span>
+                <span class="menu-icon"><i class="ri-shield-user-line"></i></span>
                 <span class="menu-label">RBAC Management</span>
                 <span class="submenu-indicator">&#9662;</span>
             </button>
             <div class="submenu {{ request()->routeIs('roles*') || request()->routeIs('permissions*') ? 'show' : '' }}">
                 @can('roles.index')
                 <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles*') ? 'active' : '' }}">
-                    <span class="menu-icon menu-icon-outline">RL</span>
+                    <span class="menu-icon menu-icon-outline"><i class="ri-user-settings-line"></i></span>
                     <span class="menu-label">Manajemen Role</span>
                 </a>
                 @endcan
                 @can('permissions.index')
                 <a href="{{ route('permissions.index') }}" class="{{ request()->routeIs('permissions*') ? 'active' : '' }}">
-                    <span class="menu-icon menu-icon-outline">PL</span>
+                    <span class="menu-icon menu-icon-outline"><i class="ri-key-2-line"></i></span>
                     <span class="menu-label">Daftar Permission</span>
                 </a>
                 @endcan
@@ -88,7 +88,7 @@
     <div class="sidebar-section-label">Monitoring Intern (Mentor)</div>
     <nav class="menu">
         <a href="{{ route('mentor.logbooks.index') }}" class="{{ request()->routeIs('mentor.logbooks.*') ? 'active' : '' }}">
-            <span class="menu-icon">LB</span>
+            <span class="menu-icon"><i class="ri-book-read-line"></i></span>
             <span class="menu-label">Logbook Mentee</span>
         </a>
     </nav>
@@ -101,13 +101,13 @@
     <nav class="menu">
         @can('intern.profile.edit')
         <a href="{{ route('intern.profile.edit') }}" class="{{ request()->routeIs('intern.profile.*') ? 'active' : '' }}">
-            <span class="menu-icon">PS</span>
+            <span class="menu-icon"><i class="ri-user-line"></i></span>
             <span class="menu-label">Profil Saya</span>
         </a>
         @endcan
         @can('intern.logbooks.index')
         <a href="{{ route('intern.logbooks.index') }}" class="{{ request()->routeIs('intern.logbooks.*') ? 'active' : '' }}">
-            <span class="menu-icon">LB</span>
+            <span class="menu-icon"><i class="ri-book-read-line"></i></span>
             <span class="menu-label">Logbook</span>
         </a>
         @endcan

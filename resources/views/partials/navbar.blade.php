@@ -48,9 +48,7 @@
                     <span>{{ $roleName }}</span>
                 </div>
                 <a href="{{ route('dashboard') }}">Dashboard</a>
-                @role('intern')
-                    <a href="{{ route('intern.profile.edit') }}">Profil Saya</a>
-                @endrole
+                <a href="{{ route('profile.index') }}">Profil Saya</a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit">Logout</button>

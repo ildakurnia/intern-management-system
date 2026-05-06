@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="p-3 text-center">
-          <img src="{{ asset('assets/img/illustrations/man-with-laptop.png') }}" height="150" alt="Illustration" />
+          <img src="{{ asset('assets/img/illustrations/boy-with-laptop-light.png') }}" height="150" alt="Illustration" />
         </div>
       </div>
     </div>

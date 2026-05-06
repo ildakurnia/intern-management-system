@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Intern;
+use App\Models\User;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -45,9 +47,38 @@ class InternController extends Controller
     public function show(Intern $intern): View
     {
         // Eager load relations
-        $intern->load(['user', 'division', 'logbooks']);
+        $intern->load(['user', 'division', 'logbooks', 'mentor']);
 
         return view('admin.interns.show', compact('intern'));
+    }
+
+    public function edit(Intern $intern): View
+    {
+        $mentors = User::role('mentor')->get();
+        $divisions = Division::where('is_active', true)->get();
+        
+        return view('admin.interns.edit', compact('intern', 'mentors', 'divisions'));
+    }
+
+    public function update(Request $request, Intern $intern): RedirectResponse
+    {
+        $request->validate([
+            'mentor_id' => ['nullable', 'exists:users,id'],
+            'division_id' => ['nullable', 'exists:divisions,id'],
+        ]);
+
+        $intern->update([
+            'mentor_id' => $request->mentor_id,
+            'division_id' => $request->division_id,
+        ]);
+
+        // If intern has a user account, sync division there too
+        if ($intern->user_id) {
+            $intern->user->update(['division_id' => $request->division_id]);
+        }
+
+        return redirect()->route('admin.interns.show', $intern)
+            ->with('success', 'Data intern berhasil diperbarui.');
     }
 
     /**

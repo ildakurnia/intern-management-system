@@ -43,8 +43,13 @@
                     <dd>{{ $intern->division?->name ?? '-' }}</dd>
                 </div>
                 <div>
+                    <dt>Mentor Pembimbing</dt>
+                    <dd>{{ $intern->mentor?->name ?? 'Belum ditentukan' }}</dd>
+                </div>
+                <div>
                     <dt>Periode Magang</dt>
-                    <dd>{{ optional($intern->start_date)->format('d M Y') }} - {{ optional($intern->end_date)->format('d M Y') }}</dd>
+                    <dd>{{ optional($intern->start_date)->format('d M Y') }} -
+                        {{ optional($intern->end_date)->format('d M Y') }}</dd>
                 </div>
                 <div>
                     <dt>Status Magang</dt>
@@ -62,15 +67,18 @@
             <div class="status-stack">
                 <div class="status-item">
                     <span>Registrasi</span>
-                    <strong class="pill {{ $intern->registration_status === 'registered' ? 'pill-success' : '' }}">{{ $intern->registration_status }}</strong>
+                    <strong
+                        class="pill {{ $intern->registration_status === 'registered' ? 'pill-success' : '' }}">{{ $intern->registration_status }}</strong>
                 </div>
                 <div class="status-item">
                     <span>Profil</span>
-                    <strong class="pill {{ $intern->hasCompletedProfile() ? 'pill-success' : '' }}">{{ $intern->hasCompletedProfile() ? 'Lengkap' : 'Belum' }}</strong>
+                    <strong
+                        class="pill {{ $intern->hasCompletedProfile() ? 'pill-success' : '' }}">{{ $intern->hasCompletedProfile() ? 'Lengkap' : 'Belum' }}</strong>
                 </div>
                 <div class="status-item">
                     <span>Berkas</span>
-                    <strong class="pill {{ $intern->hasCompletedDocuments() ? 'pill-success' : '' }}">{{ $intern->hasCompletedDocuments() ? 'Lengkap' : 'Belum' }}</strong>
+                    <strong
+                        class="pill {{ $intern->hasCompletedDocuments() ? 'pill-success' : '' }}">{{ $intern->hasCompletedDocuments() ? 'Lengkap' : 'Belum' }}</strong>
                 </div>
             </div>
         </article>
@@ -90,7 +98,8 @@
                 </div>
                 <div>
                     <dt>Jenis Kelamin</dt>
-                    <dd>{{ $intern->gender === 'male' ? 'Laki-laki' : ($intern->gender === 'female' ? 'Perempuan' : '-') }}</dd>
+                    <dd>{{ $intern->gender === 'male' ? 'Laki-laki' : ($intern->gender === 'female' ? 'Perempuan' : '-') }}
+                    </dd>
                 </div>
                 <div>
                     <dt>Asal Sekolah/Kampus</dt>
@@ -132,15 +141,21 @@
             <dl class="detail-list">
                 <div>
                     <dt>KTP</dt>
-                    <dd><span class="pill {{ $intern->ktp_path ? 'pill-success' : '' }}">{{ $intern->ktp_path ? 'Sudah upload' : 'Belum upload' }}</span></dd>
+                    <dd><span
+                            class="pill {{ $intern->ktp_path ? 'pill-success' : '' }}">{{ $intern->ktp_path ? 'Sudah upload' : 'Belum upload' }}</span>
+                    </dd>
                 </div>
                 <div>
                     <dt>Kartu Siswa/Mahasiswa</dt>
-                    <dd><span class="pill {{ $intern->student_card_path ? 'pill-success' : '' }}">{{ $intern->student_card_path ? 'Sudah upload' : 'Belum upload' }}</span></dd>
+                    <dd><span
+                            class="pill {{ $intern->student_card_path ? 'pill-success' : '' }}">{{ $intern->student_card_path ? 'Sudah upload' : 'Belum upload' }}</span>
+                    </dd>
                 </div>
                 <div>
                     <dt>BPJS Ketenagakerjaan</dt>
-                    <dd><span class="pill {{ $intern->bpjs_path ? 'pill-success' : '' }}">{{ $intern->bpjs_path ? 'Sudah upload' : 'Belum upload' }}</span></dd>
+                    <dd><span
+                            class="pill {{ $intern->bpjs_path ? 'pill-success' : '' }}">{{ $intern->bpjs_path ? 'Sudah upload' : 'Belum upload' }}</span>
+                    </dd>
                 </div>
             </dl>
         </article>

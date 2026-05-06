@@ -8,15 +8,10 @@
     <div class="card mb-4 shadow-sm border-0">
         <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between p-4 gap-3">
             <div>
-                <p class="text-primary text-uppercase fw-semibold mb-1 small" style="letter-spacing: 0.5px;">{{ $intern->hasCompletedProfile() ? 'Pengaturan Akun' : 'Intern Onboarding' }}</p>
-                <h4 class="mb-1">{{ $intern->hasCompletedProfile() ? 'Edit Profil' : 'Lengkapi Profil' }}</h4>
-                <p class="text-body-secondary mb-0">{{ $intern->hasCompletedProfile() ? 'Perbarui data diri dan kontak kamu jika ada perubahan.' : 'Profil wajib dilengkapi sebelum kamu bisa upload berkas dan masuk dashboard.' }}</p>
+                <p class="text-primary text-uppercase fw-semibold mb-1 small" style="letter-spacing: 0.5px;">{{ $intern->hasCompletedProfile() && $intern->hasCompletedDocuments() ? 'Pengaturan Akun' : 'Intern Onboarding' }}</p>
+                <h4 class="mb-1">{{ $intern->hasCompletedProfile() && $intern->hasCompletedDocuments() ? 'Edit Profil & Berkas' : 'Lengkapi Profil & Berkas' }}</h4>
+                <p class="text-body-secondary mb-0">{{ $intern->hasCompletedProfile() && $intern->hasCompletedDocuments() ? 'Perbarui data diri, kontak, atau berkas kamu jika ada perubahan.' : 'Profil dan berkas wajib dilengkapi sebelum kamu bisa masuk dashboard.' }}</p>
             </div>
-            @if(!$intern->hasCompletedProfile())
-            <div>
-                <span class="badge bg-label-primary rounded-pill px-3 py-2 fw-medium">Langkah 1 dari 2</span>
-            </div>
-            @endif
         </div>
     </div>
 
@@ -133,9 +128,54 @@
                         @error('photo') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    <div class="col-12 mt-4">
+                        <hr>
+                        <h5 class="mb-3">Berkas Wajib</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="ktp" class="form-label">KTP <span class="text-danger">*</span></label>
+                        @if($intern->ktp_path)
+                            <div class="mb-2"><span class="badge bg-label-success">Sudah diupload</span></div>
+                        @endif
+                        <input id="ktp" class="form-control @error('ktp') is-invalid @enderror" type="file" name="ktp" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->ktp_path ? '' : 'required' }}>
+                        <div class="form-text">Format: JPG, PNG, PDF (Maks 2MB)</div>
+                        @error('ktp') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="student_card" class="form-label">Kartu Siswa/Mahasiswa <span class="text-danger">*</span></label>
+                        @if($intern->student_card_path)
+                            <div class="mb-2"><span class="badge bg-label-success">Sudah diupload</span></div>
+                        @endif
+                        <input id="student_card" class="form-control @error('student_card') is-invalid @enderror" type="file" name="student_card" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->student_card_path ? '' : 'required' }}>
+                        <div class="form-text">Format: JPG, PNG, PDF (Maks 2MB)</div>
+                        @error('student_card') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="bpjs" class="form-label">BPJS Ketenagakerjaan <span class="text-danger">*</span></label>
+                        @if($intern->bpjs_path)
+                            <div class="mb-2"><span class="badge bg-label-success">Sudah diupload</span></div>
+                        @endif
+                        <input id="bpjs" class="form-control @error('bpjs') is-invalid @enderror" type="file" name="bpjs" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->bpjs_path ? '' : 'required' }}>
+                        <div class="form-text">Format: JPG, PNG, PDF (Maks 2MB)</div>
+                        @error('bpjs') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="recommendation_letter" class="form-label">Surat Pengantar <span class="text-danger">*</span></label>
+                        @if($intern->recommendation_letter_path)
+                            <div class="mb-2"><span class="badge bg-label-success">Sudah diupload</span></div>
+                        @endif
+                        <input id="recommendation_letter" class="form-control @error('recommendation_letter') is-invalid @enderror" type="file" name="recommendation_letter" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->recommendation_letter_path ? '' : 'required' }}>
+                        <div class="form-text">Format: JPG, PNG, PDF (Maks 2MB)</div>
+                        @error('recommendation_letter') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
+
                     <div class="col-12 mt-5">
                         <button type="submit" class="btn btn-primary d-flex align-items-center">
-                            <i class="icon-base ri ri-save-line me-2"></i> {{ $intern->hasCompletedProfile() ? 'Simpan Perubahan' : 'Simpan & Lanjutkan' }}
+                            <i class="icon-base ri ri-save-line me-2"></i> {{ $intern->hasCompletedProfile() && $intern->hasCompletedDocuments() ? 'Simpan Perubahan' : 'Simpan & Lanjutkan' }}
                         </button>
                     </div>
                 </div>

@@ -68,6 +68,19 @@
               <td class="text-body-secondary py-2">Akun Login</td>
               <td class="py-2"><span class="badge bg-label-success rounded-pill">{{ $intern->user_id ? 'Terhubung' : 'Belum Terhubung' }}</span></td>
             </tr>
+            <tr>
+              <td class="text-body-secondary py-2">Mentor Pembimbing</td>
+              <td class="py-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="fw-medium text-heading">{{ $intern->mentor->name ?? 'Belum ditentukan' }}</span>
+                  @if(auth()->user()->hasAnyRole(['superadmin', 'admin']))
+                  <a href="{{ route('admin.interns.edit', $intern) }}" class="btn btn-xs btn-outline-primary ms-2">
+                    <i class="ri-edit-2-line"></i> Ubah
+                  </a>
+                  @endif
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

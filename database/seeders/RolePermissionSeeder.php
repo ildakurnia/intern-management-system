@@ -34,6 +34,8 @@ class RolePermissionSeeder extends Seeder
             'dashboard.admin',
             'admin.interns.index',
             'admin.interns.show',
+            'admin.interns.edit',
+            'admin.interns.update',
             'admin.interns.approve',
             'admin.interns.import',
             'admin.interns.template',
@@ -41,6 +43,13 @@ class RolePermissionSeeder extends Seeder
             'admin.intern-documents.index',
             'admin.logbooks.index',
             'admin.logbooks.show',
+            'admin.tasks.index',
+            'admin.tasks.create',
+            'admin.tasks.store',
+            'admin.tasks.show',
+            'admin.tasks.edit',
+            'admin.tasks.update',
+            'admin.tasks.destroy',
         ]);
 
         $mentorRole = Role::firstOrCreate(['name' => 'mentor', 'guard_name' => 'web']);
@@ -52,6 +61,13 @@ class RolePermissionSeeder extends Seeder
             'admin.intern-documents.index',
             'mentor.logbooks.index',
             'mentor.logbooks.show',
+            'mentor.tasks.index',
+            'mentor.tasks.create',
+            'mentor.tasks.store',
+            'mentor.tasks.show',
+            'mentor.tasks.edit',
+            'mentor.tasks.update',
+            'mentor.tasks.destroy',
         ]);
 
         $internRole = Role::firstOrCreate(['name' => 'intern', 'guard_name' => 'web']);
@@ -69,6 +85,9 @@ class RolePermissionSeeder extends Seeder
             'intern.logbooks.edit',
             'intern.logbooks.update',
             'intern.logbooks.destroy',
+            'intern.tasks.index',
+            'intern.tasks.show',
+            'intern.tasks.update-status',
         ]);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
