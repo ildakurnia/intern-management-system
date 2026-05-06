@@ -210,7 +210,7 @@
 
     <!-- Notification -->
     @php
-      $notifications = Auth::check()
+      $notifications = Auth::check() && \Illuminate\Support\Facades\Schema::hasTable('notifications')
         ? \App\Models\Notification::forUser(Auth::id())->limit(10)->get()
         : collect();
       $unreadCount = $notifications->whereNull('read_at')->count();
