@@ -162,44 +162,28 @@ class DashboardService
         $steps = [];
         
         if ($intern) {
-            // 1. Akun Dibuat (Step 1) - Always 100% since they are logged in
+            $completeness += 25; // Akun Dibuat
             $steps[] = ['title' => 'Akun Dibuat', 'desc' => 'Akun sistem Anda telah aktif', 'status' => 'completed'];
 
-            // 2. Data Profil (50% weight)
-            $profileFields = ['phone', 'birth_date', 'gender', 'address', 'photo'];
-            $filledProfileCount = 0;
-            foreach ($profileFields as $field) {
-                if (!empty($intern->$field)) $filledProfileCount++;
-            }
-            $profileScore = ($filledProfileCount / count($profileFields)) * 50;
-            $completeness += $profileScore;
-            
+            if ($intern->hasCompletedProfile()) $completeness += 25;
             $steps[] = [
                 'title' => 'Lengkapi Profil', 
                 'desc' => 'Data diri, kontak, dan alamat', 
-                'status' => $filledProfileCount === count($profileFields) ? 'completed' : 'pending'
+                'status' => $intern->hasCompletedProfile() ? 'completed' : 'pending'
             ];
 
-            // 3. Dokumen (50% weight)
-            $docFields = ['ktp_path', 'student_card_path', 'bpjs_path', 'recommendation_letter_path'];
-            $filledDocCount = 0;
-            foreach ($docFields as $field) {
-                if (!empty($intern->$field)) $filledDocCount++;
-            }
-            $docScore = ($filledDocCount / count($docFields)) * 50;
-            $completeness += $docScore;
-
+            if ($intern->hasCompletedDocuments()) $completeness += 25;
             $steps[] = [
                 'title' => 'Unggah Berkas', 
-                'desc' => 'KTP, KTM, BPJS, & Surat Rekomendasi', 
-                'status' => $filledDocCount === count($docFields) ? 'completed' : 'pending'
+                'desc' => 'KTP, KTM, BPJS & Surat Pengantar', 
+                'status' => $intern->hasCompletedDocuments() ? 'completed' : 'pending'
             ];
 
-            // 4. Verifikasi (Visual only for now)
+            if ($intern->registration_status === 'approved') $completeness += 25;
             $steps[] = [
                 'title' => 'Verifikasi Akhir', 
                 'desc' => 'Menunggu verifikasi admin/mentor', 
-                'status' => ($intern->registration_status === 'approved' && $completeness >= 100) ? 'completed' : 'pending'
+                'status' => $intern->registration_status === 'approved' ? 'completed' : 'pending'
             ];
         }
 

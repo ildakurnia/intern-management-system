@@ -120,7 +120,7 @@ class Intern extends Model
     public function refreshDocumentCompletion(): void
     {
         $this->forceFill([
-            'documents_completed_at' => $this->ktp_path && $this->student_card_path && $this->bpjs_path
+            'documents_completed_at' => $this->ktp_path && $this->student_card_path && $this->bpjs_path && $this->recommendation_letter_path
                 ? ($this->documents_completed_at ?? now())
                 : null,
         ])->save();

@@ -33,6 +33,9 @@ class NotificationService
 
         return Notification::create([
             'user_id' => $userId,
+            'notifiable_type' => \App\Models\User::class,
+            'notifiable_id' => $userId,
+            'data'    => '[]',
             'type'    => $type,
             'icon'    => $icon ?? ($icons[$type] ?? 'ri-notification-2-line'),
             'title'   => $title,

@@ -89,6 +89,8 @@ class UserController extends Controller
             if ($request->role === 'intern') {
                 Intern::create([
                     'user_id'            => $user->id,
+                    'name'               => $request->name,
+                    'email'              => $request->email,
                     'division_id'        => $request->division_id,
                     'type'               => $request->type,
                     'institution'        => $request->institution,
@@ -98,7 +100,7 @@ class UserController extends Controller
                     'nis'                => $request->type === 'siswa' ? $request->identification_number : null,
                     'nim'                => $request->type === 'mahasiswa' ? $request->identification_number : null,
                     'status'             => 'active',
-                    'registration_status'=> 'approved',
+                    'registration_status'=> 'registered',
                     'registered_at'      => now(),
                 ]);
             }

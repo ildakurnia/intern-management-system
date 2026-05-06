@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Notification extends Model
 {
+    use HasUuids;
+
     protected $fillable = [
         'user_id',
         'type',
@@ -15,6 +18,9 @@ class Notification extends Model
         'body',
         'url',
         'read_at',
+        'notifiable_type',
+        'notifiable_id',
+        'data',
     ];
 
     protected $casts = [

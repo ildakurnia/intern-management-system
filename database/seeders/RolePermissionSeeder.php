@@ -34,6 +34,7 @@ class RolePermissionSeeder extends Seeder
             'dashboard.admin',
             'admin.interns.index',
             'admin.interns.show',
+            'admin.interns.approve',
             'admin.interns.import',
             'admin.interns.template',
             'admin.interns.import.store',

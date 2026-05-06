@@ -99,6 +99,7 @@ class MenuPermissionSeeder extends Seeder
                 'permissions' => [
                     ['name' => 'admin.interns.index', 'label' => 'Read List'],
                     ['name' => 'admin.interns.show', 'label' => 'Detail'],
+                    ['name' => 'admin.interns.approve', 'label' => 'Approve Intern'],
                     ['name' => 'admin.interns.import', 'label' => 'Import Excel'],
                     ['name' => 'admin.interns.import.store', 'label' => 'Save Import'],
                     ['name' => 'admin.interns.template', 'label' => 'Download Template'],

@@ -6,11 +6,13 @@
 @section('content')
     <section class="page-intro card-surface">
         <div>
-            <p class="eyebrow">Intern Onboarding</p>
-            <h2>Upload Berkas Wajib</h2>
-            <p>Upload KTP, kartu siswa/mahasiswa, dan BPJS Ketenagakerjaan agar dashboard terbuka.</p>
+            <p class="eyebrow">{{ $intern->hasCompletedDocuments() ? 'Pengaturan Akun' : 'Intern Onboarding' }}</p>
+            <h2>{{ $intern->hasCompletedDocuments() ? 'Edit Berkas' : 'Upload Berkas Wajib' }}</h2>
+            <p>{{ $intern->hasCompletedDocuments() ? 'Perbarui berkas KTP, kartu pelajar/mahasiswa, atau BPJS Ketenagakerjaan Anda jika diperlukan.' : 'Upload KTP, kartu siswa/mahasiswa, dan BPJS Ketenagakerjaan agar dashboard terbuka.' }}</p>
         </div>
+        @if(!$intern->hasCompletedDocuments())
         <span class="intro-badge">Langkah 2 dari 2</span>
+        @endif
     </section>
 
     <section class="card-surface form-card">
@@ -49,6 +51,17 @@
                     <div class="form-group">
                         <input type="file" name="bpjs" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->bpjs_path ? '' : 'required' }}>
                         @error('bpjs') <small class="form-error">{{ $message }}</small> @enderror
+                    </div>
+                </div>
+
+                <div class="document-row">
+                    <div>
+                        <h3>Surat Pengantar</h3>
+                        <p>{{ $intern->recommendation_letter_path ? 'Sudah upload. Upload file baru jika ingin mengganti.' : 'Belum upload.' }}</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="recommendation_letter" accept=".jpg,.jpeg,.png,.pdf" {{ $intern->recommendation_letter_path ? '' : 'required' }}>
+                        @error('recommendation_letter') <small class="form-error">{{ $message }}</small> @enderror
                     </div>
                 </div>
             </div>

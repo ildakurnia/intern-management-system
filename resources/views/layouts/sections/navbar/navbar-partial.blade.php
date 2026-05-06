@@ -373,9 +373,15 @@
     <!-- User -->
     <li class="nav-item navbar-dropdown dropdown-user dropdown">
       <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+        @php
+          $photoUrl = 'https://ui-avatars.com/api/?name='.urlencode(Auth::user() ? Auth::user()->name : 'User').'&background=666cff&color=fff';
+          if (Auth::check() && Auth::user()->hasRole('intern') && Auth::user()->intern && Auth::user()->intern->photo) {
+              $photoUrl = asset('storage/' . Auth::user()->intern->photo);
+          }
+        @endphp
         <div class="avatar avatar-online">
-          <img src="{{ Auth::check() && Auth::user()->profile_photo_path ? Storage::url(Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user() ? Auth::user()->name : 'User').'&background=666cff&color=fff' }}"
-            alt="avatar" class="rounded-circle" />
+          <img src="{{ $photoUrl }}"
+            alt="avatar" class="rounded-circle" style="object-fit: cover; width: 100%; height: 100%;" />
         </div>
       </a>
       <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
@@ -385,8 +391,8 @@
             <div class="d-flex align-items-center">
               <div class="flex-shrink-0 me-2">
                 <div class="avatar avatar-online">
-                  <img src="{{ Auth::check() && Auth::user()->profile_photo_path ? Storage::url(Auth::user()->profile_photo_path) : 'https://ui-avatars.com/api/?name='.urlencode(Auth::user() ? Auth::user()->name : 'User').'&background=666cff&color=fff' }}"
-                    alt="avatar" class="w-px-40 h-auto rounded-circle" />
+                  <img src="{{ $photoUrl }}"
+                    alt="avatar" class="w-px-40 h-auto rounded-circle" style="object-fit: cover; width: 40px; height: 40px;" />
                 </div>
               </div>
               <div class="flex-grow-1">
