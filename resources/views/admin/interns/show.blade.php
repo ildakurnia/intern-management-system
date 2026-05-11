@@ -4,11 +4,17 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h4 class="py-3 mb-0">
-    <span class="text-muted fw-light">Manajemen / Data Intern /</span> Profil
-  </h4>
+  <div>
+    @include('partials.app-breadcrumb', [
+      'items' => [
+        ['label' => 'Dashboard', 'url' => route('dashboard.admin')],
+        ['label' => 'Data Intern', 'url' => route('admin.interns.index')],
+        ['label' => 'Profil', 'current' => true],
+      ],
+    ])
+  </div>
   <div class="d-flex gap-2">
-    @if($intern->registration_status !== 'approved')
+    @if($intern->user_id && $intern->registration_status !== 'approved')
     <form action="{{ route('admin.interns.approve', $intern) }}" method="POST">
       @csrf
       @method('PUT')
@@ -24,6 +30,12 @@
 </div>
 
 <div class="row g-4">
+  @php
+    $assignedLocationIds = $intern->attendanceLocations->pluck('id')->all();
+    $primaryLocationId = optional($intern->attendanceLocations->first(fn ($location) => (bool) $location->pivot->is_primary))->id;
+    $oldLocationIds = collect(old('location_ids', $assignedLocationIds))->map(fn ($id) => (int) $id)->all();
+  @endphp
+
   <!-- Data Dasar -->
   <div class="col-lg-6">
     <div class="card h-100">
@@ -85,7 +97,11 @@
           <tbody>
             <tr>
               <td class="text-body-secondary py-3 border-bottom">Registrasi Akun</td>
-              <td class="text-end py-3 border-bottom"><span class="badge {{ $intern->registration_status === 'approved' ? 'bg-label-success' : 'bg-label-warning' }} rounded-pill">{{ ucfirst($intern->registration_status) }}</span></td>
+              <td class="text-end py-3 border-bottom">
+                <span class="badge {{ $intern->registration_status === 'approved' ? 'bg-label-success' : ($intern->user_id ? 'bg-label-warning' : 'bg-label-secondary') }} rounded-pill">
+                  {{ $intern->registration_status === 'approved' ? 'Disetujui' : ($intern->user_id ? 'Terdaftar' : 'Belum Registrasi') }}
+                </span>
+              </td>
             </tr>
             <tr>
               <td class="text-body-secondary py-3 border-bottom">Kelengkapan Profil</td>
@@ -94,6 +110,18 @@
             <tr>
               <td class="text-body-secondary py-3">Kelengkapan Berkas</td>
               <td class="text-end py-3"><span class="badge {{ $intern->hasCompletedDocuments() ? 'bg-label-success' : 'bg-label-warning' }} rounded-pill">{{ $intern->hasCompletedDocuments() ? 'Lengkap' : 'Belum Lengkap' }}</span></td>
+            </tr>
+            <tr>
+              <td class="text-body-secondary py-3 border-top">Tahap Onboarding</td>
+              <td class="text-end py-3 border-top">
+                @if($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments())
+                  <span class="badge bg-label-success rounded-pill">Aktif</span>
+                @elseif($intern->registration_status === 'approved')
+                  <span class="badge bg-label-info rounded-pill">Melengkapi Data</span>
+                @else
+                  <span class="badge bg-label-warning rounded-pill">Register</span>
+                @endif
+              </td>
             </tr>
           </tbody>
         </table>
@@ -126,7 +154,7 @@
                 </tr>
                 <tr>
                   <td class="text-body-secondary py-2">Asal Institusi</td>
-                  <td class="text-heading py-2">{{ $intern->institution ?? '-' }}</td>
+                  <td class="text-heading py-2">{{ $intern->institution_label }}</td>
                 </tr>
               </tbody>
             </table>
@@ -222,6 +250,99 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header border-bottom d-flex flex-column flex-lg-row justify-content-between gap-3">
+        <div>
+          <h5 class="mb-1">Lokasi Absensi Intern</h5>
+          <small class="text-body-secondary">Admin dapat mengaktifkan lebih dari satu lokasi agar perpindahan site tetap mudah dikelola.</small>
+        </div>
+        <a href="{{ route('admin.attendance-locations.index') }}" class="btn btn-outline-primary btn-sm align-self-lg-center">
+          <i class="ri ri-map-pin-2-line me-1"></i> Buka Master Lokasi
+        </a>
+      </div>
+      <div class="card-body">
+        <form action="{{ route('admin.interns.attendance-locations.update', $intern) }}" method="POST">
+          @csrf
+          @method('PUT')
+
+          @if($attendanceLocations->isEmpty())
+            <div class="alert alert-warning mb-0">
+              Belum ada master lokasi absensi. Tambahkan lokasi dulu sebelum menghubungkannya ke intern ini.
+            </div>
+          @else
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Aktif</th>
+                    <th>Lokasi</th>
+                    <th>Radius</th>
+                    <th>Utama</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($attendanceLocations as $location)
+                    @php
+                      $isChecked = in_array($location->id, $oldLocationIds, true);
+                      $selectedPrimary = (int) old('primary_location_id', $primaryLocationId);
+                    @endphp
+                    <tr>
+                      <td>
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="location_ids[]"
+                            value="{{ $location->id }}"
+                            id="location_{{ $location->id }}"
+                            @checked($isChecked)>
+                        </div>
+                      </td>
+                      <td>
+                        <label class="fw-medium mb-0" for="location_{{ $location->id }}">{{ $location->name }}</label>
+                        <div class="small text-body-secondary">{{ $location->latitude }}, {{ $location->longitude }}</div>
+                      </td>
+                      <td>{{ $location->radius_meters }} meter</td>
+                      <td>
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="primary_location_id"
+                            value="{{ $location->id }}"
+                            id="primary_location_{{ $location->id }}"
+                            @checked($selectedPrimary === $location->id)>
+                          <label class="form-check-label" for="primary_location_{{ $location->id }}">Pilih utama</label>
+                        </div>
+                      </td>
+                      <td>{{ $location->notes ?: '-' }}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+
+            @error('location_ids')
+              <div class="text-danger small mt-2">{{ $message }}</div>
+            @enderror
+
+            @error('primary_location_id')
+              <div class="text-danger small mt-2">{{ $message }}</div>
+            @enderror
+
+            <div class="d-flex justify-content-end mt-3">
+              <button type="submit" class="btn btn-primary">
+                <i class="ri ri-save-line me-1"></i> Simpan Lokasi Absensi
+              </button>
+            </div>
+          @endif
+        </form>
       </div>
     </div>
   </div>

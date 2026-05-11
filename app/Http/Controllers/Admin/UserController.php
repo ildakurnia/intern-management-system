@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Division;
 use App\Models\Intern;
 use App\Models\User;
+use App\Services\InstitutionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,11 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct(
+        private readonly InstitutionService $institutionService,
+    ) {
+    }
+
     public function index(Request $request)
     {
         $query = User::with(['roles', 'division'])->latest();
@@ -65,12 +71,21 @@ class UserController extends Controller
         if ($request->role === 'intern') {
             $rules = array_merge($rules, [
                 'type'        => ['required', 'in:siswa,mahasiswa'],
-                'institution' => ['required', 'string', 'max:255'],
+                'institution_id' => ['nullable', 'exists:institutions,id'],
+                'institution_manual_name' => ['required_without:institution_id', 'nullable', 'string', 'max:255'],
+                'bank_account_number' => ['nullable', 'string', 'max:50'],
                 'start_date'  => ['required', 'date'],
                 'end_date'    => ['required', 'date', 'after:start_date'],
                 'division_id' => ['required', 'exists:divisions,id'],
                 'identification_number' => ['required', 'string', 'max:50'],
             ]);
+
+            if ($this->institutionService->requiresBankAccount(
+                $request->input('type'),
+                $request->input('institution_id')
+            )) {
+                $rules['bank_account_number'] = ['required', 'string', 'max:50'];
+            }
         }
 
         $request->validate($rules);
@@ -87,13 +102,24 @@ class UserController extends Controller
 
             // Jika intern, buat record Intern-nya juga
             if ($request->role === 'intern') {
+                $institutionPayload = $this->institutionService->resolveSelection(
+                    $request->input('institution_id'),
+                    $request->input('institution_manual_name')
+                );
+
                 Intern::create([
                     'user_id'            => $user->id,
                     'name'               => $request->name,
                     'email'              => $request->email,
                     'division_id'        => $request->division_id,
                     'type'               => $request->type,
-                    'institution'        => $request->institution,
+                    'institution'        => $institutionPayload['institution'],
+                    'institution_id'     => $institutionPayload['institution_id'],
+                    'institution_manual_name' => $institutionPayload['institution_manual_name'],
+                    'bank_account_number' => $this->institutionService->requiresBankAccount(
+                        $request->input('type'),
+                        $institutionPayload['institution_id'] ?? null
+                    ) ? $request->input('bank_account_number') : null,
                     'major'              => $request->major,
                     'start_date'         => $request->start_date,
                     'end_date'           => $request->end_date,

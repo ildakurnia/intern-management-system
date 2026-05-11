@@ -4,6 +4,26 @@
 
 @section('page-style')
   @vite('resources/assets/vendor/scss/pages/app-academy-details.scss')
+  <style>
+    @media (max-width: 991.98px) {
+      .stick-top {
+        position: static !important;
+        top: auto !important;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .academy-content .card-body,
+      .card > .card-body {
+        padding: 1rem;
+      }
+
+      .academy-content p,
+      .accordion-body p {
+        word-break: break-word;
+      }
+    }
+  </style>
 @endsection
 
 @section('content')

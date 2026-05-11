@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const permissionCheckboxes = document.querySelectorAll('[data-permission-checkbox]');
     const roleSearch = document.querySelector('[data-role-search]');
     const roleRows = document.querySelectorAll('[data-role-row]');
+    const authForm = document.querySelector('[data-auth-form]');
+    const authErrorSummary = document.querySelector('[data-auth-error-summary]');
+    const passwordToggles = document.querySelectorAll('[data-password-toggle]');
 
     currentYearTargets.forEach((target) => {
         target.textContent = new Date().getFullYear().toString();
@@ -93,6 +96,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     syncPermissionToggles();
+
+    if (authErrorSummary) {
+        authErrorSummary.setAttribute('tabindex', '-1');
+        authErrorSummary.focus();
+    }
+
+    passwordToggles.forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+            const targetId = toggle.getAttribute('data-password-target');
+            const input = targetId ? document.getElementById(targetId) : null;
+
+            if (!input) {
+                return;
+            }
+
+            const nextType = input.type === 'password' ? 'text' : 'password';
+            const isVisible = nextType === 'text';
+
+            input.type = nextType;
+            toggle.textContent = isVisible ? 'Hide' : 'Show';
+            toggle.setAttribute('aria-pressed', isVisible ? 'true' : 'false');
+            toggle.setAttribute('aria-label', isVisible ? 'Sembunyikan password' : 'Tampilkan password');
+        });
+    });
+
+    authForm?.addEventListener('submit', () => {
+        const submitButton = authForm.querySelector('[data-submit-button]');
+        const buttonLabel = submitButton?.querySelector('.button-label');
+        const loadingText = submitButton?.getAttribute('data-loading-text') ?? 'Loading...';
+
+        if (!submitButton) {
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.classList.add('is-loading');
+
+        if (buttonLabel) {
+            submitButton.dataset.originalText = buttonLabel.textContent ?? '';
+            buttonLabel.textContent = loadingText;
+        }
+    });
 
     if (!sidebar) {
         return;

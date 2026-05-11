@@ -96,15 +96,9 @@
     @endrole
 
     @role('intern')
-    @canany(['intern.profile.edit', 'intern.logbooks.index'])
+    @can('intern.logbooks.index')
     <div class="sidebar-section-label">Menu Anak Magang</div>
     <nav class="menu">
-        @can('intern.profile.edit')
-        <a href="{{ route('intern.profile.edit') }}" class="{{ request()->routeIs('intern.profile.*') ? 'active' : '' }}">
-            <span class="menu-icon">PS</span>
-            <span class="menu-label">Profil Saya</span>
-        </a>
-        @endcan
         @can('intern.logbooks.index')
         <a href="{{ route('intern.logbooks.index') }}" class="{{ request()->routeIs('intern.logbooks.*') ? 'active' : '' }}">
             <span class="menu-icon">LB</span>
@@ -112,6 +106,6 @@
         </a>
         @endcan
     </nav>
-    @endcanany
+    @endcan
     @endrole
 </aside>

@@ -128,12 +128,31 @@
                 </div>
 
                 {{-- Institusi --}}
-                <div class="col-md-6">
+                @include('partials.forms.institution-picker', [
+                  'pickerId' => 'admin_institution',
+                  'label' => 'Asal Institusi',
+                  'required' => old('role') === 'intern',
+                  'selectedInstitutionId' => old('institution_id'),
+                  'selectedInstitutionLabel' => null,
+                  'manualInstitutionName' => old('institution_manual_name'),
+                  'wrapperClass' => 'col-md-6',
+                  'inputPlaceholder' => 'Ketik universitas atau sekolah',
+                ])
+
+                <div
+                  class="col-md-6 {{ old('role') === 'intern' && old('type') === 'mahasiswa' && old('institution_id') == app(\App\Services\InstitutionService::class)->getAllowanceEligibleInstitutionId() ? '' : 'd-none' }}"
+                  id="admin_bank_account_wrapper">
                   <div class="form-floating form-floating-outline">
-                    <input type="text" class="form-control @error('institution') is-invalid @enderror" id="institution"
-                      name="institution" placeholder="Universitas/Sekolah..." value="{{ old('institution') }}" />
-                    <label for="institution">Asal Institusi</label>
-                    @error('institution') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <input
+                      type="text"
+                      class="form-control @error('bank_account_number') is-invalid @enderror"
+                      id="bank_account_number"
+                      name="bank_account_number"
+                      placeholder="Nomor rekening mahasiswa"
+                      value="{{ old('bank_account_number') }}" />
+                    <label for="bank_account_number">No Rekening</label>
+                    @error('bank_account_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <small class="text-body-secondary mt-1 d-block">Wajib untuk mahasiswa Politeknik Negeri Batam.</small>
                   </div>
                 </div>
 
@@ -186,9 +205,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const roleSelect    = document.getElementById('role');
   const internSection = document.getElementById('intern_section');
   const typeSelect    = document.getElementById('type');
-  const institutionInput = document.getElementById('institution');
+  const institutionInput = document.getElementById('admin_institution_search');
+  const institutionIdInput = document.getElementById('admin_institution_id');
   const startDateInput   = document.getElementById('start_date');
   const endDateInput     = document.getElementById('end_date');
+  const bankAccountWrapper = document.getElementById('admin_bank_account_wrapper');
+  const bankAccountInput = document.getElementById('bank_account_number');
+  const eligibleInstitutionId = '{{ app(\App\Services\InstitutionService::class)->getAllowanceEligibleInstitutionId() }}';
 
   function toggleInternSection() {
     const isIntern = roleSelect.value === 'intern';
@@ -196,15 +219,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Toggle required attributes
     typeSelect.required        = isIntern;
-    institutionInput.required  = isIntern;
+    if (institutionInput) {
+      institutionInput.required = isIntern;
+    }
     startDateInput.required    = isIntern;
     endDateInput.required      = isIntern;
+    syncBankAccountVisibility();
+  }
+
+  function syncBankAccountVisibility() {
+    const isInternMahasiswa = roleSelect.value === 'intern' && typeSelect.value === 'mahasiswa';
+    const isEligibleInstitution = institutionIdInput && institutionIdInput.value === eligibleInstitutionId;
+    const shouldShow = isInternMahasiswa && isEligibleInstitution;
+
+    bankAccountWrapper.classList.toggle('d-none', !shouldShow);
+    bankAccountInput.required = shouldShow;
+
+    if (!shouldShow) {
+      bankAccountInput.value = '';
+    }
   }
 
   roleSelect.addEventListener('change', toggleInternSection);
+  typeSelect.addEventListener('change', syncBankAccountVisibility);
+  institutionIdInput?.addEventListener('change', syncBankAccountVisibility);
+  institutionIdInput?.addEventListener('input', syncBankAccountVisibility);
+  institutionInput?.addEventListener('change', () => setTimeout(syncBankAccountVisibility, 60));
+  institutionInput?.addEventListener('input', () => setTimeout(syncBankAccountVisibility, 60));
 
   // Trigger on page load jika old('role') = intern (validasi gagal)
   toggleInternSection();
 });
 </script>
+@include('partials.forms.institution-picker-script')
 @endsection

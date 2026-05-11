@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\InstitutionService;
 use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,10 +12,15 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private readonly InstitutionService $institutionService,
+    ) {
+    }
+
     public function edit(Request $request): View
     {
         return view('pages.intern.profile.edit', [
-            'intern' => $request->user()->intern,
+            'intern' => $request->user()->intern->loadMissing('institutionReference'),
         ]);
     }
 
@@ -27,12 +33,13 @@ class ProfileController extends Controller
             'address' => ['required', 'string', 'max:255'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:male,female'],
-            'institution' => ['required', 'string', 'max:255'],
+            'institution_id' => ['nullable', 'exists:institutions,id'],
+            'institution_manual_name' => ['required_without:institution_id', 'nullable', 'string', 'max:255'],
+            'bank_account_number' => ['nullable', 'string', 'max:50'],
             'major' => ['required', 'string', 'max:255'],
             'faculty' => ['nullable', 'string', 'max:255'],
             'school_grade' => ['nullable', 'string', 'max:50'],
             'semester' => ['nullable', 'string', 'max:50'],
-            'gpa' => ['nullable', 'numeric', 'between:0,4'],
             'photo' => ['nullable', 'image', 'max:2048'],
         ];
 
@@ -42,6 +49,13 @@ class ProfileController extends Controller
 
         if ($intern->type === 'mahasiswa') {
             $rules['semester'] = ['required', 'string', 'max:50'];
+
+            if ($this->institutionService->requiresBankAccount(
+                $intern->type,
+                $request->input('institution_id')
+            )) {
+                $rules['bank_account_number'] = ['required', 'string', 'max:50'];
+            }
         }
 
         $validated = $request->validate($rules);
@@ -52,8 +66,23 @@ class ProfileController extends Controller
 
         $wasCompleted = $intern->hasCompletedProfile();
         $validated['profile_completed_at'] = $intern->profile_completed_at ?? now();
+        $validated = array_merge(
+            $validated,
+            $this->institutionService->resolveSelection(
+                $request->input('institution_id'),
+                $request->input('institution_manual_name')
+            )
+        );
+
+        $validated['bank_account_number'] = $this->institutionService->requiresBankAccount(
+            $intern->type,
+            $validated['institution_id'] ?? null
+        )
+            ? ($validated['bank_account_number'] ?? null)
+            : null;
 
         $intern->update($validated);
+        $intern->refreshOperationalStatus();
 
         // Notifikasi ke Admin
         $admins = User::role(['admin', 'superadmin'])->get();

@@ -2,14 +2,21 @@
 
 namespace App\Services;
 
+use App\Models\Attendance;
+use App\Models\Division;
+use App\Models\Logbook;
 use App\Models\User;
 use App\Models\Intern;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
+    public function __construct(
+        private readonly AttendanceService $attendanceService,
+    ) {
+    }
+
     public function resolveDashboardRouteName(?User $user): string
     {
         if (! $user) {
@@ -37,8 +44,12 @@ class DashboardService
         ];
 
         // Data untuk admin/superadmin
-        if (in_array($expectedRole, ['admin', 'superadmin'])) {
-            $base = array_merge($base, $this->adminStats());
+        if ($expectedRole === 'superadmin') {
+            $base = array_merge($base, $this->superadminStats());
+        }
+
+        if ($expectedRole === 'admin') {
+            $base = array_merge($base, $this->adminStats($user));
         }
 
         // Data untuk intern
@@ -54,38 +65,35 @@ class DashboardService
         return $base;
     }
 
-    private function adminStats(): array
+    private function superadminStats(): array
     {
-        $logbookModel = \App\Models\Logbook::class;
-        $internModel  = \App\Models\Intern::class;
-
-        $totalLogbooks    = $logbookModel::count();
-        $totalInterns     = $internModel::count();
-        $logbookThisMonth = $logbookModel::whereMonth('tanggal', now()->month)
-                                          ->whereYear('tanggal', now()->year)
-                                          ->count();
+        $totalLogbooks = Logbook::count();
+        $totalInterns = Intern::count();
+        $logbookThisMonth = Logbook::whereMonth('tanggal', now()->month)
+            ->whereYear('tanggal', now()->year)
+            ->count();
 
         // Logbook per 7 bulan terakhir
         $logbooksPerMonth = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $logbooksPerMonth[] = $logbookModel::whereMonth('tanggal', $date->month)
-                                                ->whereYear('tanggal', $date->year)
-                                                ->count();
+            $logbooksPerMonth[] = Logbook::whereMonth('tanggal', $date->month)
+                ->whereYear('tanggal', $date->year)
+                ->count();
         }
 
         // Distribusi intern per divisi
-        $divisionData  = $internModel::with('division')
-                            ->get()
-                            ->groupBy(fn($i) => $i->division->name ?? 'Lainnya');
+        $divisionData  = Intern::with('division')
+            ->get()
+            ->groupBy(fn($i) => $i->division->name ?? 'Lainnya');
         $divisionLabels = $divisionData->keys()->toArray();
         $divisionCounts = $divisionData->map->count()->values()->toArray();
 
         // Logbook terbaru
-        $recentLogbooks = $logbookModel::with(['intern.user', 'intern.division'])
-                            ->latest('tanggal')
-                            ->take(5)
-                            ->get();
+        $recentLogbooks = Logbook::with(['intern.user', 'intern.division'])
+            ->latest('tanggal')
+            ->take(5)
+            ->get();
 
         // Roles
         $roles = Role::withCount('users')->get();
@@ -102,6 +110,50 @@ class DashboardService
             'roles'            => $roles,
             'totalRoles'       => $roles->count(),
             'totalPermissions' => Permission::count(),
+        ];
+    }
+
+    private function adminStats(User $user): array
+    {
+        $totalInterns = Intern::count();
+        $logbookThisMonth = Logbook::whereMonth('tanggal', now()->month)
+            ->whereYear('tanggal', now()->year)
+            ->count();
+
+        $onboardingRegister = Intern::where('registration_status', 'pending')->count();
+        $onboardingCompleting = Intern::where('registration_status', 'approved')
+            ->where(function ($query) {
+                $query->whereNull('profile_completed_at')
+                    ->orWhereNull('documents_completed_at');
+            })
+            ->count();
+        $onboardingActive = Intern::where('registration_status', 'approved')
+            ->whereNotNull('profile_completed_at')
+            ->whereNotNull('documents_completed_at')
+            ->count();
+
+        return [
+            'totalInterns' => $totalInterns,
+            'logbookThisMonth' => $logbookThisMonth,
+            'adminOnboarding' => [
+                'register' => $onboardingRegister,
+                'completing' => $onboardingCompleting,
+                'active' => $onboardingActive,
+            ],
+            'adminAttendanceSummary' => $this->attendanceService->getMonitoringInternListSummary($user),
+            'recentLogbooks' => Logbook::with(['intern.user', 'intern.division'])
+                ->latest('tanggal')
+                ->take(5)
+                ->get(),
+            'recentInterns' => Intern::with(['user', 'division'])
+                ->latest()
+                ->take(5)
+                ->get(),
+            'divisionSnapshots' => Division::query()
+                ->withCount('interns')
+                ->orderByDesc('interns_count')
+                ->take(6)
+                ->get(),
         ];
     }
 
@@ -132,8 +184,10 @@ class DashboardService
                 ->where('intern_id', $intern->id)
                 ->latest('tanggal')
                 ->take(5)
-                ->get()
+            ->get()
             : collect();
+
+        $attendanceSummary = $this->attendanceService->getInternSummary($user);
 
         // New Intern specific data
         $daysPassed = 0;
@@ -145,8 +199,8 @@ class DashboardService
             $end = \Carbon\Carbon::parse($intern->end_date);
             $now = now();
             
-            $totalDays = $start->diffInDays($end);
-            $daysPassed = $start->diffInDays($now);
+            $totalDays = (int) $start->copy()->startOfDay()->diffInDays($end->copy()->startOfDay());
+            $daysPassed = (int) $start->copy()->startOfDay()->diffInDays($now->copy()->startOfDay());
             
             if ($now->isBefore($start)) {
                 $daysPassed = 0;
@@ -193,6 +247,10 @@ class DashboardService
             'logbookThisMonth' => $logbookThisMonth,
             'logbooksPerMonth' => $logbooksPerMonth,
             'recentLogbooks'   => $recentLogbooks,
+            'todayAttendance' => $attendanceSummary['todayAttendance'],
+            'attendanceThisMonth' => $attendanceSummary['attendanceThisMonth'],
+            'attendanceStatusCounts' => $attendanceSummary['attendanceStatusCounts'],
+            'recentAttendances' => $attendanceSummary['recentAttendances'],
             'hasCompletedProfile'   => $intern ? $intern->hasCompletedProfile() : false,
             'hasCompletedDocuments' => $intern ? $intern->hasCompletedDocuments() : false,
             'profileCompleteness'   => round($completeness),
@@ -209,9 +267,59 @@ class DashboardService
 
     private function mentorStats(User $user): array
     {
-        return array_merge($this->adminStats(), [
-            'pageDescription' => 'Pantau aktivitas dan logbook anak magang yang kamu bimbing.',
-        ]);
+        $divisionId = $user->division_id;
+
+        $internQuery = Intern::query()
+            ->where('division_id', $divisionId);
+
+        $logbookQuery = Logbook::query()
+            ->whereHas('intern', function ($query) use ($divisionId) {
+                $query->where('division_id', $divisionId);
+            });
+
+        $onboardingRegister = (clone $internQuery)
+            ->where('registration_status', 'pending')
+            ->count();
+
+        $onboardingCompleting = (clone $internQuery)
+            ->where('registration_status', 'approved')
+            ->where(function ($query) {
+                $query->whereNull('profile_completed_at')
+                    ->orWhereNull('documents_completed_at');
+            })
+            ->count();
+
+        $onboardingActive = (clone $internQuery)
+            ->where('registration_status', 'approved')
+            ->whereNotNull('profile_completed_at')
+            ->whereNotNull('documents_completed_at')
+            ->count();
+
+        return [
+            'pageDescription' => 'Pantau aktivitas dan progres onboarding intern bimbingan Anda.',
+            'mentorDivisionName' => $user->division?->name ?? 'Divisi Mentor',
+            'totalInterns' => (clone $internQuery)->count(),
+            'logbookThisMonth' => (clone $logbookQuery)
+                ->whereMonth('tanggal', now()->month)
+                ->whereYear('tanggal', now()->year)
+                ->count(),
+            'mentorOnboarding' => [
+                'register' => $onboardingRegister,
+                'completing' => $onboardingCompleting,
+                'active' => $onboardingActive,
+            ],
+            'mentorAttendanceSummary' => $this->attendanceService->getMonitoringInternListSummary($user),
+            'recentLogbooks' => (clone $logbookQuery)
+                ->with(['intern.user', 'intern.division'])
+                ->latest('tanggal')
+                ->take(5)
+                ->get(),
+            'recentInterns' => (clone $internQuery)
+                ->with(['user', 'division'])
+                ->latest()
+                ->take(5)
+                ->get(),
+        ];
     }
 
     private function titleForRole(string $role): string

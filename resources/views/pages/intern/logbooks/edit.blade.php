@@ -3,9 +3,13 @@
 @section('title', 'Edit Logbook')
 
 @section('content')
-<h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">Logbook /</span> Edit Laporan
-</h4>
+@include('partials.app-breadcrumb', [
+  'items' => [
+    ['label' => 'Dashboard', 'url' => route('dashboard.intern')],
+    ['label' => 'Logbook', 'url' => route('intern.logbooks.index')],
+    ['label' => 'Edit Laporan', 'current' => true],
+  ],
+])
 
 <div class="row g-6">
   <div class="col-lg-8">

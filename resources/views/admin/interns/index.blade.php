@@ -3,9 +3,12 @@
 @section('title', 'Data Intern')
 
 @section('content')
-<h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">Manajemen /</span> Data Intern
-</h4>
+@include('partials.app-breadcrumb', [
+  'items' => [
+    ['label' => 'Dashboard', 'url' => route('dashboard.admin')],
+    ['label' => 'Data Intern', 'current' => true],
+  ],
+])
 
 <div class="card">
   <div class="card-header border-bottom">
@@ -60,7 +63,7 @@
           </td>
           <td>
             <div class="d-flex flex-column">
-              <span>{{ $intern->institution ?? '-' }}</span>
+              <span>{{ $intern->institution_label }}</span>
               <small class="text-muted">{{ $intern->major ?? '-' }}</small>
             </div>
           </td>
@@ -68,18 +71,32 @@
             <span class="badge bg-label-secondary rounded-pill">{{ $intern->division->name ?? 'Belum ada divisi' }}</span>
           </td>
           <td>
-            @if($intern->registration_status === 'approved')
-              <span class="badge bg-label-success rounded-pill">Selesai & Aktif</span>
-            @elseif($intern->hasCompletedDocuments() && $intern->hasCompletedProfile())
-              <span class="badge bg-label-warning rounded-pill">Menunggu Review</span>
-            @else
+            @if($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments())
+              <span class="badge bg-label-success rounded-pill">Aktif</span>
+            @elseif($intern->registration_status === 'approved')
               <span class="badge bg-label-info rounded-pill">Melengkapi Data</span>
+            @else
+              <span class="badge bg-label-warning rounded-pill">Register</span>
             @endif
           </td>
           <td>
-            <a href="{{ route('admin.interns.show', $intern->id) }}" class="btn btn-sm btn-outline-primary">
-              <i class="ri-eye-line me-1"></i> Detail
-            </a>
+            <div class="d-flex flex-wrap gap-2">
+              @can('admin.interns.approve')
+                @if($intern->user_id && $intern->registration_status !== 'approved')
+                  <form action="{{ route('admin.interns.approve', $intern->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-sm btn-success">
+                      <i class="ri-check-line me-1"></i> Approve
+                    </button>
+                  </form>
+                @endif
+              @endcan
+
+              <a href="{{ route('admin.interns.show', $intern->id) }}" class="btn btn-sm btn-outline-primary">
+                <i class="ri-eye-line me-1"></i> Detail
+              </a>
+            </div>
           </td>
         </tr>
         @empty

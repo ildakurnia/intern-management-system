@@ -53,6 +53,7 @@ class DocumentController extends Controller
         $updateData['documents_completed_at'] = $intern->documents_completed_at ?? now();
 
         $intern->update($updateData);
+        $intern->refreshOperationalStatus();
 
         // Notifikasi ke Admin
         $admins = User::role(['admin', 'superadmin'])->get();
@@ -67,7 +68,11 @@ class DocumentController extends Controller
         }
 
         if (!$wasCompleted) {
-            return redirect()->route('dashboard')->with('status', 'Berkas berhasil diupload! Data Anda akan direview oleh admin.');
+            if ($intern->fresh()->status === 'active') {
+                return redirect()->route('dashboard')->with('status', 'Berkas berhasil diupload. Seluruh onboarding selesai dan akun Anda sekarang aktif.');
+            }
+
+            return redirect()->route('dashboard')->with('status', 'Berkas berhasil diupload. Lanjutkan proses onboarding hingga seluruh data lengkap.');
         }
 
         return redirect()->route('intern.documents.edit')->with('status', 'Berkas dokumen berhasil diperbarui.');

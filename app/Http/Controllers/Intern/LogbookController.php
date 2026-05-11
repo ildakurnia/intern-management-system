@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLogbookRequest;
+use App\Models\Logbook;
 use App\Models\User;
 use App\Services\LogbookService;
 use App\Services\NotificationService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LogbookController extends Controller
@@ -17,13 +19,34 @@ class LogbookController extends Controller
 
     public function index(Request $request)
     {
-        $logbooks = $this->logbookService->getLogbooksForUser($request->user());
-        return view('pages.intern.logbooks.index', compact('logbooks'));
+        $intern = $request->user()->intern;
+        $monthParam = $request->string('month')->toString();
+
+        try {
+            $calendarMonth = $monthParam !== ''
+                ? Carbon::createFromFormat('Y-m', $monthParam)->startOfMonth()
+                : now()->startOfMonth();
+        } catch (\Throwable $exception) {
+            $calendarMonth = now()->startOfMonth();
+        }
+
+        $logbooks = Logbook::query()
+            ->where('intern_id', $intern->id)
+            ->whereBetween('tanggal', [
+                $calendarMonth->copy()->startOfMonth()->toDateString(),
+                $calendarMonth->copy()->endOfMonth()->toDateString(),
+            ])
+            ->orderBy('tanggal')
+            ->get();
+
+        return view('pages.intern.logbooks.index', compact('logbooks', 'calendarMonth'));
     }
 
     public function create()
     {
-        return view('pages.intern.logbooks.create');
+        return redirect()
+            ->route('intern.logbooks.index', ['month' => now()->format('Y-m')])
+            ->with('status', 'Gunakan kalender logbook untuk memilih tanggal laporan.');
     }
 
     public function show($id)
@@ -51,21 +74,27 @@ class LogbookController extends Controller
             );
         }
 
+        if ($request->filled('return_month')) {
+            return redirect()
+                ->route('intern.logbooks.index', ['month' => $request->input('return_month')])
+                ->with('status', 'Logbook berhasil disimpan!');
+        }
+
         return redirect()->route('intern.logbooks.index')->with('status', 'Logbook berhasil disimpan!');
     }
 
     public function edit($id)
     {
-        $logbook = $this->logbookService->getLogbookById($id);
-        return view('pages.intern.logbooks.edit', compact('logbook'));
+        return redirect()
+            ->route('intern.logbooks.show', $id)
+            ->with('status', 'Logbook yang sudah dikirim tidak dapat diedit lagi.');
     }
 
     public function update(StoreLogbookRequest $request, $id)
     {
-        $data = $request->validated();
-        $this->logbookService->updateLogbook($id, $data);
-
-        return redirect()->route('intern.logbooks.index')->with('status', 'Logbook berhasil diperbarui!');
+        return redirect()
+            ->route('intern.logbooks.show', $id)
+            ->with('status', 'Logbook yang sudah dikirim tidak dapat diedit lagi.');
     }
 
     public function destroy($id)

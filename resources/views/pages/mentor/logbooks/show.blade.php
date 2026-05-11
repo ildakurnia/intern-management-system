@@ -1,54 +1,170 @@
-@extends('layouts.app')
+@extends('layouts/contentNavbarLayout')
 
-@section('title', 'Detail Laporan Anak Bimbingan')
+@section('title', 'Detail Logbook Anak Bimbingan')
+
+@section('page-style')
+  <style>
+    @media (max-width: 991.98px) {
+      .stick-top {
+        position: static !important;
+        top: auto !important;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .card.shadow-none > .card-body,
+      .card > .card-body {
+        padding: 1rem;
+      }
+
+      .card p,
+      .accordion-body p {
+        word-break: break-word;
+      }
+    }
+  </style>
+@endsection
 
 @section('content')
-    <div class="settings-page-head">
-        <div>
-            <h1>Detail Logbook</h1>
-            <div class="breadcrumb-line">
-                <span>Mentor</span>
-                <span>&rsaquo;</span>
-                <a href="{{ route('mentor.logbooks.index') }}">Data Logbook</a>
-                <span>&rsaquo;</span>
-                <span>Detail</span>
+  <div class="g-3">
+    @include('partials.app-breadcrumb', [
+      'items' => [
+        ['label' => 'Dashboard', 'url' => route('dashboard.mentor')],
+        ['label' => 'Logbook Intern', 'url' => route('mentor.logbooks.index')],
+        ['label' => 'Detail', 'current' => true],
+      ],
+    ])
+
+    <div class="row g-6">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-6 gap-1">
+              <div class="me-1">
+                <h5 class="mb-0">Laporan Harian Intern</h5>
+                <p class="mb-0">Oleh: <span class="fw-medium text-heading">{{ $logbook->intern->user->name ?? $logbook->intern->name }}</span></p>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-label-primary rounded-pill">{{ $logbook->intern->division->name ?? 'Umum' }}</span>
+                <a href="{{ route('mentor.logbooks.index') }}" class="icon-base ri ri-arrow-left-line icon-24px mx-4 text-body"></a>
+              </div>
             </div>
+
+            <div class="card shadow-none border">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-4 p-4 bg-label-primary rounded-3">
+                  <i class="icon-base ri ri-calendar-event-line icon-24px text-primary me-3"></i>
+                  <div>
+                    <small class="text-body-secondary d-block">Tanggal Laporan</small>
+                    <h6 class="mb-0 fw-semibold">{{ \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('l, d F Y') }}</h6>
+                  </div>
+                </div>
+
+                <h5>Uraian Aktivitas</h5>
+                <p class="mb-0">{{ $logbook->uraian_aktivitas }}</p>
+                <hr class="my-6" />
+
+                <h5>Pembelajaran yang Diperoleh</h5>
+                <div class="d-flex flex-wrap row-gap-2">
+                  <div>
+                    <p class="mb-2"><i class="icon-base ri ri-check-line icon-20px me-2 text-success"></i>{{ $logbook->pembelajaran_diperoleh }}</p>
+                  </div>
+                </div>
+
+                @if($logbook->kendala_dialami)
+                  <hr class="my-6" />
+                  <h5 class="text-danger"><i class="icon-base ri ri-error-warning-line icon-20px me-2"></i>Kendala yang Dialami</h5>
+                  <div class="alert alert-danger d-flex align-items-start" role="alert">
+                    <i class="icon-base ri ri-alert-line icon-20px me-3 mt-1 flex-shrink-0"></i>
+                    <p class="mb-0">{{ $logbook->kendala_dialami }}</p>
+                  </div>
+                @endif
+
+                <hr class="my-6" />
+                <h5>Intern</h5>
+                <div class="d-flex justify-content-start align-items-center user-name">
+                  <div class="avatar-wrapper">
+                    <div class="avatar me-4">
+                      <span class="avatar-initial rounded-circle bg-label-info fw-bold">
+                        {{ strtoupper(substr($logbook->intern->user->name ?? $logbook->intern->name, 0, 2)) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <h6 class="mb-1">{{ $logbook->intern->user->name ?? $logbook->intern->name }}</h6>
+                    <small>{{ $logbook->intern->division->name ?? '-' }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="stick-top">
+          <div class="accordion accordion-custom-button" id="logbookSummary">
+            <div class="accordion-item active mb-0">
+              <div class="accordion-header border-bottom-0" id="headingInfo">
+                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#logbookInfo"
+                  aria-expanded="true" aria-controls="logbookInfo">
+                  <span class="d-flex flex-column">
+                    <span class="h5 mb-0">Ringkasan Logbook</span>
+                    <span class="text-body fw-normal">Data laporan intern bimbingan</span>
+                  </span>
+                </button>
+              </div>
+              <div id="logbookInfo" class="accordion-collapse collapse show" data-bs-parent="#logbookSummary">
+                <div class="accordion-body py-4">
+                  <div class="mb-4 d-flex align-items-center">
+                    <i class="icon-base ri ri-user-3-line icon-20px me-3 text-primary"></i>
+                    <div>
+                      <small class="text-body-secondary">Nama Intern</small>
+                      <p class="mb-0 fw-medium">{{ $logbook->intern->user->name ?? $logbook->intern->name }}</p>
+                    </div>
+                  </div>
+                  <div class="mb-4 d-flex align-items-center">
+                    <i class="icon-base ri ri-building-line icon-20px me-3 text-primary"></i>
+                    <div>
+                      <small class="text-body-secondary">Divisi</small>
+                      <p class="mb-0 fw-medium">{{ $logbook->intern->division->name ?? '-' }}</p>
+                    </div>
+                  </div>
+                  <div class="mb-4 d-flex align-items-center">
+                    <i class="icon-base ri ri-calendar-check-line icon-20px me-3 text-primary"></i>
+                    <div>
+                      <small class="text-body-secondary">Tanggal Laporan</small>
+                      <p class="mb-0 fw-medium">{{ \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('d M Y') }}</p>
+                    </div>
+                  </div>
+                  <div class="mb-4 d-flex align-items-center">
+                    <i class="icon-base ri ri-time-line icon-20px me-3 text-primary"></i>
+                    <div>
+                      <small class="text-body-secondary">Dibuat</small>
+                      <p class="mb-0 fw-medium">{{ $logbook->created_at->diffForHumans() }}</p>
+                    </div>
+                  </div>
+                  @if($logbook->kendala_dialami)
+                    <div class="mb-4 d-flex align-items-center">
+                      <i class="icon-base ri ri-error-warning-line icon-20px me-3 text-danger"></i>
+                      <div>
+                        <small class="text-body-secondary">Status Kendala</small>
+                        <p class="mb-0 fw-medium text-danger">Ada Kendala</p>
+                      </div>
+                    </div>
+                  @endif
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <a href="{{ route('mentor.logbooks.index') }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+              <i class="icon-base ri ri-arrow-left-line icon-16px me-2"></i> Kembali ke Kalender
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="settings-form-card" style="max-width: 850px; padding: 2.5rem;">
-        <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--border-soft); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-                <h4 style="color: var(--text-muted); margin: 0 0 0.25rem 0; font-size: 0.8rem; text-transform: uppercase;">Laporan Oleh Intern:</h4>
-                <h2 style="margin: 0; color: var(--text-main);">{{ $logbook->intern->user->name }}</h2>
-                <span style="color: var(--primary); font-weight: 500;">Status: Aktif</span>
-            </div>
-            <div style="text-align: right;">
-                <span style="display: block; font-weight: 600; font-size: 1.1rem; color: var(--primary);">{{ \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('l, d F Y') }}</span>
-            </div>
-        </div>
-
-        <div style="margin-bottom: 2rem;">
-            <h4 style="color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Pekerjaan yang Dilakukan:</h4>
-            <div style="line-height: 1.7; font-size: 1.05rem; color: #2d3748; background: #fdfdfd; border: 1px solid var(--border-soft); padding: 1.5rem; border-radius: 0.5rem;">
-                {{ $logbook->uraian_aktivitas }}
-            </div>
-        </div>
-
-        <div style="margin-bottom: 2rem;">
-            <h4 style="color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Hasil Pembelajaran:</h4>
-            <p style="line-height: 1.6; font-style: italic; color: #4a5568;">"{{ $logbook->pembelajaran_diperoleh }}"</p>
-        </div>
-
-        @if($logbook->kendala_dialami)
-        <div style="padding: 1.25rem; background: #fff5f5; border: 1px solid #fed7d7; border-radius: 0.4rem;">
-            <h4 style="color: #c53030; margin-bottom: 0.4rem; font-size: 0.85rem; font-weight: 700;">Kendala Magang:</h4>
-            <p style="color: #742a2a; margin: 0;">{{ $logbook->kendala_dialami }}</p>
-        </div>
-        @endif
-
-        <div style="margin-top: 3rem; pt-2; border-top: 1px solid var(--border-soft);">
-            <a href="{{ route('mentor.logbooks.index') }}" class="button" style="background: var(--bg-soft); color: var(--text-main); text-decoration: none;">&larr; Kembali ke Daftar</a>
-        </div>
-    </div>
+  </div>
 @endsection
