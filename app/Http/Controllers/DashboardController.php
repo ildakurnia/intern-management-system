@@ -21,18 +21,20 @@ class DashboardController extends Controller
 
     public function admin(Request $request): View
     {
-        $role = $request->user()->hasRole('superadmin') ? 'superadmin' : 'admin';
+        if ($request->user()->hasRole('superadmin')) {
+            return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'superadmin'));
+        }
 
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), $role));
+        return view('pages.admin.dashboard', $this->dashboardService->buildPageData($request->user(), 'admin'));
     }
 
     public function mentor(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'mentor'));
+        return view('pages.mentor.dashboard', $this->dashboardService->buildPageData($request->user(), 'mentor'));
     }
 
     public function intern(Request $request): View
     {
-        return view('pages.dashboard', $this->dashboardService->buildPageData($request->user(), 'intern'));
+        return view('pages.intern.dashboard', $this->dashboardService->buildPageData($request->user(), 'intern'));
     }
 }

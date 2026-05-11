@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,6 +24,9 @@ class Intern extends Model
         'photo',
         'type',
         'institution',
+        'institution_id',
+        'institution_manual_name',
+        'bank_account_number',
         'major',
         'faculty',
         // Siswa
@@ -66,6 +70,11 @@ class Intern extends Model
         return $this->belongsTo(Division::class);
     }
 
+    public function institutionReference(): BelongsTo
+    {
+        return $this->belongsTo(Institution::class, 'institution_id');
+    }
+
     /**
      * The user account linked to this intern (if any)
      */
@@ -77,6 +86,23 @@ class Intern extends Model
     public function logbooks(): HasMany
     {
         return $this->hasMany(Logbook::class);
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function attendanceLocations(): BelongsToMany
+    {
+        return $this->belongsToMany(AttendanceLocation::class)
+            ->withPivot(['is_primary', 'is_active', 'assigned_at', 'notes'])
+            ->withTimestamps();
+    }
+
+    public function activeAttendanceLocations(): BelongsToMany
+    {
+        return $this->attendanceLocations()->wherePivot('is_active', true);
     }
 
     /**
@@ -120,9 +146,32 @@ class Intern extends Model
     public function refreshDocumentCompletion(): void
     {
         $this->forceFill([
-            'documents_completed_at' => $this->ktp_path && $this->student_card_path && $this->bpjs_path
+            'documents_completed_at' => $this->ktp_path && $this->student_card_path && $this->bpjs_path && $this->recommendation_letter_path
                 ? ($this->documents_completed_at ?? now())
                 : null,
         ])->save();
+    }
+
+    public function refreshOperationalStatus(): void
+    {
+        if (in_array($this->status, ['completed', 'terminated'], true)) {
+            return;
+        }
+
+        $shouldBeActive = $this->registration_status === 'approved'
+            && $this->hasCompletedProfile()
+            && $this->hasCompletedDocuments();
+
+        if ($shouldBeActive && $this->status !== 'active') {
+            $this->forceFill(['status' => 'active'])->save();
+        }
+    }
+
+    public function getInstitutionLabelAttribute(): string
+    {
+        return $this->institutionReference?->name
+            ?? $this->institution_manual_name
+            ?? $this->institution
+            ?? '-';
     }
 }

@@ -54,7 +54,7 @@ class InternsImport implements ToCollection, WithHeadingRow
                 'nis' => $type === 'siswa' ? $identifier : null,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
-                'status' => 'active',
+                'status' => $intern->status ?: 'active',
             ]);
 
             if (! $intern->exists || $intern->user_id === null) {

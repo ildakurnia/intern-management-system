@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Intern;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Services\NotificationService;
+use App\Models\User;
 
 class DocumentController extends Controller
 {
@@ -20,30 +22,59 @@ class DocumentController extends Controller
     {
         $intern = $request->user()->intern;
 
-        $validated = $request->validate([
+        $rules = [
             'ktp' => [$intern->ktp_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
             'student_card' => [$intern->student_card_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
             'bpjs' => [$intern->bpjs_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
-        ]);
+            'recommendation_letter' => [$intern->recommendation_letter_path ? 'nullable' : 'required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+        ];
 
-        $paths = [];
+        $request->validate($rules);
 
-        foreach (['ktp' => 'ktp_path', 'student_card' => 'student_card_path', 'bpjs' => 'bpjs_path'] as $input => $column) {
-            if ($request->hasFile($input)) {
-                $paths[$column] = $request->file($input)->store("intern-documents/{$intern->id}", 'public');
+        $updateData = [];
+
+        if ($request->hasFile('ktp')) {
+            $updateData['ktp_path'] = $request->file('ktp')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('student_card')) {
+            $updateData['student_card_path'] = $request->file('student_card')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('bpjs')) {
+            $updateData['bpjs_path'] = $request->file('bpjs')->store("intern-documents/{$intern->id}", 'public');
+        }
+
+        if ($request->hasFile('recommendation_letter')) {
+            $updateData['recommendation_letter_path'] = $request->file('recommendation_letter')->store("intern-documents/{$intern->id}", 'public');
+        }
+        
+        $wasCompleted = $intern->hasCompletedDocuments();
+        $updateData['documents_completed_at'] = $intern->documents_completed_at ?? now();
+
+        $intern->update($updateData);
+        $intern->refreshOperationalStatus();
+
+        // Notifikasi ke Admin
+        $admins = User::role(['admin', 'superadmin'])->get();
+        foreach ($admins as $admin) {
+            NotificationService::send(
+                userId: $admin->id,
+                title: 'Upload Dokumen Intern',
+                body: $intern->user->name . ' baru saja mengunggah/memperbarui dokumen wajibnya.',
+                type: 'info',
+                icon: 'ri-file-upload-line'
+            );
+        }
+
+        if (!$wasCompleted) {
+            if ($intern->fresh()->status === 'active') {
+                return redirect()->route('dashboard')->with('status', 'Berkas berhasil diupload. Seluruh onboarding selesai dan akun Anda sekarang aktif.');
             }
+
+            return redirect()->route('dashboard')->with('status', 'Berkas berhasil diupload. Lanjutkan proses onboarding hingga seluruh data lengkap.');
         }
 
-        if ($paths !== []) {
-            $intern->update($paths);
-        }
-
-        $intern->refreshDocumentCompletion();
-
-        return redirect()
-            ->route($intern->hasCompletedDocuments() ? 'dashboard' : 'intern.documents.edit')
-            ->with('status', $intern->hasCompletedDocuments()
-                ? 'Berkas wajib sudah lengkap. Kamu bisa masuk dashboard.'
-                : 'Berkas tersimpan. Lengkapi semua berkas wajib untuk lanjut.');
+        return redirect()->route('intern.documents.edit')->with('status', 'Berkas dokumen berhasil diperbarui.');
     }
 }

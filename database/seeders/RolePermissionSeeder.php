@@ -34,12 +34,26 @@ class RolePermissionSeeder extends Seeder
             'dashboard.admin',
             'admin.interns.index',
             'admin.interns.show',
+            'admin.interns.approve',
+            'admin.interns.attendance-locations.update',
             'admin.interns.import',
             'admin.interns.template',
             'admin.interns.import.store',
             'admin.intern-documents.index',
             'admin.logbooks.index',
             'admin.logbooks.show',
+            'admin.attendances.index',
+            'admin.attendances.show',
+            'admin.attendance-locations.index',
+            'admin.attendance-locations.create',
+            'admin.attendance-locations.store',
+            'admin.attendance-locations.edit',
+            'admin.attendance-locations.update',
+            'admin.attendance-locations.destroy',
+            'admin.allowances.index',
+            'admin.allowances.show',
+            'admin.allowances.print',
+            'admin.allowances.show.print',
         ]);
 
         $mentorRole = Role::firstOrCreate(['name' => 'mentor', 'guard_name' => 'web']);
@@ -51,6 +65,7 @@ class RolePermissionSeeder extends Seeder
             'admin.intern-documents.index',
             'mentor.logbooks.index',
             'mentor.logbooks.show',
+            'mentor.attendances.index',
         ]);
 
         $internRole = Role::firstOrCreate(['name' => 'intern', 'guard_name' => 'web']);
@@ -68,6 +83,11 @@ class RolePermissionSeeder extends Seeder
             'intern.logbooks.edit',
             'intern.logbooks.update',
             'intern.logbooks.destroy',
+            'intern.attendances.index',
+            'intern.attendances.check-in',
+            'intern.attendances.check-out',
+            'intern.attendances.submissions.create',
+            'intern.attendances.submissions.store',
         ]);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();

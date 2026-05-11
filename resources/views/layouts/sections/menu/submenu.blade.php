@@ -1,5 +1,19 @@
 @php
-  use Illuminate\Support\Facades\Route;
+  $isRouteActive = static function ($slug): bool {
+      $slugs = is_array($slug) ? $slug : [$slug];
+
+      foreach ($slugs as $routeName) {
+          if (! is_string($routeName) || $routeName === '') {
+              continue;
+          }
+
+          if (request()->routeIs($routeName, $routeName . '.*')) {
+              return true;
+          }
+      }
+
+      return false;
+  };
 @endphp
 
 <ul class="menu-sub">
@@ -7,28 +21,9 @@
     @foreach ($menu as $submenu)
       {{-- active menu method --}}
       @php
-        $activeClass = null;
-        $active = $configData['layout'] === 'vertical' ? 'active open' : 'active';
-        $currentRouteName = Route::currentRouteName();
-
-        if ($currentRouteName === $submenu->slug) {
-            $activeClass = 'active';
-        } elseif (isset($submenu->submenu)) {
-            if (gettype($submenu->slug) === 'array') {
-                foreach ($submenu->slug as $slug) {
-                    if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
-                        $activeClass = $active;
-                    }
-                }
-            } else {
-                if (
-                    str_contains($currentRouteName, $submenu->slug) and
-                    strpos($currentRouteName, $submenu->slug) === 0
-                ) {
-                    $activeClass = $active;
-                }
-            }
-        }
+        $activeClass = $isRouteActive($submenu->slug ?? null)
+            ? (isset($submenu->submenu) ? 'active open' : 'active')
+            : null;
       @endphp
 
       <li class="menu-item {{ $activeClass }}">

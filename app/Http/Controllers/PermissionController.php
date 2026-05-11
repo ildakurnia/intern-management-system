@@ -2,50 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Menu;
+use App\Services\PermissionService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-    public function index()
-    {
-        $permissionMenus = $this->permissionMenus();
+    protected $permissionService;
 
-        return view('pages.permissions.index', compact('permissionMenus'));
+    public function __construct(PermissionService $permissionService)
+    {
+        $this->permissionService = $permissionService;
+    }
+
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        
+        $data = $this->permissionService->getPermissionGroups($search ?? '');
+        $permissionMenus = $data['permissionMenus'];
+        $unassignedPermissions = $data['unassignedPermissions'];
+
+        return view('pages.permissions.index', compact('permissionMenus', 'unassignedPermissions', 'search'));
     }
 
     public function create()
     {
         $menus = Menu::orderBy('order')->orderBy('title')->get();
-
         return view('pages.permissions.create', compact('menus'));
     }
 
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('permissions', 'name')
-                    ->where(fn ($query) => $query->where('guard_name', $request->input('guard_name', 'web'))),
-            ],
-            'guard_name' => ['required', 'string', 'in:web'],
-            'menu_id' => ['nullable', 'exists:menus,id'],
-            'label' => ['nullable', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-        ]);
-
-        Permission::create([
-            'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'],
-            'menu_id' => $validated['menu_id'] ?? null,
-            'label' => $validated['label'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
-        ]);
+        $this->permissionService->createPermission($request->validated());
 
         return redirect()->route('permissions.index')->with('status', 'Permission dibuat.');
     }
@@ -53,50 +45,19 @@ class PermissionController extends Controller
     public function edit(Permission $permission)
     {
         $menus = Menu::orderBy('order')->orderBy('title')->get();
-
         return view('pages.permissions.edit', compact('permission', 'menus'));
     }
 
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('permissions', 'name')
-                    ->ignore($permission->id)
-                    ->where(fn ($query) => $query->where('guard_name', $request->input('guard_name', $permission->guard_name))),
-            ],
-            'guard_name' => ['required', 'string', 'in:web'],
-            'menu_id' => ['nullable', 'exists:menus,id'],
-            'label' => ['nullable', 'string', 'max:255'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-        ]);
-
-        $permission->update([
-            'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'],
-            'menu_id' => $validated['menu_id'] ?? null,
-            'label' => $validated['label'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
-        ]);
+        $this->permissionService->updatePermission($permission, $request->validated());
 
         return redirect()->route('permissions.index')->with('status', 'Permission diperbarui.');
     }
 
     public function destroy(Permission $permission)
     {
-        $permission->delete();
+        $this->permissionService->deletePermission($permission);
         return redirect()->route('permissions.index')->with('status', 'Permission dihapus.');
-    }
-
-    private function permissionMenus()
-    {
-        return Menu::query()
-            ->with(['permissions' => fn ($query) => $query->orderBy('sort_order')->orderBy('name')])
-            ->orderBy('order')
-            ->orderBy('title')
-            ->get();
     }
 }

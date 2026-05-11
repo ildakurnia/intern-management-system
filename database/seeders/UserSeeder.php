@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Division;
 use App\Models\Intern;
+use App\Models\Institution;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -63,6 +64,10 @@ class UserSeeder extends Seeder
         if ($internUser) {
             $internUser->update(['division_id' => $division->id]);
 
+            $sampleInstitution = Institution::query()
+                ->where('name', 'Universitas Contoh')
+                ->first();
+
             Intern::updateOrCreate(
                 ['email' => 'intern@ims.test'],
                 [
@@ -75,6 +80,8 @@ class UserSeeder extends Seeder
                     'gender' => 'female',
                     'type' => 'mahasiswa',
                     'institution' => 'Universitas Contoh',
+                    'institution_id' => $sampleInstitution?->id,
+                    'institution_manual_name' => $sampleInstitution ? null : 'Universitas Contoh',
                     'major' => 'Sistem Informasi',
                     'nim' => '2023121210',
                     'semester' => '6',

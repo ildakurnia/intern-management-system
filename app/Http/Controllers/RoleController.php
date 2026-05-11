@@ -12,7 +12,7 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::with('permissions')->get();
+        $roles = Role::with(['permissions', 'users'])->get();
         $permissionMenus = $this->permissionMenus();
 
         return view('pages.roles.index', compact('roles', 'permissionMenus'));
@@ -34,16 +34,15 @@ class RoleController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('roles', 'name')
-                    ->where(fn ($query) => $query->where('guard_name', $request->input('guard_name', 'web'))),
+                    ->where(fn ($query) => $query->where('guard_name', 'web')),
             ],
-            'guard_name' => ['required', 'string', 'in:web'],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::exists('permissions', 'name')],
         ]);
 
         $role = Role::create([
             'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'],
+            'guard_name' => 'web',
         ]);
 
         $role->syncPermissions($validated['permissions'] ?? []);
@@ -68,18 +67,13 @@ class RoleController extends Controller
                 'max:255',
                 Rule::unique('roles', 'name')
                     ->ignore($role->id)
-                    ->where(fn ($query) => $query->where('guard_name', $request->input('guard_name', $role->guard_name))),
+                    ->where(fn ($query) => $query->where('guard_name', $role->guard_name)),
             ],
-            'guard_name' => ['required', 'string', 'in:web'],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', Rule::exists('permissions', 'name')],
         ]);
 
-        $role->update([
-            'name' => $validated['name'],
-            'guard_name' => $validated['guard_name'],
-        ]);
-
+        $role->update(['name' => $validated['name']]);
         $role->syncPermissions($validated['permissions'] ?? []);
 
         return redirect()->route('roles.index')->with('status', 'Role berhasil diperbarui.');

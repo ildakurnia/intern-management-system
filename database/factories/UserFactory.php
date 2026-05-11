@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -30,7 +30,6 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => UserRoleEnum::INTERN,
             'remember_token' => Str::random(10),
         ];
     }
@@ -47,22 +46,25 @@ class UserFactory extends Factory
 
     public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRoleEnum::ADMIN,
-        ]);
+        return $this->afterCreating(function (User $user) {
+            Role::findOrCreate('admin', 'web');
+            $user->syncRoles(['admin']);
+        });
     }
 
     public function mentor(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRoleEnum::MENTOR,
-        ]);
+        return $this->afterCreating(function (User $user) {
+            Role::findOrCreate('mentor', 'web');
+            $user->syncRoles(['mentor']);
+        });
     }
 
     public function intern(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => UserRoleEnum::INTERN,
-        ]);
+        return $this->afterCreating(function (User $user) {
+            Role::findOrCreate('intern', 'web');
+            $user->syncRoles(['intern']);
+        });
     }
 }
