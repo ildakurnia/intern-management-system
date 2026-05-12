@@ -407,6 +407,384 @@
     background: #fafbff;
   }
 
+  .attendance-mobile-shell {
+    display: none;
+  }
+
+  .attendance-mobile-card {
+    border: 1px solid rgba(181, 186, 214, 0.38);
+    border-radius: 1.15rem;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(30, 36, 68, 0.06);
+    overflow: hidden;
+  }
+
+  html[data-bs-theme="dark"] .attendance-mobile-card {
+    background: #2a2740;
+    border-color: rgba(219, 223, 255, 0.12);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  }
+
+  .attendance-mobile-card + .attendance-mobile-card {
+    margin-top: 0.9rem;
+  }
+
+  .attendance-mobile-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.95rem 1rem 0.8rem;
+    border-bottom: 1px solid rgba(181, 186, 214, 0.22);
+  }
+
+  html[data-bs-theme="dark"] .attendance-mobile-card-head {
+    border-bottom-color: rgba(219, 223, 255, 0.1);
+  }
+
+  .attendance-mobile-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .attendance-mobile-avatar {
+    width: 2.65rem;
+    height: 2.65rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #ecefff;
+    color: #4b46d8;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  html[data-bs-theme="dark"] .attendance-mobile-avatar {
+    background: rgba(93, 91, 255, 0.18);
+    color: #cbc7ff;
+  }
+
+  .attendance-mobile-name {
+    color: var(--bs-heading-color);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .attendance-mobile-email {
+    color: var(--bs-secondary-color);
+    font-size: 0.79rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .attendance-mobile-body {
+    padding: 0.9rem 1rem 1rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .attendance-mobile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .attendance-mobile-meta .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 600;
+  }
+
+  .attendance-mobile-note {
+    color: var(--bs-body-color);
+    font-size: 0.87rem;
+    line-height: 1.5;
+  }
+
+  .attendance-mobile-lines {
+    display: grid;
+    gap: 0.42rem;
+    color: var(--bs-body-color);
+    font-size: 0.87rem;
+    line-height: 1.45;
+  }
+
+  .attendance-mobile-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+
+  .attendance-mobile-line i {
+    margin-top: 0.12rem;
+    color: var(--attendance-primary);
+    flex-shrink: 0;
+  }
+
+  .attendance-mobile-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .attendance-mobile-summary-box {
+    border: 1px solid rgba(181, 186, 214, 0.38);
+    border-radius: 1rem;
+    padding: 0.95rem 0.9rem;
+    background: #fff;
+  }
+
+  html[data-bs-theme="dark"] .attendance-mobile-summary-box {
+    background: rgba(31, 33, 48, 0.74);
+    border-color: rgba(219, 223, 255, 0.12);
+  }
+
+  .attendance-mobile-summary-label {
+    color: var(--bs-secondary-color);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .attendance-mobile-summary-value {
+    color: var(--bs-heading-color);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .attendance-mobile-actions {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .attendance-mobile-actions .btn {
+    width: 100%;
+    border-radius: 0.85rem;
+  }
+
+  .attendance-mobile-actions-compact {
+    display: flex;
+    gap: 0.55rem;
+  }
+
+  .attendance-mobile-actions-compact .btn {
+    flex: 1 1 0;
+    border-radius: 999px;
+  }
+
+  .attendance-history-mobile-list {
+    display: none;
+  }
+
+  .attendance-history-mobile-card {
+    border: 1px solid rgba(181, 186, 214, 0.38);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(30, 36, 68, 0.06);
+    overflow: hidden;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-card {
+    background: #2a2740;
+    border-color: rgba(219, 223, 255, 0.12);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  }
+
+  .attendance-history-mobile-card .card-header {
+    background: transparent;
+    padding: 0.9rem 1rem 0.75rem;
+    border-bottom: 1px solid rgba(181, 186, 214, 0.22);
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-card .card-header {
+    border-bottom-color: rgba(219, 223, 255, 0.1);
+  }
+
+  .attendance-history-mobile-title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 0;
+  }
+
+  .attendance-history-mobile-avatar {
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #ecefff;
+    color: #4b46d8;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-avatar {
+    background: rgba(93, 91, 255, 0.18);
+    color: #cbc7ff;
+  }
+
+  .attendance-history-mobile-name {
+    color: var(--bs-heading-color);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .attendance-history-mobile-email {
+    color: var(--bs-secondary-color);
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .attendance-history-mobile-card .card-body {
+    padding: 0.85rem 1rem 0.95rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .attendance-history-mobile-meta-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .attendance-history-mobile-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.9rem;
+    background: rgba(109, 114, 255, 0.08);
+    color: var(--bs-heading-color);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-meta-item {
+    background: rgba(109, 114, 255, 0.14);
+  }
+
+  .attendance-history-mobile-meta-item i {
+    color: var(--attendance-primary);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .attendance-history-mobile-status {
+    color: var(--bs-secondary-color);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .attendance-history-mobile-standalone {
+    display: grid;
+    gap: 0.42rem;
+    padding-top: 0.15rem;
+  }
+
+  .attendance-history-mobile-standalone .attendance-history-mobile-meta-item {
+    width: 100%;
+    justify-content: flex-start;
+    background: transparent;
+    padding: 0;
+    color: var(--bs-body-color);
+    font-weight: 500;
+    border-radius: 0;
+  }
+
+  .attendance-history-mobile-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .attendance-history-mobile-stat {
+    border: 1px solid rgba(181, 186, 214, 0.34);
+    border-radius: 0.95rem;
+    padding: 0.9rem 1rem;
+    background: rgba(250, 250, 255, 0.8);
+  }
+
+  .attendance-history-mobile-stat--full {
+    grid-column: 1 / -1;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-stat {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(219, 223, 255, 0.1);
+  }
+
+  .attendance-history-mobile-stat small {
+    display: block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--bs-secondary-color);
+    margin-bottom: 0.2rem;
+  }
+
+  .attendance-history-mobile-stat strong {
+    display: block;
+    color: var(--bs-heading-color);
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+
+  .attendance-history-mobile-actions {
+    display: flex;
+  }
+
+  .attendance-history-mobile-actions .btn {
+    width: 100%;
+    border-radius: 0.85rem;
+  }
+
+  .attendance-history-mobile-actions .btn i {
+    font-size: 0.95rem;
+  }
+
+  .attendance-history-mobile-card .attendance-history-mobile-meta .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 600;
+  }
+
+  .attendance-history-mobile-lines {
+    display: grid;
+    gap: 0.4rem;
+    color: var(--bs-body-color);
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  .attendance-history-mobile-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+
+  .attendance-history-mobile-line i {
+    margin-top: 0.1rem;
+    color: var(--attendance-primary);
+    flex-shrink: 0;
+  }
+
   .attendance-geolocation-feedback {
     display: none;
   }
@@ -452,6 +830,28 @@
       align-self: stretch;
       justify-content: center;
     }
+
+    .attendance-history-table-wrap {
+      display: none !important;
+    }
+
+    .attendance-history-mobile-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .attendance-history-mobile-actions {
+      flex-direction: column;
+    }
+
+    .attendance-mobile-shell {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .attendance-hide-on-mobile {
+      display: none !important;
+    }
   }
 </style>
 @endsection
@@ -492,6 +892,24 @@
       return $parts === [] ? '0 menit' : implode(' ', $parts);
   };
 
+  $resolveWorkDurationLabel = function ($attendance) use ($now, $formatMinutes): string {
+      if (! $attendance) {
+          return '-';
+      }
+
+      if ($attendance->check_in_at && ! $attendance->check_out_at && in_array($attendance->status, [\App\Models\Attendance::STATUS_PRESENT, \App\Models\Attendance::STATUS_LATE], true)) {
+          $liveMinutes = max(0, $attendance->check_in_at->diffInMinutes($now));
+
+          return 'Aktif '.($liveMinutes > 0 ? $formatMinutes($liveMinutes) : '0 menit');
+      }
+
+      if ($attendance->work_minutes !== null) {
+          return $attendance->work_minutes > 0 ? $formatMinutes($attendance->work_minutes) : '-';
+      }
+
+      return '-';
+  };
+
   $attendanceStep = match (true) {
       ! $todayAttendance => 'Belum Check In',
       $todayAttendance->status === \App\Models\Attendance::STATUS_PERMISSION => 'Izin Hari Ini',
@@ -524,7 +942,7 @@
 
   $heroLivePill = match (true) {
       ! $todayAttendance => 'Siap memulai hari kerja',
-      $todayAttendance->check_in_at && ! $todayAttendance->check_out_at => 'Aktif '.$formatMinutes($currentWorkMinutes),
+      $todayAttendance->check_in_at && ! $todayAttendance->check_out_at => $resolveWorkDurationLabel($todayAttendance),
       $todayAttendance->check_out_at => 'Total '.$todayAttendance->work_duration_label,
       $todayAttendance->status === \App\Models\Attendance::STATUS_LATE => 'Terlambat '.$todayAttendance->late_duration_label,
       default => $attendanceStep,
@@ -537,6 +955,14 @@
       default => 'Lokasi akan dicek saat check in',
   };
   $heroLocationSuffix = '';
+  $intern = auth()->user()?->intern;
+  $internTypeLabel = match ($intern?->type) {
+      'siswa' => 'Siswa',
+      'mahasiswa' => 'Mahasiswa',
+      default => 'Intern',
+  };
+  $internInitials = strtoupper(substr(auth()->user()->name ?? 'IM', 0, 2));
+  $internDivisionLabel = $intern?->division?->name ?? '-';
 
   $recentEntries = $attendanceSummary['recentAttendances']->take(3);
   $statusIcons = [
@@ -595,7 +1021,7 @@
     <div id="attendanceGeolocationFeedback" class="alert alert-danger mb-0 attendance-geolocation-feedback" role="alert"></div>
   </div>
 
-  <div class="col-12">
+  <div class="col-12 attendance-hide-on-mobile">
     <div class="card attendance-hero">
       <div class="card-body p-4 p-xl-5">
         <div class="row g-4 align-items-center">
@@ -687,7 +1113,129 @@
     </div>
   @endif
 
-  <div class="col-xl-8 col-lg-7">
+  <div class="col-12 d-md-none">
+    <div class="attendance-mobile-shell">
+      <div class="attendance-mobile-card">
+        <div class="attendance-mobile-card-head">
+          <div class="attendance-mobile-title min-w-0">
+            <div class="attendance-mobile-avatar">{{ $internInitials }}</div>
+            <div class="min-w-0">
+              <div class="attendance-mobile-name">{{ auth()->user()->name }}</div>
+              <div class="attendance-mobile-email">{{ auth()->user()->email }}</div>
+            </div>
+          </div>
+          <span class="badge bg-label-{{ $todayStatusBadge }} rounded-pill flex-shrink-0">{{ $attendanceStep }}</span>
+        </div>
+
+        <div class="attendance-mobile-body">
+          <div class="attendance-mobile-meta">
+            <span class="badge bg-label-info rounded-pill">{{ $internDivisionLabel }}</span>
+            <span class="badge bg-label-primary rounded-pill">{{ $internTypeLabel }}</span>
+          </div>
+
+          <div class="attendance-mobile-note">{{ $todayMessage }}</div>
+
+          <div class="attendance-mobile-lines">
+            <div class="attendance-mobile-line">
+              <i class="ri ri-login-box-line"></i>
+              <span>Check In: {{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</span>
+            </div>
+            <div class="attendance-mobile-line">
+              <i class="ri ri-logout-box-r-line"></i>
+              <span>Check Out: {{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</span>
+            </div>
+          </div>
+
+          <div class="attendance-mobile-summary-grid">
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Total Kehadiran</div>
+              <div class="attendance-mobile-summary-value">{{ $attendanceSummary['attendanceThisMonth'] }}/{{ now()->daysInMonth }} Hari</div>
+            </div>
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Status Hari Ini</div>
+              <div class="attendance-mobile-summary-value">{{ $todayStatusLabel }}</div>
+            </div>
+          </div>
+
+          <div class="attendance-mobile-actions">
+            @if (! $todayAttendance)
+              <form action="{{ route('intern.attendances.check-in') }}" method="POST" data-attendance-geolocation-form>
+                @csrf
+                <input type="hidden" name="latitude">
+                <input type="hidden" name="longitude">
+                <input type="hidden" name="accuracy">
+                <button type="submit" class="btn btn-lg btn-primary w-100">
+                  <i class="ri ri-login-box-line me-2"></i> Check In Sekarang
+                </button>
+              </form>
+              <div class="attendance-mobile-actions-compact">
+                <a href="{{ route('intern.attendances.submissions.create', 'izin') }}" class="btn btn-outline-primary">
+                  <i class="ri ri-file-list-3-line me-1"></i> Izin
+                </a>
+                <a href="{{ route('intern.attendances.submissions.create', 'sakit') }}" class="btn btn-outline-primary">
+                  <i class="ri ri-heart-pulse-line me-1"></i> Sakit
+                </a>
+              </div>
+            @elseif ($todayAttendance->check_in_at && ! $todayAttendance->check_out_at && in_array($todayAttendance->status, [\App\Models\Attendance::STATUS_PRESENT, \App\Models\Attendance::STATUS_LATE], true))
+              <form action="{{ route('intern.attendances.check-out') }}" method="POST" data-attendance-geolocation-form>
+                @csrf
+                <input type="hidden" name="latitude">
+                <input type="hidden" name="longitude">
+                <input type="hidden" name="accuracy">
+                <button type="submit" class="btn btn-lg btn-primary w-100">
+                  <i class="ri ri-logout-box-r-line me-2"></i> Check Out Sekarang
+                </button>
+              </form>
+              <a href="#riwayat-absensi" class="btn btn-outline-secondary w-100">
+                <i class="ri ri-eye-line me-1"></i> Lihat Detail
+              </a>
+            @else
+              <a href="#riwayat-absensi" class="btn btn-lg btn-primary w-100 d-flex align-items-center justify-content-center">
+                <i class="ri ri-eye-line me-2"></i> Lihat Detail
+              </a>
+            @endif
+          </div>
+        </div>
+      </div>
+
+      <div class="attendance-mobile-card">
+        <div class="attendance-mobile-card-head">
+          <div>
+            <div class="attendance-mobile-name">Ringkasan Hari Ini</div>
+            <div class="attendance-mobile-email">{{ $todayLabel }}</div>
+          </div>
+          <span class="badge bg-label-{{ $todayStatusBadge }} rounded-pill flex-shrink-0">{{ $attendanceStep }}</span>
+        </div>
+        <div class="attendance-mobile-body">
+          <div class="attendance-mobile-summary-grid">
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Lokasi</div>
+              <div class="attendance-mobile-summary-value">{{ $heroLocationLabel }}</div>
+            </div>
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Jam Kerja</div>
+              <div class="attendance-mobile-summary-value">{{ $workWindowLabel }}</div>
+            </div>
+          </div>
+          <div class="attendance-mobile-summary-grid">
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Durasi</div>
+              <div class="attendance-mobile-summary-value">{{ $heroLivePill }}</div>
+            </div>
+            <div class="attendance-mobile-summary-box">
+              <div class="attendance-mobile-summary-label">Akurasi</div>
+              <div class="attendance-mobile-summary-value">{{ $todayAttendance?->check_in_accuracy ? number_format((float) $todayAttendance->check_in_accuracy, 0, ',', '.') . ' m' : '-' }}</div>
+            </div>
+          </div>
+          <a href="#riwayat-absensi" class="btn btn-outline-primary w-100">
+            <i class="ri ri-list-check-2 me-1"></i> Lihat Riwayat
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-8 col-lg-7 attendance-hide-on-mobile">
     <div class="card attendance-detail-card h-100">
       <div class="d-flex flex-column flex-md-row align-items-md-start justify-content-between gap-3 mb-4">
         <div>
@@ -727,7 +1275,7 @@
           </div>
           <div class="attendance-detail-item">
             <small>Durasi Kerja</small>
-            <strong>{{ $formatMinutes($currentWorkMinutes) }}</strong>
+            <strong>{{ $resolveWorkDurationLabel($todayAttendance) }}</strong>
             <div class="attendance-soft-text small mt-1">Akumulasi kerja hari ini</div>
           </div>
           <div class="attendance-detail-item">
@@ -774,7 +1322,7 @@
     </div>
   </div>
 
-  <div class="col-xl-4 col-lg-5">
+  <div class="col-xl-4 col-lg-5 attendance-hide-on-mobile">
     <div class="card attendance-recent-card h-100">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <div>
@@ -816,7 +1364,7 @@
     </div>
   </div>
 
-  <div class="col-12">
+  <div class="col-12 attendance-hide-on-mobile">
     <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3">
       <div>
         <h3 class="attendance-section-title">Insight Bulanan</h3>
@@ -828,7 +1376,7 @@
     </div>
   </div>
 
-  <div class="col-12">
+  <div class="col-12 attendance-hide-on-mobile">
     <div class="row g-4">
       @foreach ($monthlyInsightCards as $card)
         <div class="col-md-6 col-xl">
@@ -877,7 +1425,7 @@
         </form>
       </div>
 
-      <div class="table-responsive">
+      <div class="table-responsive attendance-history-table-wrap d-none d-md-block">
         <table class="table table-hover align-middle attendance-history-table">
           <thead>
             <tr>
@@ -900,7 +1448,7 @@
                 <td><span class="badge bg-label-{{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span></td>
                 <td>{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
                 <td>{{ $attendance->check_out_at?->format('H:i') ?? '-' }}</td>
-                <td>{{ $attendance->work_duration_label }}</td>
+                <td>{{ $resolveWorkDurationLabel($attendance) }}</td>
                 <td>
                   <div class="fw-medium">{{ $attendance->attendanceLocation?->name ?? '-' }}</div>
                   @if ($attendance->check_in_distance_meters !== null)
@@ -992,6 +1540,99 @@
             @endforelse
           </tbody>
         </table>
+      </div>
+
+      <div class="attendance-history-mobile-list d-md-none">
+        @forelse ($attendances as $attendance)
+          @php
+            $detailModalId = 'attendance-detail-'.$attendance->id;
+          @endphp
+
+          <article class="card attendance-history-mobile-card">
+            <div class="card-header border-bottom">
+              <div class="d-flex align-items-start justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3 min-w-0">
+                  <span class="attendance-history-mobile-avatar flex-shrink-0">{{ $attendance->date->format('d') }}</span>
+                  <div class="min-w-0">
+                    <h6 class="attendance-history-mobile-name text-truncate mb-0">{{ $attendance->date->locale('id')->translatedFormat('d M Y') }}</h6>
+                    <div class="attendance-history-mobile-email text-truncate">{{ $attendance->date->locale('id')->translatedFormat('l') }}</div>
+                  </div>
+                </div>
+                <span class="badge bg-label-{{ $attendance->status_badge_class }} rounded-pill flex-shrink-0">{{ $attendance->status_label }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="attendance-history-mobile-meta-list">
+                <div class="attendance-history-mobile-meta-item">
+                  <i class="ri ri-community-line"></i>
+                  <span>{{ $internDivisionLabel }}</span>
+                </div>
+                <div class="attendance-history-mobile-meta-item">
+                  <i class="ri ri-price-tag-3-line"></i>
+                  <span>{{ $internTypeLabel }}</span>
+                </div>
+              </div>
+
+              <div class="attendance-history-mobile-status">
+                {{ $attendance->reason ?: 'Belum ada catatan absensi hari ini.' }}
+              </div>
+
+              <div class="attendance-history-mobile-standalone">
+                <div class="attendance-history-mobile-meta-item">
+                  <i class="ri ri-login-box-line"></i>
+                  <span>Check In: {{ $attendance->check_in_at?->format('H:i') ?? '-' }}</span>
+                </div>
+                <div class="attendance-history-mobile-meta-item">
+                  <i class="ri ri-logout-box-r-line"></i>
+                  <span>Check Out: {{ $attendance->check_out_at?->format('H:i') ?? '-' }}</span>
+                </div>
+                <div class="attendance-history-mobile-meta-item">
+                  <i class="ri ri-map-pin-line"></i>
+                  <span>{{ $attendance->attendanceLocation?->name ?? '-' }}</span>
+                </div>
+              </div>
+
+              <div class="attendance-history-mobile-stats">
+                <div class="attendance-history-mobile-stat">
+                  <small>Durasi Kerja</small>
+                  <strong>{{ $resolveWorkDurationLabel($attendance) }}</strong>
+                </div>
+                <div class="attendance-history-mobile-stat">
+                  <small>Keterlambatan</small>
+                  <strong>{{ $attendance->late_duration_label }}</strong>
+                </div>
+                <div class="attendance-history-mobile-stat attendance-history-mobile-stat--full">
+                  <small>Jarak Check-in</small>
+                  <strong>{{ $attendance->check_in_distance_meters !== null ? $attendance->check_in_distance_meters.' m' : '-' }}</strong>
+                </div>
+              </div>
+
+              @if ($attendance->reason || $attendance->attachment_path)
+                <div class="attendance-history-mobile-actions">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm attendance-detail-button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#{{ $detailModalId }}"
+                    aria-label="Lihat detail absensi">
+                    <i class="ri ri-eye-line me-1"></i> Lihat Detail
+                  </button>
+                </div>
+              @endif
+            </div>
+          </article>
+        @empty
+          <div class="attendance-empty-state text-center">
+            <div class="avatar avatar-xl mb-3">
+              <span class="avatar-initial rounded-4 bg-label-secondary">
+                <i class="ri ri-time-line icon-28px"></i>
+              </span>
+            </div>
+            <h6 class="mb-1">Belum Ada Riwayat</h6>
+            <p class="attendance-soft-text mb-0">Aktivitas absensi terbaru akan muncul di sini setelah Anda mulai mencatat kehadiran.</p>
+          </div>
+        @endforelse
       </div>
 
       @if ($attendances->hasPages())

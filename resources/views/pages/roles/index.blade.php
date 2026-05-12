@@ -2,227 +2,262 @@
 
 @section('title', 'Manajemen Role')
 
-@section('vendor-style')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss',
-         'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss'])
-@endsection
-
-@section('vendor-script')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js'])
-@endsection
-
 @section('page-style')
 <style>
-/* ── Permission Toggle Panel ─────────────────────────── */
-.permission-table { width: 100%; border-collapse: collapse; }
-.permission-table th {
-  padding: 10px 14px;
-  background: rgba(var(--bs-primary-rgb), 0.08);
-  color: var(--bs-heading-color);
-  font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.permission-table td { padding: 8px 14px; vertical-align: middle; border-bottom: 1px solid var(--bs-border-color); }
-.permission-table tr:last-child td { border-bottom: none; }
-.permission-group-header td {
-  background: rgba(var(--bs-primary-rgb), 0.05);
-  font-weight: 600;
-  color: var(--bs-primary);
-  padding: 10px 14px;
-  border-top: 2px solid rgba(var(--bs-primary-rgb), 0.15);
-}
-.permission-group-block { display: none; }
-.permission-group-block.active { display: table-row-group; }
+  .ims-theme-edit-btn {
+    color: #fff;
+    border: 0;
+    box-shadow: none;
+    transition: transform 0.18s ease, filter 0.18s ease;
+  }
 
-/* Toggle switch */
-.form-check-input[type=checkbox].form-check-input {
-  cursor: pointer;
-}
-.permission-select-all { display: flex; align-items: center; gap: 8px; }
+  html[data-bs-theme="light"] .ims-theme-edit-btn {
+    background: linear-gradient(180deg, #36c76a 0%, #22a955 100%);
+  }
 
-/* Pagination bar */
-.perm-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding: 8px 4px;
-  border-top: 1px solid var(--bs-border-color);
-}
-.perm-pagination .page-info { font-size: 0.85rem; color: var(--bs-body-color); }
-.perm-pagination .btn-perm-page {
-  border: 1px solid var(--bs-border-color);
-  background: var(--bs-body-bg);
-  color: var(--bs-body-color);
-  border-radius: 6px;
-  padding: 4px 14px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all .2s;
-}
-.perm-pagination .btn-perm-page:disabled { opacity: 0.4; cursor: not-allowed; }
-.perm-pagination .btn-perm-page:not(:disabled):hover {
-  background: rgba(var(--bs-primary-rgb), 0.1);
-  border-color: var(--bs-primary);
-  color: var(--bs-primary);
-}
+  html[data-bs-theme="dark"] .ims-theme-edit-btn {
+    background: linear-gradient(180deg, #5b7cff 0%, #3f67f2 100%);
+  }
+
+  .ims-theme-edit-btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+  }
+
+  @media (max-width: 767.98px) {
+    .roles-mobile-shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .roles-mobile-card {
+      border: 1px solid var(--bs-border-color);
+      border-radius: 1rem;
+      background: var(--bs-card-bg);
+      box-shadow: 0 12px 28px rgba(47, 43, 61, 0.12);
+      color: var(--bs-body-color);
+      overflow: hidden;
+    }
+
+    .roles-mobile-card .card-body {
+      padding: 1rem;
+    }
+
+    .roles-mobile-card .roles-mobile-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .roles-mobile-card .roles-mobile-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .roles-mobile-card .roles-mobile-title-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(var(--bs-primary-rgb), 0.1);
+      color: var(--bs-primary);
+    }
+
+    .roles-mobile-card .roles-mobile-title {
+      margin: 0;
+      color: var(--bs-heading-color);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .roles-mobile-card .roles-mobile-subtitle {
+      color: var(--bs-secondary-color);
+      font-size: 0.875rem;
+    }
+
+    .roles-mobile-card .roles-mobile-meta {
+      color: var(--bs-body-color);
+      font-size: 0.78rem;
+    }
+
+    .roles-mobile-card .roles-mobile-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .roles-mobile-card .roles-mobile-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .roles-mobile-card .roles-mobile-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .roles-mobile-card .roles-mobile-actions .btn {
+      width: 100%;
+      border-radius: 0.75rem;
+    }
+
+    .roles-mobile-card .roles-mobile-delete {
+      background: var(--bs-danger);
+      border-color: var(--bs-danger);
+      color: #fff;
+    }
+
+    .roles-mobile-card .roles-mobile-badge {
+      border-radius: 999px;
+      background: var(--bs-primary-bg-subtle);
+      color: var(--bs-primary-text-emphasis);
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+  }
 </style>
 @endsection
 
 @section('content')
-
-  <h4 class="mb-1">Daftar Role</h4>
-  <p class="mb-6">Setiap role memberikan akses ke menu dan fitur yang sudah ditentukan, sehingga pengguna hanya bisa mengakses apa yang sesuai dengan perannya.</p>
-
-  {{-- Role Cards --}}
-  <div class="row g-6">
-
-    {{-- Dynamic Role Cards --}}
-    @foreach ($roles as $index => $role)
-    @php
-      $avatars = ['5.png','12.png','6.png','9.png','1.png','4.png','2.png','3.png','15.png','10.png'];
-      $userCount = $role->users->count();
-      $shownAvatars = array_slice($avatars, 0, min(3, $userCount));
-      $extra = max(0, $userCount - 3);
-      $rolePerms = $role->permissions->pluck('name')->toArray();
-    @endphp
-    <div class="col-xl-4 col-lg-6 col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <p class="mb-0">Total {{ $userCount }} pengguna</p>
-            <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
-              @foreach ($shownAvatars as $avatar)
-              <li class="avatar pull-up" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $role->name }}">
-                <img class="rounded-circle" src="{{ asset('assets/img/avatars/' . $avatar) }}" alt="Avatar" />
-              </li>
-              @endforeach
-              @if ($extra > 0)
-              <li class="avatar">
-                <span class="avatar-initial rounded-circle pull-up bg-lightest text-body"
-                  data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ $extra }} lainnya">+{{ $extra }}</span>
-              </li>
-              @endif
-            </ul>
-          </div>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="role-heading">
-              <h5 class="mb-1">{{ ucfirst($role->name) }}</h5>
-              <a href="{{ route('roles.edit', $role->id) }}">
-                <p class="mb-0">Edit Role &rsaquo;</p>
-              </a>
-            </div>
-            <form action="{{ route('roles.destroy', $role) }}" method="POST"
-              onsubmit="return confirm('Hapus role {{ $role->name }}?');" class="d-inline">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="btn btn-icon btn-text-secondary rounded-pill">
-                <i class="icon-base ri ri-delete-bin-line icon-22px text-danger"></i>
-              </button>
-            </form>
-          </div>
-        </div>
+  <div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4 mb-md-6 ims-mobile-toolbar">
+      <div>
+        <h4 class="mb-1">Daftar Role</h4>
+        <p class="mb-0 text-body-secondary">Setiap role memberikan akses ke menu dan fitur yang sudah ditentukan.</p>
       </div>
-    </div>
-    @endforeach
-
-    {{-- Add New Role Card --}}
-    <div class="col-xl-4 col-lg-6 col-md-6">
-      <div class="card h-100">
-        <div class="row h-100">
-          <div class="col-5">
-            <div class="d-flex align-items-end h-100 justify-content-center mt-5">
-              <img src="{{ asset('assets/img/illustrations/add-new-role-illustration.png') }}" class="img-fluid"
-                alt="add role" width="68" />
-            </div>
-          </div>
-          <div class="col-7">
-            <div class="card-body text-sm-end text-center ps-sm-0">
-              <a href="{{ route('roles.create') }}"
-                class="btn btn-sm btn-primary mb-4 text-nowrap">Tambah Role</a>
-              <p class="mb-0">Tambah role baru<br />jika belum ada.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <a href="{{ route('roles.create') }}" class="btn btn-primary">
+        <i class="icon-base ri ri-add-line me-1"></i> Tambah Role
+      </a>
     </div>
 
-    {{-- Table Section --}}
-    <div class="col-12">
-      <h4 class="mt-6 mb-1">Semua Pengguna &amp; Role Mereka</h4>
-      <p class="mb-6">Lihat seluruh akun pengguna sistem beserta role yang diberikan kepada mereka.</p>
-    </div>
-    <div class="col-12">
-      <div class="card">
-        <div class="table-responsive">
-          <table class="table table-hover" id="rolesTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Role</th>
-                <th>Guard</th>
-                <th>Total Pengguna</th>
-                <th>Dibuat</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($roles as $role)
-              @php $rolePerms = $role->permissions->pluck('name')->toArray(); @endphp
+    {{-- TAMPILAN DESKTOP (Tabel List) --}}
+    <div class="card d-none d-md-block">
+      <div class="table-responsive text-nowrap">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Role</th>
+              <th>Guard Name</th>
+              <th>Total Pengguna</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="table-border-bottom-0">
+            @forelse ($roles as $index => $role)
               <tr>
                 <td>{{ $loop->iteration }}</td>
+                <td><strong>{{ ucfirst($role->name) }}</strong></td>
+                <td><span class="badge bg-label-primary">{{ $role->guard_name }}</span></td>
                 <td>
-                  <span class="d-flex align-items-center gap-2">
-                    <span class="avatar-initial rounded bg-label-primary p-2">
-                      <i class="icon-base ri ri-shield-user-line icon-18px"></i>
-                    </span>
-                    <strong>{{ ucfirst($role->name) }}</strong>
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <i class="icon-base ri ri-user-3-line text-body-secondary me-2"></i>
+                    <span>{{ $role->users->count() }} Pengguna</span>
+                  </div>
                 </td>
-                <td><span class="badge bg-label-secondary">{{ $role->guard_name }}</span></td>
-                <td>{{ $role->users->count() }} pengguna</td>
-                <td>{{ $role->created_at?->format('d M Y') ?? '-' }}</td>
-                <td>
-                  <div class="d-flex align-items-center gap-1">
-                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-icon btn-text-secondary btn-sm rounded-pill"
-                      title="Edit">
-                      <i class="icon-base ri ri-edit-line icon-20px"></i>
+                <td class="text-center">
+                  <div class="d-flex align-items-center justify-content-center gap-2">
+                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm ims-theme-edit-btn d-inline-flex align-items-center gap-1 ims-role-edit-btn" title="Edit Role">
+                      <i class="icon-base ri ri-pencil-line"></i>
+                      <span>Edit</span>
                     </a>
-                    <form action="{{ route('roles.destroy', $role) }}" method="POST"
-                      onsubmit="return confirm('Hapus role {{ $role->name }}?');">
+                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus role {{ $role->name }}?');">
                       @csrf
                       @method('DELETE')
-                      <button type="submit" class="btn btn-icon btn-text-secondary btn-sm rounded-pill" title="Hapus">
-                        <i class="icon-base ri ri-delete-bin-line icon-20px text-danger"></i>
+                      <button type="submit" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 ims-role-delete-btn" title="Hapus Role">
+                        <i class="icon-base ri ri-delete-bin-line"></i>
+                        <span>Hapus</span>
                       </button>
                     </form>
                   </div>
                 </td>
               </tr>
-              @endforeach
-            </tbody>
-          </table>
-        </div>
+            @empty
+              <tr>
+                <td colspan="5" class="text-center py-5">
+                  <i class="icon-base ri ri-shield-user-line icon-32px text-muted mb-2"></i>
+                  <p class="mb-0">Belum ada data role.</p>
+                </td>
+              </tr>
+            @endforelse
+          </tbody>
+        </table>
       </div>
     </div>
 
+    {{-- TAMPILAN MOBILE (Card Compact) --}}
+    <div class="roles-mobile-shell d-md-none">
+      @forelse ($roles as $role)
+        <div class="roles-mobile-card">
+          <div class="card-body">
+            <div class="roles-mobile-head">
+              <div class="min-w-0">
+                <div class="roles-mobile-title-wrap">
+                  <span class="roles-mobile-title-icon">
+                    <i class="ri ri-shield-user-line"></i>
+                  </span>
+                  <h6 class="roles-mobile-title text-truncate">{{ ucfirst($role->name) }}</h6>
+                </div>
+                <div class="roles-mobile-subtitle mt-1">{{ $role->users->count() }} pengguna terdaftar</div>
+                <div class="roles-mobile-meta mt-2">
+                  <i class="icon-base ri ri-user-3-line me-1" style="font-size: 14px;"></i>
+                  Guard: {{ $role->guard_name }}
+                </div>
+              </div>
+              <span class="badge roles-mobile-badge">
+                <i class="icon-base ri ri-code-line"></i>
+                <span>{{ $role->guard_name }}</span>
+              </span>
+            </div>
+
+            <div class="roles-mobile-stats">
+              <span class="badge bg-label-primary rounded-pill roles-mobile-stat">
+                <i class="icon-base ri ri-user-3-line"></i>
+                <span>{{ $role->users->count() }} Pengguna</span>
+              </span>
+            </div>
+
+            <div class="roles-mobile-actions">
+              <a href="{{ route('roles.edit', $role->id) }}" class="btn roles-mobile-edit ims-theme-edit-btn d-inline-flex align-items-center justify-content-center gap-1">
+                <i class="icon-base ri ri-pencil-line"></i>
+                <span>Edit</span>
+              </a>
+
+              <form action="{{ route('roles.destroy', $role) }}" method="POST" onsubmit="return confirm('Hapus role {{ $role->name }}?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn roles-mobile-delete d-inline-flex align-items-center justify-content-center gap-1">
+                  <i class="icon-base ri ri-delete-bin-line"></i>
+                  <span>Hapus</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      @empty
+        <div class="roles-mobile-card text-center p-4">
+          <div class="card-body">
+            <i class="icon-base ri ri-shield-user-line icon-32px text-muted mb-2"></i>
+            <p class="mb-0">Belum ada data role.</p>
+          </div>
+        </div>
+      @endforelse
+    </div>
   </div>
-  {{-- /Role cards --}}
-
-  </div>
-  {{-- /Role cards --}}
-
-@endsection
-
-@section('page-script')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  // Initialization of table row highlighting or other minor features
-});
-</script>
 @endsection

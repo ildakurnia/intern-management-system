@@ -32,6 +32,8 @@ class Division extends Model
      */
     public function mentors(): HasMany
     {
-        return $this->hasMany(User::class);
+        // Hanya hitung user yang benar-benar berperan sebagai mentor.
+        // User intern juga punya division_id, jadi tanpa filter ini count bisa ikut membengkak.
+        return $this->hasMany(User::class)->role('mentor');
     }
 }

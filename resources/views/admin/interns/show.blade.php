@@ -3,7 +3,7 @@
 @section('title', 'Detail Profil Intern')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 ims-mobile-toolbar">
   <div>
     @include('partials.app-breadcrumb', [
       'items' => [
@@ -19,12 +19,12 @@
       @csrf
       @method('PUT')
       <button type="submit" class="btn btn-success">
-        <i class="ri-check-line me-1"></i> Terima / Approve
+        <i class="ri ri-check-line me-1"></i> Terima / Approve
       </button>
     </form>
     @endif
     <a href="{{ route('admin.interns.index') }}" class="btn btn-outline-secondary">
-      <i class="ri-arrow-left-line me-1"></i> Kembali
+      <i class="ri ri-arrow-left-line me-1"></i> Kembali
     </a>
   </div>
 </div>
@@ -275,8 +275,8 @@
               Belum ada master lokasi absensi. Tambahkan lokasi dulu sebelum menghubungkannya ke intern ini.
             </div>
           @else
-            <div class="table-responsive">
-              <table class="table align-middle">
+            <div class="table-responsive ims-card-table-wrap">
+              <table class="table align-middle ims-card-table">
                 <thead class="table-light">
                   <tr>
                     <th>Aktif</th>
@@ -293,7 +293,7 @@
                       $selectedPrimary = (int) old('primary_location_id', $primaryLocationId);
                     @endphp
                     <tr>
-                      <td>
+                      <td data-label="Aktif">
                         <div class="form-check">
                           <input
                             class="form-check-input"
@@ -304,12 +304,12 @@
                             @checked($isChecked)>
                         </div>
                       </td>
-                      <td>
+                      <td data-label="Lokasi" class="ims-card-primary">
                         <label class="fw-medium mb-0" for="location_{{ $location->id }}">{{ $location->name }}</label>
                         <div class="small text-body-secondary">{{ $location->latitude }}, {{ $location->longitude }}</div>
                       </td>
-                      <td>{{ $location->radius_meters }} meter</td>
-                      <td>
+                      <td data-label="Radius">{{ $location->radius_meters }} meter</td>
+                      <td data-label="Utama">
                         <div class="form-check">
                           <input
                             class="form-check-input"
@@ -321,7 +321,7 @@
                           <label class="form-check-label" for="primary_location_{{ $location->id }}">Pilih utama</label>
                         </div>
                       </td>
-                      <td>{{ $location->notes ?: '-' }}</td>
+                      <td data-label="Keterangan">{{ $location->notes ?: '-' }}</td>
                     </tr>
                   @endforeach
                 </tbody>

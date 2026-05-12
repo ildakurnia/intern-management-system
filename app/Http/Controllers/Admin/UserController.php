@@ -174,7 +174,16 @@ class UserController extends Controller
             return back()->with('error', 'Anda tidak bisa menghapus akun sendiri!');
         }
 
-        $user->delete();
+        DB::transaction(function () use ($user) {
+            // Jika user ini linked ke data intern, hapus dulu record intern-nya
+            // supaya data tidak tertinggal di daftar intern dan hitungan divisi ikut turun.
+            if ($user->intern()->exists()) {
+                $user->intern()->delete();
+            }
+
+            $user->delete();
+        });
+
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus!');
     }
 }

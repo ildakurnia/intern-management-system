@@ -2,7 +2,6 @@
   use Illuminate\Support\Facades\Auth;
 
   $configData = Helper::appClasses();
-  $currentUser = Auth::user();
   $isRouteActive = static function ($slug): bool {
       $slugs = is_array($slug) ? $slug : [$slug];
 
@@ -226,28 +225,9 @@
       font-size: 0.78rem;
     }
 
-    .ims-sidebar-footer {
-      padding: 0.65rem 0.58rem 0.72rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.12);
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(10px);
-    }
-
-    .ims-sidebar-logout {
-      width: 100%;
-      border-radius: 999px;
-      padding: 0.55rem 0.78rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.42rem;
-    }
-
     .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .ims-sidebar-brand-copy,
     .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .menu-header,
-    .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .menu-link > div,
-    .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .ims-sidebar-logout span {
+    .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .menu-link > div {
       display: none;
     }
 
@@ -288,27 +268,13 @@
       display: none;
     }
 
-    .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .ims-sidebar-footer {
-      padding-inline: 0.58rem;
-      padding-block: 0.68rem;
-    }
-
-    .layout-menu-collapsed:not(.layout-menu-hover) .ims-sidebar .ims-sidebar-logout {
-      width: 3.2rem;
-      min-height: 2.7rem;
-      margin-inline: auto;
-      padding: 0;
-      gap: 0;
-    }
-
     html[data-bs-theme="dark"] .ims-sidebar {
       background: #0f172a;
       border-inline-end-color: rgba(148, 163, 184, 0.14);
       box-shadow: 0 24px 48px rgba(2, 6, 23, 0.32);
     }
 
-    html[data-bs-theme="dark"] .ims-sidebar .app-brand,
-    html[data-bs-theme="dark"] .ims-sidebar-footer {
+    html[data-bs-theme="dark"] .ims-sidebar .app-brand {
       border-color: rgba(148, 163, 184, 0.12);
     }
 
@@ -405,15 +371,4 @@
     </ul>
   </div>
 
-  @if ($currentUser)
-    <div class="ims-sidebar-footer">
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="btn btn-outline-secondary ims-sidebar-logout">
-          <i class="ri ri-logout-box-r-line"></i>
-          <span>Logout</span>
-        </button>
-      </form>
-    </div>
-  @endif
 </aside>

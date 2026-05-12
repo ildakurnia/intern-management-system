@@ -101,3 +101,203 @@
   text-align: center;
   margin-top: 1.25rem;
 }
+
+/*
+* IMS responsive table cards
+* Keeps desktop tables intact while turning dense admin tables into compact cards on phones.
+******************************************************************************/
+
+.ims-card-table {
+  width: 100%;
+}
+
+.ims-table-inline-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ims-filter-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ims-icon-only-btn {
+  width: 2.5rem;
+  min-width: 2.5rem;
+  padding-inline: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 767.98px) {
+  .ims-mobile-stack,
+  .ims-mobile-stack.card-header,
+  .ims-mobile-stack > .d-flex {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .ims-mobile-toolbar,
+  .ims-mobile-filter,
+  .ims-mobile-filter .ims-filter-actions {
+    width: 100%;
+  }
+
+  .ims-mobile-toolbar {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .ims-mobile-filter {
+    display: grid !important;
+    gap: 0.65rem !important;
+  }
+
+  .ims-mobile-filter.ims-inline-search {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center !important;
+  }
+
+  .ims-mobile-filter .form-control,
+  .ims-mobile-filter .form-select,
+  .ims-mobile-filter .btn,
+  .ims-mobile-filter a.btn {
+    width: 100%;
+    min-width: 0 !important;
+  }
+
+  .ims-mobile-filter .ims-icon-only-btn {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    flex: 0 0 2.75rem;
+  }
+
+  .ims-card-table-wrap.table-responsive,
+  .ims-card-table-wrap .table-responsive {
+    overflow-x: visible;
+  }
+
+  .ims-card-table {
+    border-collapse: separate !important;
+    border-spacing: 0 0.75rem;
+  }
+
+  .ims-card-table thead {
+    display: none;
+  }
+
+  .ims-card-table tbody,
+  .ims-card-table tr,
+  .ims-card-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .ims-card-table tbody tr {
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.9rem;
+    background: var(--bs-card-bg, var(--bs-body-bg));
+    box-shadow: 0 0.35rem 1rem rgba(15, 23, 42, 0.045);
+  }
+
+  .ims-card-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .ims-card-table td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 2.75rem;
+    padding: 0.72rem 0.9rem !important;
+    border: 0 !important;
+    border-bottom: 1px dashed var(--bs-border-color) !important;
+    text-align: right !important;
+    white-space: normal !important;
+    word-break: break-word;
+  }
+
+  .ims-card-table td:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .ims-card-table td::before {
+    content: attr(data-label);
+    flex: 0 0 42%;
+    max-width: 42%;
+    color: var(--bs-secondary-color);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .ims-card-table td:not([data-label])::before,
+  .ims-card-table td[data-label=""]::before,
+  .ims-card-table td[colspan]::before,
+  .ims-card-table .ims-card-actions::before,
+  .ims-card-table .ims-table-group-cell::before {
+    display: none;
+  }
+
+  .ims-card-table .ims-card-primary {
+    display: block;
+    text-align: left !important;
+  }
+
+  .ims-card-table .ims-card-primary::before {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 0.35rem;
+  }
+
+  .ims-card-table .ims-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left !important;
+  }
+
+  .ims-card-table .ims-card-actions form {
+    margin: 0;
+  }
+
+  .ims-card-table .ims-card-actions .btn-icon,
+  .ims-card-table .ims-card-actions .allowance-icon-btn {
+    width: 2.7rem;
+    flex: 0 0 2.7rem;
+  }
+
+  .ims-card-table .ims-table-inline-actions,
+  .ims-card-table .d-flex.justify-content-center,
+  .ims-card-table .d-flex.text-center {
+    justify-content: flex-start !important;
+  }
+
+  .ims-card-table td[colspan] {
+    display: block;
+    padding: 1.25rem !important;
+    text-align: center !important;
+  }
+
+  .ims-card-table .ims-table-group-row {
+    border-style: dashed;
+    box-shadow: none;
+  }
+
+  .ims-card-table .ims-table-group-cell {
+    display: block;
+    min-height: 0;
+    text-align: left !important;
+  }
+}
