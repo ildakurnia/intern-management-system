@@ -138,7 +138,7 @@
         <h4 class="mb-1">Detail Riwayat Absensi Intern</h4>
         <p class="admin-detail-soft mb-0">Pantau riwayat kehadiran, lokasi tervalidasi, dan catatan absensi untuk {{ $intern->name }}.</p>
       </div>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2 flex-wrap">
         <a href="{{ route('admin.interns.show', $intern) }}" class="btn btn-outline-primary">
           <i class="ri ri-user-line me-1"></i> Profil Intern
         </a>
@@ -296,7 +296,7 @@
           <h5 class="mb-1">Riwayat Absensi Lengkap</h5>
           <small class="admin-detail-soft">Pantau semua catatan absensi intern ini berdasarkan bulan dan status.</small>
         </div>
-        <form class="d-flex flex-wrap gap-3" method="GET">
+        <form class="d-flex flex-wrap gap-3 ims-mobile-filter" method="GET">
           <input type="month" name="month" value="{{ $selectedMonth }}" class="form-control" style="min-width: 190px;" />
           <select name="status" class="form-select" style="min-width: 180px;">
             <option value="">Semua Status</option>
@@ -304,12 +304,14 @@
               <option value="{{ $value }}" @selected($selectedStatus === $value)>{{ $label }}</option>
             @endforeach
           </select>
-          <button type="submit" class="btn btn-primary px-4">Terapkan</button>
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="ri ri-search-line me-1"></i>Terapkan
+          </button>
         </form>
       </div>
       <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
+        <div class="table-responsive ims-card-table-wrap">
+          <table class="table table-hover align-middle mb-0 ims-card-table">
             <thead class="table-light">
               <tr>
                 <th class="ps-4">Tanggal</th>
@@ -324,16 +326,16 @@
             <tbody>
               @forelse ($attendances as $attendance)
                 <tr>
-                  <td class="ps-4">
+                  <td data-label="Tanggal" class="ps-4 ims-card-primary">
                     <div class="fw-medium">{{ $attendance->date->locale('id')->translatedFormat('d M Y') }}</div>
                     <small class="admin-detail-soft">{{ $attendance->date->locale('id')->translatedFormat('l') }}</small>
                   </td>
-                  <td><span class="badge bg-label-{{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span></td>
-                  <td>{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
-                  <td>{{ $attendance->check_out_at?->format('H:i') ?? '-' }}</td>
-                  <td>{{ $attendance->attendanceLocation?->name ?? '-' }}</td>
-                  <td>{{ $attendance->check_in_distance_meters !== null ? $attendance->check_in_distance_meters.' m' : '-' }}</td>
-                  <td>{{ $attendance->reason ?: '-' }}</td>
+                  <td data-label="Status"><span class="badge bg-label-{{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span></td>
+                  <td data-label="Check In">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
+                  <td data-label="Check Out">{{ $attendance->check_out_at?->format('H:i') ?? '-' }}</td>
+                  <td data-label="Lokasi">{{ $attendance->attendanceLocation?->name ?? '-' }}</td>
+                  <td data-label="Jarak">{{ $attendance->check_in_distance_meters !== null ? $attendance->check_in_distance_meters.' m' : '-' }}</td>
+                  <td data-label="Keterangan">{{ $attendance->reason ?: '-' }}</td>
                 </tr>
               @empty
                 <tr>

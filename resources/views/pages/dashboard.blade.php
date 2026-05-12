@@ -27,12 +27,12 @@
 @endsection
 
 @section('content')
-<div class="row g-6 mb-6">
+<div class="row g-3 g-xl-6 mb-3 mb-xl-6">
 
   {{-- Selamat Datang Card --}}
-  <div class="col-xxl-4">
+  <div class="col-12 col-xxl-4">
     <div class="card h-100">
-      <div class="card-body text-nowrap">
+      <div class="card-body text-wrap">
         <h5 class="card-title mb-1">Selamat datang, <span class="fw-bold">{{ auth()->user()->name }}!</span> 🎉</h5>
         <p class="card-subtitle mb-3">{{ $pageDescription ?? 'Portal Intern Management System' }}</p>
         <h4 class="text-primary mb-0">{{ $totalInterns ?? 0 }} Intern</h4>
@@ -42,12 +42,14 @@
         @endif
       </div>
       <img src="{{ asset('assets/img/illustrations/trophy.png') }}"
-        class="position-absolute bottom-0 end-0 me-4" height="140" alt="trophy" />
+        class="position-absolute bottom-0 end-0 me-4 d-none d-sm-block" height="140" alt="trophy" />
+      <img src="{{ asset('assets/img/illustrations/trophy.png') }}"
+        class="position-absolute bottom-0 end-0 me-2 d-sm-none" height="80" alt="trophy" style="opacity: 0.5;" />
     </div>
   </div>
 
   {{-- Total Intern --}}
-  <div class="col-xxl-2 col-md-3 col-sm-6">
+  <div class="col-6 col-md-3 col-xxl-2">
     <div class="card h-100">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -61,17 +63,17 @@
             <i class="icon-base ri ri-arrow-up-s-line text-success icon-sm"></i>
           </div>
         </div>
-        <div class="card-info mt-5">
+        <div class="card-info mt-3 mt-sm-5">
           <h5 class="mb-1">{{ $totalInterns ?? 0 }}</h5>
-          <p>Total Anak Magang</p>
-          <div class="badge bg-label-secondary rounded-pill">Semua Divisi</div>
+          <small class="d-block text-truncate mb-1">Total Anak Magang</small>
+          <div class="badge bg-label-secondary rounded-pill text-truncate" style="max-width: 100%;">Semua Divisi</div>
         </div>
       </div>
     </div>
   </div>
 
   {{-- Total Logbook --}}
-  <div class="col-xxl-2 col-md-3 col-sm-6">
+  <div class="col-6 col-md-3 col-xxl-2">
     <div class="card h-100">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -85,27 +87,27 @@
             <i class="icon-base ri ri-arrow-up-s-line text-success icon-sm"></i>
           </div>
         </div>
-        <div class="card-info mt-5">
+        <div class="card-info mt-3 mt-sm-5">
           <h5 class="mb-1">{{ $totalLogbooks ?? 0 }}</h5>
-          <p>Total Logbook</p>
-          <div class="badge bg-label-secondary rounded-pill">Bulan Ini</div>
+          <small class="d-block text-truncate mb-1">Total Logbook</small>
+          <div class="badge bg-label-secondary rounded-pill text-truncate" style="max-width: 100%;">Bulan Ini</div>
         </div>
       </div>
     </div>
   </div>
 
   {{-- Total Role --}}
-  <div class="col-xxl-2 col-md-3 col-sm-6">
+  <div class="col-6 col-md-3 col-xxl-2">
     <div class="card h-100">
       <div class="card-header">
         <div class="d-flex align-items-center mb-1 flex-wrap">
           <h5 class="mb-0 me-1">{{ $totalRoles ?? 0 }}</h5>
           <p class="mb-0 text-primary">Roles</p>
         </div>
-        <span class="d-block card-subtitle">Manajemen Akses</span>
+        <span class="d-block card-subtitle text-truncate">Manajemen Akses</span>
       </div>
       <div class="card-body">
-        <div class="d-flex align-items-center gap-2 mt-2">
+        <div class="d-flex align-items-center gap-2 mt-0 mt-sm-2">
           <i class="icon-base ri ri-shield-user-line icon-32px text-primary"></i>
           <div>
             <small class="d-block text-body-secondary">Aktif</small>
@@ -117,17 +119,17 @@
   </div>
 
   {{-- Total Users --}}
-  <div class="col-xxl-2 col-md-3 col-sm-6">
+  <div class="col-6 col-md-3 col-xxl-2">
     <div class="card h-100">
       <div class="card-header">
         <div class="d-flex align-items-center mb-1 flex-wrap">
           <h5 class="mb-0 me-1">{{ $totalUsers ?? 0 }}</h5>
           <p class="mb-0 text-info">Users</p>
         </div>
-        <span class="d-block card-subtitle">Semua Pengguna</span>
+        <span class="d-block card-subtitle text-truncate">Semua Pengguna</span>
       </div>
       <div class="card-body">
-        <div class="d-flex align-items-center gap-2 mt-2">
+        <div class="d-flex align-items-center gap-2 mt-0 mt-sm-2">
           <i class="icon-base ri ri-user-3-line icon-32px text-info"></i>
           <div>
             <small class="d-block text-body-secondary">Terdaftar</small>
@@ -140,7 +142,7 @@
 
 </div>
 
-<div class="row g-6">
+<div class="row g-3 g-xl-6">
 
   {{-- Logbook per Bulan Chart --}}
   <div class="col-lg-4 col-md-6 order-1 order-lg-0">

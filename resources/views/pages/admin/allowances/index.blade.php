@@ -622,8 +622,8 @@
         </div>
         <span class="allowance-table-badge">Update: {{ now()->locale('id')->translatedFormat('d M Y') }}</span>
       </div>
-      <div class="table-responsive">
-        <table class="table align-middle">
+      <div class="table-responsive ims-card-table-wrap">
+        <table class="table align-middle ims-card-table">
           <thead>
             <tr>
               <th>Mahasiswa</th>
@@ -648,7 +648,7 @@
                 $showDivisionChip = $divisionCode !== '' && strcasecmp($divisionCode, $divisionName) !== 0;
               @endphp
               <tr>
-                <td>
+                <td data-label="Mahasiswa" class="ims-card-primary">
                   <div class="d-flex align-items-center gap-3">
                     <span class="allowance-avatar success">{{ strtoupper($initials ?: 'IN') }}</span>
                     <div>
@@ -657,15 +657,16 @@
                     </div>
                   </div>
                 </td>
-                <td>
+                <td data-label="Divisi & Institusi">
                   @if ($showDivisionChip)
                     <div class="allowance-chip">{{ $divisionCode }}</div>
                   @endif
                   <div class="fw-semibold">{{ $divisionName }}</div>
                   <small class="allowance-soft-text">{{ $row['institution_label'] }}</small>
                 </td>
-                <td>
-                  <div class="allowance-attendance-total">{{ $row['counted_days'] }}/{{ $attendanceProgress }} hari</div>
+                <td data-label="Kehadiran">
+                  <div class="allowance-attendance-total">{{ $row['counted_days'] }} hari</div>
+                  <small class="allowance-soft-text">Maksimal {{ $attendanceProgress }} hari</small>
                   <div class="allowance-attendance-breakdown">
                     <span class="text-success">
                       <span class="dot" style="background:#12a150;"></span>{{ $row['present_days'] }}
@@ -675,11 +676,11 @@
                     </span>
                   </div>
                 </td>
-                <td>
+                <td data-label="Tarif & Total">
                   <div class="allowance-total-line">{{ $row['allowance_amount_label'] }}</div>
                   <div class="allowance-max-line">Max: {{ $row['max_amount_label'] }}</div>
                 </td>
-                <td>
+                <td data-label="Aksi" class="ims-card-actions">
                   <div class="allowance-action-group">
                     <a href="{{ route('admin.allowances.show.print', ['intern' => $intern, 'month' => $selectedMonth]) }}" target="_blank" class="allowance-icon-btn" aria-label="Cetak PDF {{ $intern->name }}">
                       <i class="ri ri-file-pdf-line"></i>
@@ -692,7 +693,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="8">
+                <td colspan="5">
                   <div class="allowance-empty-state">
                     <h6 class="mb-2">Belum Ada Mahasiswa Eligible</h6>
                     <p class="allowance-soft-text mb-0">Mahasiswa Polibatam yang memakai institusi resmi akan muncul di daftar ini.</p>

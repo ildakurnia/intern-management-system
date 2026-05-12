@@ -368,33 +368,58 @@
       }
 
       .mentor-logbook-calendar-grid {
-        min-width: 40rem;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .mentor-logbook-calendar-board {
+        overflow-x: visible;
       }
 
       .mentor-logbook-day {
-        min-height: 6rem;
-        padding: 0.25rem;
+        min-height: 4.85rem;
+        padding: 0.15rem;
       }
 
       .mentor-logbook-day-button {
-        min-height: 5.2rem;
-        padding: 0.5rem;
-        border-radius: 0.8rem;
+        align-items: center;
+        min-height: 4.45rem;
+        gap: 0.3rem;
+        padding: 0.35rem 0.15rem;
+        border-radius: 0.65rem;
+        text-align: center;
+      }
+
+      .mentor-logbook-day-number {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.82rem;
       }
 
       .mentor-logbook-weekday {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.15rem;
+        font-size: 0.72rem;
+        padding: 0.35rem 0.05rem;
       }
 
       .mentor-logbook-day-count,
       .mentor-logbook-day-empty,
       .mentor-logbook-day-names {
-        font-size: 0.72rem;
+        font-size: 0.64rem;
       }
 
+      .mentor-logbook-day-names,
+      .mentor-logbook-day-empty,
       .mentor-logbook-mobile-hint {
-        display: block;
+        display: none;
+      }
+
+      .mentor-logbook-day-count {
+        justify-content: center;
+        gap: 0.18rem;
+      }
+
+      .mentor-logbook-day-count i {
+        font-size: 0.5rem;
       }
 
       .mentor-logbook-modal .modal-dialog {

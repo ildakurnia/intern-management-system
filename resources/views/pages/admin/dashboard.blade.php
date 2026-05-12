@@ -9,6 +9,10 @@
     gap: 1rem;
   }
 
+  .role-dashboard .row > [class*="col"] {
+    min-width: 0;
+  }
+
   .role-dashboard .card {
     border: 1px solid rgba(148, 163, 184, 0.14);
     border-radius: 1.5rem;
@@ -44,7 +48,11 @@
   }
 
   .role-hero-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 1rem;
+    white-space: normal;
   }
 
   .role-stat-card {
@@ -79,6 +87,13 @@
     height: 100%;
   }
 
+  .role-list-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
   .role-list-card h5 {
     margin-bottom: .25rem;
   }
@@ -104,15 +119,21 @@
     background: rgba(248, 250, 252, 0.72);
   }
 
+  .role-list-item > div {
+    min-width: 0;
+  }
+
   .role-list-item-title {
     color: #1f2937;
     font-weight: 700;
+    overflow-wrap: anywhere;
   }
 
   .role-list-item-meta {
     margin-top: .2rem;
     color: #64748b;
     font-size: .84rem;
+    overflow-wrap: anywhere;
   }
 
   .role-list-item-sub {
@@ -120,6 +141,138 @@
     color: #475569;
     font-size: .84rem;
     line-height: 1.55;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  @media (max-width: 767.98px) {
+    .role-dashboard {
+      gap: .8rem;
+    }
+
+    .role-dashboard .row {
+      --bs-gutter-x: .75rem;
+      --bs-gutter-y: .75rem;
+    }
+
+    .role-dashboard .card {
+      border-radius: 1rem;
+      box-shadow: 0 .5rem 1.25rem rgba(15, 23, 42, 0.055);
+    }
+
+    .role-hero .card-body {
+      padding: 1rem !important;
+    }
+
+    .role-hero-badge {
+      padding: .38rem .65rem;
+      font-size: .78rem;
+    }
+
+    .role-hero h2 {
+      font-size: 1.25rem;
+      line-height: 1.25;
+    }
+
+    .role-hero p {
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    .role-hero-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .55rem;
+      margin-top: 1rem;
+    }
+
+    .role-hero-actions .btn {
+      min-height: 2.35rem;
+      padding: .5rem .55rem;
+      border-radius: .75rem;
+      font-size: .8rem;
+      line-height: 1.2;
+    }
+
+    .role-stat-card,
+    .role-list-card {
+      padding: .9rem;
+    }
+
+    .role-stat-label {
+      font-size: .68rem;
+      letter-spacing: .04em;
+    }
+
+    .role-stat-value {
+      margin-top: .5rem;
+      font-size: 1.65rem;
+    }
+
+    .role-stat-note {
+      margin-top: .35rem;
+      font-size: .75rem;
+      line-height: 1.35;
+    }
+
+    .role-list-card h5 {
+      font-size: 1rem;
+    }
+
+    .role-list-soft {
+      font-size: .82rem;
+      line-height: 1.4;
+    }
+
+    .role-list {
+      gap: .6rem;
+      margin-top: .75rem;
+    }
+
+    .role-list-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: .65rem;
+      padding: .75rem;
+      border-radius: .75rem;
+    }
+
+    .role-list-item-title {
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+
+    .role-list-item-meta,
+    .role-list-item-sub {
+      font-size: .76rem;
+      line-height: 1.4;
+    }
+
+    .role-list-item .badge {
+      align-self: start;
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    .role-list-item .btn {
+      align-self: start;
+      padding: .35rem .55rem;
+      font-size: .75rem;
+    }
+  }
+
+  @media (max-width: 379.98px) {
+    .role-hero-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .role-stat-note {
+      display: none;
+    }
   }
 </style>
 @endsection
@@ -162,28 +315,28 @@
   </div>
 
   <div class="row g-4">
-    <div class="col-md-6 col-xl-3">
+    <div class="col-6 col-md-6 col-xl-3">
       <div class="card role-stat-card">
         <div class="role-stat-label">Total Intern</div>
         <div class="role-stat-value">{{ $totalInterns }}</div>
         <div class="role-stat-note">Semua peserta magang terdaftar.</div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col-6 col-md-6 col-xl-3">
       <div class="card role-stat-card">
         <div class="role-stat-label">Register</div>
         <div class="role-stat-value">{{ $adminOnboarding['register'] }}</div>
         <div class="role-stat-note">Belum melewati approval admin.</div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col-6 col-md-6 col-xl-3">
       <div class="card role-stat-card">
         <div class="role-stat-label">Melengkapi Data</div>
         <div class="role-stat-value">{{ $adminOnboarding['completing'] }}</div>
         <div class="role-stat-note">Sudah approve, onboarding belum selesai.</div>
       </div>
     </div>
-    <div class="col-md-6 col-xl-3">
+    <div class="col-6 col-md-6 col-xl-3">
       <div class="card role-stat-card">
         <div class="role-stat-label">Logbook Bulan Ini</div>
         <div class="role-stat-value">{{ $logbookThisMonth }}</div>
@@ -199,7 +352,7 @@
         <p class="role-list-soft mb-0">Ringkasan kehadiran seluruh intern untuk hari ini.</p>
         <div class="row g-3 mt-1">
           @foreach ($adminAttendanceSummary as $item)
-            <div class="col-md-6">
+            <div class="col-6 col-md-6">
               <div class="role-list-item">
                 <div>
                   <div class="role-list-item-title">{{ $item['label'] }}</div>
@@ -215,7 +368,7 @@
 
     <div class="col-xl-7">
       <div class="card role-list-card">
-        <div class="d-flex justify-content-between align-items-start gap-3">
+        <div class="role-list-header">
           <div>
             <h5>Logbook Terbaru</h5>
             <p class="role-list-soft mb-0">Aktivitas logbook terbaru dari intern.</p>

@@ -38,43 +38,90 @@
       'pembelajaran_diperoleh' => old('pembelajaran_diperoleh'),
       'kendala_dialami' => old('kendala_dialami'),
   ];
+  $totalLogbooks = $logbooks->count();
 @endphp
 
 @section('page-style')
   <style>
+    .intern-logbook-page {
+      --intern-logbook-card-bg: var(--bs-card-bg);
+      --intern-logbook-card-bg-soft: var(--bs-body-bg);
+      --intern-logbook-border: var(--bs-border-color);
+      --intern-logbook-border-strong: rgba(var(--bs-primary-rgb), 0.16);
+      --intern-logbook-title: var(--bs-heading-color);
+      --intern-logbook-text: var(--bs-body-color);
+      --intern-logbook-soft: var(--bs-secondary-color);
+      --intern-logbook-muted: var(--bs-tertiary-color);
+      --intern-logbook-hover: rgba(var(--bs-primary-rgb), 0.08);
+      --intern-logbook-primary: var(--bs-primary);
+      --intern-logbook-success: var(--bs-success);
+      --intern-logbook-future: var(--bs-secondary-color);
+      --intern-logbook-shadow: 0 16px 42px rgba(47, 43, 61, 0.08);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-page {
+      --intern-logbook-card-bg-soft: rgba(31, 33, 48, 0.8);
+      --intern-logbook-border: rgba(219, 223, 255, 0.12);
+      --intern-logbook-border-strong: rgba(93, 91, 255, 0.22);
+      --intern-logbook-title: #f4f5ff;
+      --intern-logbook-text: #dde1f5;
+      --intern-logbook-soft: #aab1cd;
+      --intern-logbook-muted: #8f97b4;
+      --intern-logbook-hover: rgba(93, 91, 255, 0.16);
+      --intern-logbook-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    }
+
     .intern-logbook-page {
       display: grid;
       gap: 1rem;
     }
 
     .intern-logbook-card {
-      border: 1px solid rgba(148, 163, 184, 0.14);
+      border: 1px solid var(--intern-logbook-border);
       border-radius: 1.6rem;
-      background: rgba(255, 255, 255, 0.97);
-      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+      background: var(--intern-logbook-card-bg);
+      box-shadow: var(--intern-logbook-shadow);
+      color: var(--intern-logbook-text);
     }
 
     .intern-logbook-header {
-      padding: 1.35rem 1.4rem 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.15rem 1.2rem 0;
     }
 
     .intern-logbook-title {
       margin: 0;
-      color: #172033;
-      font-size: 1.35rem;
+      color: var(--intern-logbook-title);
+      font-size: 1.22rem;
       font-weight: 800;
       letter-spacing: -0.03em;
     }
 
     .intern-logbook-subtitle {
       margin: 0.45rem 0 0;
-      color: #64748b;
+      color: var(--intern-logbook-soft);
       font-size: 0.92rem;
       line-height: 1.6;
     }
 
+    .intern-logbook-total {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(var(--bs-primary-rgb), 0.08);
+      color: var(--bs-primary);
+      font-size: 0.86rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
     .intern-logbook-calendar-wrap {
-      padding: 1.1rem 1.4rem 1.4rem;
+      padding: 0.95rem 1.2rem 1.2rem;
     }
 
     .intern-logbook-calendar-board {
@@ -84,43 +131,43 @@
     }
 
     .intern-logbook-calendar-grid {
-      min-width: 42rem;
+      min-width: 52rem;
     }
 
     .intern-logbook-calendar-toolbar {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .intern-logbook-month-button {
-      width: 2.8rem;
-      height: 2.8rem;
+      width: 2.55rem;
+      height: 2.55rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(15, 23, 42, 0.22);
-      border-radius: 0.9rem;
-      color: #1f2937;
-      background: #fff;
+      border: 1px solid var(--intern-logbook-border);
+      border-radius: 0.85rem;
+      color: var(--intern-logbook-title);
+      background: var(--intern-logbook-card-bg);
       text-decoration: none;
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .intern-logbook-month-button:hover {
       transform: translateY(-1px);
-      border-color: rgba(37, 99, 235, 0.24);
+      border-color: var(--intern-logbook-border-strong);
       box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
-      color: #1d4ed8;
+      color: var(--intern-logbook-primary);
     }
 
     .intern-logbook-month-label {
       min-width: 10rem;
       text-align: center;
-      color: #1f2937;
-      font-size: 1.25rem;
+      color: var(--intern-logbook-title);
+      font-size: 1.12rem;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
@@ -137,22 +184,23 @@
     }
 
     .intern-logbook-weekday {
-      padding: 0.55rem;
-      color: #334155;
-      font-size: 0.92rem;
+      padding: 0.45rem 0.35rem;
+      color: var(--intern-logbook-soft);
+      font-size: 0.82rem;
       font-weight: 600;
       text-align: center;
+      letter-spacing: 0.01em;
     }
 
     .intern-logbook-week {
-      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      border-top: 1px solid var(--intern-logbook-border);
     }
 
     .intern-logbook-day {
-      min-height: 6.2rem;
-      padding: 0.4rem;
-      background: rgba(248, 250, 252, 0.45);
-      border-right: 1px solid rgba(148, 163, 184, 0.12);
+      min-height: 5.45rem;
+      padding: 0.3rem;
+      background: var(--intern-logbook-card-bg-soft);
+      border-right: 1px solid var(--intern-logbook-border);
     }
 
     .intern-logbook-week .intern-logbook-day:last-child {
@@ -162,22 +210,22 @@
     .intern-logbook-day-button {
       width: 100%;
       height: 100%;
-      min-height: 5.3rem;
+      min-height: 4.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.45rem;
+      gap: 0.3rem;
       border: 0;
-      border-radius: 1rem;
+      border-radius: 0.85rem;
       background: transparent;
-      color: #64748b;
+      color: var(--intern-logbook-soft);
       transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease;
     }
 
     .intern-logbook-day-button:hover:not(:disabled) {
-      background: rgba(37, 99, 235, 0.08);
-      color: #1d4ed8;
+      background: var(--intern-logbook-hover);
+      color: var(--intern-logbook-primary);
       transform: translateY(-1px);
     }
 
@@ -187,67 +235,67 @@
     }
 
     .intern-logbook-day-number {
-      width: 2.2rem;
-      height: 2.2rem;
+      width: 2rem;
+      height: 2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       line-height: 1;
     }
 
     .intern-logbook-day.is-today .intern-logbook-day-number {
-      background: #2d8cff;
+      background: var(--intern-logbook-primary);
       color: #fff;
     }
 
     .intern-logbook-day.is-filled .intern-logbook-day-button {
-      color: #166534;
+      color: var(--intern-logbook-success);
     }
 
     .intern-logbook-day.is-filled .intern-logbook-day-button:hover {
-      background: rgba(34, 197, 94, 0.1);
-      color: #166534;
+      background: rgba(var(--bs-success-rgb), 0.1);
+      color: var(--intern-logbook-success);
     }
 
     .intern-logbook-day-dot {
-      width: 0.55rem;
-      height: 0.55rem;
+      width: 0.5rem;
+      height: 0.5rem;
       border-radius: 50%;
       border: 2px solid rgba(148, 163, 184, 0.48);
       background: transparent;
     }
 
     .intern-logbook-day.is-filled .intern-logbook-day-dot {
-      border-color: #3f9142;
-      background: #3f9142;
+      border-color: var(--intern-logbook-success);
+      background: var(--intern-logbook-success);
     }
 
     .intern-logbook-day.is-today .intern-logbook-day-dot {
-      border-color: #2d8cff;
-      background: #2d8cff;
+      border-color: var(--intern-logbook-primary);
+      background: var(--intern-logbook-primary);
     }
 
     .intern-logbook-day.is-outside {
-      background: rgba(249, 250, 251, 0.72);
+      background: rgba(var(--bs-secondary-rgb), 0.05);
     }
 
     .intern-logbook-day.is-outside .intern-logbook-day-button {
-      color: #c0c6d4;
+      color: var(--intern-logbook-muted);
     }
 
     .intern-logbook-day.is-future .intern-logbook-day-button {
-      color: #b7becd;
+      color: var(--intern-logbook-future);
     }
 
     .intern-logbook-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 1rem;
-      color: #64748b;
+      gap: 0.75rem 1rem;
+      margin-top: 0.9rem;
+      color: var(--intern-logbook-soft);
       font-size: 0.82rem;
     }
 
@@ -260,7 +308,7 @@
     .intern-logbook-mobile-hint {
       display: none;
       margin-bottom: 0.9rem;
-      color: #64748b;
+      color: var(--intern-logbook-soft);
       font-size: 0.82rem;
       line-height: 1.5;
     }
@@ -268,27 +316,85 @@
     .intern-logbook-modal .modal-content {
       border: 0;
       border-radius: 1.35rem;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
       box-shadow: 0 24px 54px rgba(15, 23, 42, 0.18);
+      color-scheme: light;
     }
 
     .intern-logbook-modal .modal-header,
     .intern-logbook-modal .modal-footer {
       border: 0;
+      background-color: var(--bs-body-bg);
     }
 
     .intern-logbook-modal .modal-body {
       padding-top: 0;
+      background-color: var(--bs-body-bg);
+    }
+
+    .intern-logbook-modal .form-control,
+    .intern-logbook-modal .form-select {
+      background-color: var(--bs-body-bg);
+      border-color: var(--intern-logbook-border);
+      color: var(--bs-body-color);
+      box-shadow: none;
+    }
+
+    .intern-logbook-modal .form-control::placeholder {
+      color: var(--bs-secondary-color);
+    }
+
+    .intern-logbook-modal .form-control:focus,
+    .intern-logbook-modal .form-select:focus {
+      background-color: var(--bs-body-bg);
+      border-color: var(--intern-logbook-border-strong);
+      color: var(--bs-body-color);
+      box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.12);
+    }
+
+    .intern-logbook-modal .form-control[readonly],
+    .intern-logbook-modal .form-control:disabled,
+    .intern-logbook-modal .form-select:disabled {
+      background-color: rgba(var(--bs-secondary-rgb), 0.08);
+      color: var(--intern-logbook-muted);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-modal .form-control,
+    html[data-bs-theme="dark"] .intern-logbook-modal .form-select {
+      background-color: var(--bs-body-bg);
+      border-color: rgba(219, 223, 255, 0.14);
+      color: var(--intern-logbook-title);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-modal .form-control::placeholder {
+      color: rgba(170, 177, 205, 0.78);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-modal .form-control:focus,
+    html[data-bs-theme="dark"] .intern-logbook-modal .form-select:focus {
+      background-color: var(--bs-body-bg);
+      border-color: rgba(93, 91, 255, 0.45);
+      box-shadow: 0 0 0 0.2rem rgba(93, 91, 255, 0.14);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-modal .modal-content,
+    html[data-bs-theme="dark"] .intern-logbook-modal .modal-header,
+    html[data-bs-theme="dark"] .intern-logbook-modal .modal-body,
+    html[data-bs-theme="dark"] .intern-logbook-modal .modal-footer {
+      background-color: var(--bs-body-bg);
+      color-scheme: dark;
     }
 
     .intern-logbook-form-label {
-      color: #1f2937;
+      color: var(--intern-logbook-title);
       font-size: 0.95rem;
       font-weight: 600;
     }
 
     .intern-logbook-form-note {
       margin-top: 0.35rem;
-      color: #ef4444;
+      color: var(--bs-danger);
       font-size: 0.82rem;
     }
 
@@ -304,7 +410,7 @@
     }
 
     .intern-logbook-check label {
-      color: #374151;
+      color: var(--intern-logbook-text);
       font-size: 0.95rem;
       line-height: 1.6;
     }
@@ -312,51 +418,70 @@
     @media (max-width: 767.98px) {
       .intern-logbook-calendar-wrap,
       .intern-logbook-header {
-        padding-inline: 1rem;
+        padding-inline: 0.95rem;
+      }
+
+      .intern-logbook-header {
+        flex-direction: column;
       }
 
       .intern-logbook-calendar-toolbar {
-        gap: 0.65rem;
+        gap: 0.6rem;
       }
 
       .intern-logbook-month-label {
         min-width: 0;
         flex: 1 1 auto;
-        font-size: 1.05rem;
+        font-size: 0.98rem;
       }
 
       .intern-logbook-month-button {
-        width: 2.45rem;
-        height: 2.45rem;
-        border-radius: 0.8rem;
+        width: 2.3rem;
+        height: 2.3rem;
+        border-radius: 0.75rem;
         flex: 0 0 auto;
       }
 
       .intern-logbook-calendar-grid {
-        min-width: 34rem;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .intern-logbook-calendar-board {
+        overflow-x: visible;
       }
 
       .intern-logbook-day {
-        min-height: 5rem;
-        padding: 0.25rem;
+        min-height: 4.85rem;
+        padding: 0.15rem;
       }
 
       .intern-logbook-day-button {
-        min-height: 4.3rem;
-        border-radius: 0.8rem;
+        align-items: center;
+        min-height: 4.45rem;
+        gap: 0.3rem;
+        padding: 0.35rem 0.15rem;
+        border-radius: 0.65rem;
+        text-align: center;
+      }
+
+      .intern-logbook-day-number {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.82rem;
       }
 
       .intern-logbook-weekday {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.15rem;
+        font-size: 0.72rem;
+        padding: 0.35rem 0.05rem;
       }
 
       .intern-logbook-mobile-hint {
-        display: block;
+        display: none;
       }
 
       .intern-logbook-modal .modal-dialog {
-        margin: 0.9rem;
+        margin: 0.8rem;
       }
 
       .intern-logbook-modal .modal-header,
@@ -366,12 +491,15 @@
       }
 
       .intern-logbook-modal .modal-footer {
-        flex-direction: column-reverse;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
         align-items: stretch;
       }
 
       .intern-logbook-modal .modal-footer .btn {
         width: 100%;
+        margin: 0;
       }
     }
   </style>
@@ -388,10 +516,16 @@
 
     <div class="intern-logbook-card">
       <div class="intern-logbook-header">
-        <h1 class="intern-logbook-title">Kalender Laporan Harian</h1>
-        <p class="intern-logbook-subtitle">
-          Klik tanggal untuk mengisi logbook harian. Tanggal yang sudah ada titik hijau berarti logbook sudah tersimpan dan bisa diperbarui.
-        </p>
+        <div>
+          <h1 class="intern-logbook-title">Kalender Laporan Harian</h1>
+          <p class="intern-logbook-subtitle">
+            Klik tanggal untuk mengisi logbook harian. Tanggal yang sudah ada titik hijau berarti logbook sudah tersimpan dan bisa diperbarui.
+          </p>
+        </div>
+        <div class="intern-logbook-total">
+          <i class="ri ri-draft-line"></i>
+          {{ $totalLogbooks }} laporan bulan ini
+        </div>
       </div>
 
       <div class="intern-logbook-calendar-wrap">
@@ -610,6 +744,10 @@
 
       document.querySelectorAll('[data-logbook-date]').forEach(function (button) {
         button.addEventListener('click', function () {
+          if (button.tagName === 'A') {
+            return;
+          }
+
           const logbookDate = button.dataset.logbookDate;
           const logbook = logbooks[logbookDate] ?? null;
 

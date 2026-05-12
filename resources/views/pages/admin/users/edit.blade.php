@@ -6,10 +6,10 @@
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="card shadow-sm border-0">
-      <div class="card-header d-flex align-items-center justify-content-between border-bottom py-4">
+      <div class="card-header d-flex align-items-center justify-content-between border-bottom py-4 ims-mobile-toolbar">
         <h5 class="m-0 text-primary fw-bold">Edit Data Pengguna</h5>
         <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-secondary">
-          <i class="ri-arrow-left-line me-1"></i> Kembali
+          <i class="ri ri-arrow-left-line me-1"></i> Kembali
         </a>
       </div>
       <div class="card-body py-5">
@@ -102,7 +102,7 @@
 
             <div class="col-12 mt-5">
               <button type="submit" class="btn btn-warning w-100 py-3 shadow">
-                <i class="ri-refresh-line me-2"></i> Perbarui Data Pengguna
+                <i class="ri ri-refresh-line me-2"></i> Perbarui Data Pengguna
               </button>
             </div>
           </div>

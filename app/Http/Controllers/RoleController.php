@@ -21,9 +21,14 @@ class RoleController extends Controller
     public function create()
     {
         $permissionMenus = $this->permissionMenus();
+        $unassignedPermissions = \App\Models\Permission::query()
+            ->whereDoesntHave('menu')
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
         $rolePermissions = [];
 
-        return view('pages.roles.create', compact('permissionMenus', 'rolePermissions'));
+        return view('pages.roles.create', compact('permissionMenus', 'unassignedPermissions', 'rolePermissions'));
     }
 
     public function store(Request $request)
@@ -53,9 +58,14 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $permissionMenus = $this->permissionMenus();
+        $unassignedPermissions = \App\Models\Permission::query()
+            ->whereDoesntHave('menu')
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
         $rolePermissions = $role->permissions->pluck('name')->toArray();
 
-        return view('pages.roles.edit', compact('role', 'permissionMenus', 'rolePermissions'));
+        return view('pages.roles.edit', compact('role', 'permissionMenus', 'unassignedPermissions', 'rolePermissions'));
     }
 
     public function update(Request $request, Role $role)

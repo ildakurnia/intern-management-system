@@ -89,24 +89,59 @@
 
   .monitoring-table-card .table {
     margin-bottom: 0;
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
   }
 
   .monitoring-table-card thead th {
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
+    font-size: 0.73rem;
+    letter-spacing: 0.035em;
     text-transform: uppercase;
     color: #4c5675;
     background: #f6f7fc;
     border-bottom: 0;
-    padding-top: 1.1rem;
-    padding-bottom: 1.1rem;
+    padding: 0.85rem 0.7rem;
+    white-space: nowrap;
   }
 
   .monitoring-table-card tbody td {
-    padding-top: 1.15rem;
-    padding-bottom: 1.15rem;
+    padding: 0.85rem 0.7rem;
     border-color: rgba(90, 96, 141, 0.1);
     vertical-align: middle;
+  }
+
+  .monitoring-col-intern {
+    width: auto;
+  }
+
+  .monitoring-col-divisi {
+    width: auto;
+  }
+
+  .monitoring-col-kategori {
+    width: auto;
+  }
+
+  .monitoring-col-status {
+    width: auto;
+    white-space: normal;
+  }
+
+  .monitoring-col-checkin,
+  .monitoring-col-checkout {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .monitoring-col-total {
+    width: auto;
+    white-space: normal;
+  }
+
+  .monitoring-col-aksi {
+    width: auto;
+    white-space: nowrap;
   }
 
   .monitoring-avatar {
@@ -131,22 +166,142 @@
     color: #56607f;
     font-size: 0.76rem;
     font-weight: 600;
+    max-width: 100%;
   }
 
   .monitoring-attendance-total {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #171f39;
   }
 
   .monitoring-detail-btn {
-    min-width: 7.75rem;
-    border-radius: 0.95rem;
+    min-width: 0;
+    padding-inline: 0.75rem;
+    border-radius: 0.8rem;
+  }
+
+  .monitoring-table-card .table-responsive {
+    overflow-x: hidden;
   }
 
   .monitoring-empty-state {
     padding: 2rem;
     text-align: center;
+  }
+
+  @media (max-width: 767.98px) {
+    .monitoring-mobile-shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .monitoring-mobile-card {
+      border: 1px solid var(--bs-border-color);
+      border-radius: 1.1rem;
+      background: var(--bs-card-bg);
+      overflow: hidden;
+    }
+
+    .monitoring-mobile-card .card-header,
+    .monitoring-mobile-card .card-body {
+      background: transparent;
+    }
+
+    .monitoring-mobile-card .card-header {
+      padding: 1rem;
+    }
+
+    .monitoring-mobile-card .card-body {
+      padding: 1rem;
+    }
+
+    .monitoring-mobile-name {
+      margin: 0;
+      color: var(--bs-heading-color);
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .monitoring-mobile-email,
+    .monitoring-mobile-meta {
+      color: var(--bs-secondary-color);
+      font-size: 0.875rem;
+    }
+
+    .monitoring-mobile-meta-list {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .monitoring-mobile-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--bs-body-color);
+      font-size: 0.875rem;
+      line-height: 1.35;
+    }
+
+    .monitoring-mobile-status {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .monitoring-mobile-status .badge {
+      border-radius: 999px;
+    }
+
+    .monitoring-mobile-standalone {
+      display: grid;
+      gap: 0.45rem;
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid var(--bs-border-color);
+    }
+
+    .monitoring-mobile-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.9rem;
+    }
+
+    .monitoring-mobile-stat {
+      border: 1px solid var(--bs-border-color);
+      border-radius: 0.9rem;
+      padding: 0.75rem 0.85rem;
+      background: rgba(var(--bs-emphasis-color-rgb), 0.02);
+    }
+
+    .monitoring-mobile-stat small {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: var(--bs-secondary-color);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .monitoring-mobile-stat strong {
+      color: var(--bs-heading-color);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .monitoring-mobile-actions {
+      margin-top: 1rem;
+    }
+
+    .monitoring-mobile-actions .btn {
+      width: 100%;
+      border-radius: 0.85rem;
+    }
   }
 </style>
 @endsection
@@ -212,7 +367,7 @@
           <small class="monitoring-soft-text d-block mt-2">Snapshot hari ini: {{ $monitorDate }}</small>
         </div>
 
-        <form class="monitoring-filter-shell d-flex flex-wrap align-items-end gap-3 m-0" method="GET">
+        <form class="monitoring-filter-shell d-flex flex-wrap align-items-end gap-3 m-0 ims-mobile-filter" method="GET">
           <div>
             <label for="monitor-search">Cari Nama Intern</label>
             <input
@@ -232,9 +387,13 @@
               @endforeach
             </select>
           </div>
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary px-4">Terapkan</button>
-            <a href="{{ route('admin.attendances.index') }}" class="btn btn-outline-secondary px-4">Reset</a>
+          <div class="ims-filter-actions">
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="ri ri-search-line me-1"></i>Terapkan
+            </button>
+            <a href="{{ route('admin.attendances.index') }}" class="btn btn-outline-secondary px-4">
+              <i class="ri ri-refresh-line me-1"></i>Reset
+            </a>
           </div>
         </form>
       </div>
@@ -255,18 +414,18 @@
 
   <div class="col-12">
     <div class="card monitoring-table-card">
-      <div class="table-responsive">
-        <table class="table align-middle">
+      <div class="table-responsive ims-card-table-wrap d-none d-md-block">
+        <table class="table align-middle ims-card-table">
           <thead>
             <tr>
-              <th>Intern</th>
-              <th>Divisi</th>
-              <th>Kategori</th>
-              <th>Status Hari Ini</th>
-              <th>Check In</th>
-              <th>Check Out</th>
-              <th>Total Kehadiran</th>
-              <th>Aksi</th>
+              <th class="monitoring-col-intern">Intern</th>
+              <th class="monitoring-col-divisi">Divisi</th>
+              <th class="monitoring-col-kategori">Kategori</th>
+              <th class="monitoring-col-status">Status Hari Ini</th>
+              <th class="monitoring-col-checkin">Check In</th>
+              <th class="monitoring-col-checkout">Check Out</th>
+              <th class="monitoring-col-total">Total Kehadiran</th>
+              <th class="monitoring-col-aksi">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -282,7 +441,7 @@
                 $categoryLabel = ucfirst($intern->type ?? 'intern');
               @endphp
               <tr>
-                <td>
+                <td data-label="Intern" class="ims-card-primary monitoring-col-intern">
                   <div class="d-flex align-items-center gap-3">
                     <span class="monitoring-avatar">{{ strtoupper($initials ?: 'IN') }}</span>
                     <div>
@@ -291,19 +450,19 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ $intern->division->name ?? '-' }}</td>
-                <td><span class="monitoring-category-badge">{{ $categoryLabel }}</span></td>
-                <td>
+                <td data-label="Divisi" class="monitoring-col-divisi">{{ $intern->division->name ?? '-' }}</td>
+                <td data-label="Kategori" class="monitoring-col-kategori"><span class="monitoring-category-badge">{{ $categoryLabel }}</span></td>
+                <td data-label="Status Hari Ini" class="monitoring-col-status">
                   <span class="badge rounded-pill bg-label-{{ $rowStatus['badge'] }}">{{ $rowStatus['label'] }}</span>
                   <div class="small monitoring-soft-text mt-1">{{ $rowStatus['meta'] }}</div>
                 </td>
-                <td>{{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</td>
-                <td>{{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</td>
-                <td>
+                <td data-label="Check In" class="monitoring-col-checkin">{{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</td>
+                <td data-label="Check Out" class="monitoring-col-checkout">{{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</td>
+                <td data-label="Total Kehadiran" class="monitoring-col-total">
                   <div class="monitoring-attendance-total">{{ $intern->attendance_records_count }}/{{ $workingDays }} Hari</div>
                   <small class="monitoring-soft-text">Ringkasan bulan berjalan</small>
                 </td>
-                <td>
+                <td data-label="Aksi" class="ims-card-actions monitoring-col-aksi">
                   <a href="{{ route('admin.attendances.show', $intern) }}" class="btn btn-primary btn-sm monitoring-detail-btn">
                     Lihat Detail
                   </a>
@@ -321,6 +480,90 @@
             @endforelse
           </tbody>
         </table>
+      </div>
+
+      <div class="d-md-none p-3">
+        <div class="monitoring-mobile-shell">
+          @forelse ($interns as $intern)
+            @php
+              $todayAttendance = $intern->attendances->first();
+              $rowStatus = $resolveStatus($todayAttendance);
+              $initials = collect(explode(' ', trim($intern->name)))
+                ->filter()
+                ->take(2)
+                ->map(fn ($part) => mb_substr($part, 0, 1))
+                ->implode('');
+              $categoryLabel = ucfirst($intern->type ?? 'intern');
+            @endphp
+
+            <div class="monitoring-mobile-card">
+              <div class="card-header border-bottom">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                  <div class="d-flex align-items-center gap-3 min-w-0">
+                    <span class="monitoring-avatar flex-shrink-0">{{ strtoupper($initials ?: 'IN') }}</span>
+                    <div class="min-w-0">
+                      <h6 class="monitoring-mobile-name text-truncate">{{ $intern->name }}</h6>
+                      <div class="monitoring-mobile-email text-truncate">{{ $intern->user?->email ?? $intern->email ?? '-' }}</div>
+                    </div>
+                  </div>
+                  <span class="badge bg-label-{{ $rowStatus['badge'] }} rounded-pill flex-shrink-0">
+                    {{ $rowStatus['label'] }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="monitoring-mobile-meta-list">
+                  <div class="monitoring-mobile-meta-item">
+                    <i class="ri ri-community-line"></i>
+                    <span>{{ $intern->division->name ?? '-' }}</span>
+                  </div>
+                  <div class="monitoring-mobile-meta-item">
+                    <i class="ri ri-price-tag-3-line"></i>
+                    <span class="monitoring-category-badge">{{ $categoryLabel }}</span>
+                  </div>
+                </div>
+
+                <div class="monitoring-mobile-status">
+                  <div class="small monitoring-soft-text">{{ $rowStatus['meta'] }}</div>
+                </div>
+
+                <div class="monitoring-mobile-standalone">
+                  <div class="monitoring-mobile-meta-item">
+                    <i class="ri ri-login-box-line"></i>
+                    <span>Check In: {{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</span>
+                  </div>
+                  <div class="monitoring-mobile-meta-item">
+                    <i class="ri ri-logout-box-r-line"></i>
+                    <span>Check Out: {{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</span>
+                  </div>
+                </div>
+
+                <div class="monitoring-mobile-stats">
+                  <div class="monitoring-mobile-stat">
+                    <small>Total Kehadiran</small>
+                    <strong>{{ $intern->attendance_records_count }}/{{ $workingDays }} Hari</strong>
+                  </div>
+                  <div class="monitoring-mobile-stat">
+                    <small>Status Hari Ini</small>
+                    <strong>{{ $rowStatus['label'] }}</strong>
+                  </div>
+                </div>
+
+                <div class="monitoring-mobile-actions">
+                  <a href="{{ route('admin.attendances.show', $intern) }}" class="btn btn-primary">
+                    Lihat Detail
+                  </a>
+                </div>
+              </div>
+            </div>
+          @empty
+            <div class="monitoring-mobile-card text-center p-4">
+              <h6 class="mb-2">Belum Ada Intern yang Sesuai</h6>
+              <p class="monitoring-soft-text mb-0">Coba ubah pencarian atau kategori untuk melihat data intern lainnya.</p>
+            </div>
+          @endforelse
+        </div>
       </div>
 
       @if ($interns->hasPages())

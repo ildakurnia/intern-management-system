@@ -6,10 +6,10 @@
 <div class="row justify-content-center">
   <div class="col-md-8">
     <div class="card shadow-sm border-0">
-      <div class="card-header d-flex align-items-center justify-content-between border-bottom py-4">
+      <div class="card-header d-flex align-items-center justify-content-between border-bottom py-4 ims-mobile-toolbar">
         <h5 class="m-0 text-primary fw-bold">Form Tambah Pengguna</h5>
         <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-secondary">
-          <i class="ri-arrow-left-line me-1"></i> Kembali
+          <i class="ri ri-arrow-left-line me-1"></i> Kembali
         </a>
       </div>
       <div class="card-body py-5">
@@ -94,7 +94,7 @@
               <hr class="my-2">
               <div class="d-flex align-items-center gap-2 mb-4">
                 <div class="avatar avatar-sm">
-                  <span class="avatar-initial bg-label-success rounded"><i class="ri-graduation-cap-line"></i></span>
+                  <span class="avatar-initial bg-label-success rounded"><i class="ri ri-graduation-cap-line"></i></span>
                 </div>
                 <div>
                   <h6 class="mb-0">Data Anak Magang</h6>
@@ -190,7 +190,7 @@
 
             <div class="col-12 mt-5">
               <button type="submit" class="btn btn-primary w-100 py-3 shadow">
-                <i class="ri-save-line me-2"></i> Simpan Pengguna Baru
+                <i class="ri ri-save-line me-2"></i> Simpan Pengguna Baru
               </button>
             </div>
           </div>

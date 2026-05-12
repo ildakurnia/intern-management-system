@@ -512,8 +512,8 @@
           <span class="allowance-late-pill">{{ $lateEntries }} Terlambat</span>
         </div>
       </div>
-      <div class="table-responsive">
-        <table class="table align-middle">
+      <div class="table-responsive ims-card-table-wrap">
+        <table class="table align-middle ims-card-table">
           <thead>
             <tr>
               <th>Tanggal</th>
@@ -527,12 +527,12 @@
           <tbody>
             @forelse ($allowance['attendances'] as $attendance)
               <tr>
-                <td>{{ $attendance->date->translatedFormat('d M Y') }}</td>
-                <td><span class="allowance-status-pill {{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span></td>
-                <td class="allowance-history-metric">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
-                <td class="allowance-history-metric">{{ $attendance->check_out_at?->format('H:i') ?? '-' }}</td>
-                <td>{{ $attendance->attendanceLocation?->name ?? '-' }}</td>
-                <td>
+                <td data-label="Tanggal" class="ims-card-primary">{{ $attendance->date->translatedFormat('d M Y') }}</td>
+                <td data-label="Status"><span class="allowance-status-pill {{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span></td>
+                <td data-label="Check In" class="allowance-history-metric">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
+                <td data-label="Check Out" class="allowance-history-metric">{{ $attendance->check_out_at?->format('H:i') ?? '-' }}</td>
+                <td data-label="Lokasi">{{ $attendance->attendanceLocation?->name ?? '-' }}</td>
+                <td data-label="Keterlambatan">
                   <div class="allowance-history-metric">{{ $attendance->late_duration_label }}</div>
                   @if ($attendance->status === \App\Models\Attendance::STATUS_LATE)
                     <small class="allowance-soft-text">Over threshold</small>
