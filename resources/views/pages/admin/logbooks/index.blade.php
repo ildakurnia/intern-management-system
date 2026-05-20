@@ -317,16 +317,25 @@
       background: rgba(248, 250, 252, 0.72);
     }
 
+    .admin-logbook-modal-item > div {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
     .admin-logbook-modal-name {
       color: #1f2937;
       font-size: 0.98rem;
       font-weight: 700;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .admin-logbook-modal-meta {
       margin-top: 0.2rem;
       color: #64748b;
       font-size: 0.82rem;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .admin-logbook-modal-text {
@@ -338,6 +347,8 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     @media (max-width: 767.98px) {

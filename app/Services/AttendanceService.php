@@ -10,6 +10,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -37,11 +38,17 @@ class AttendanceService
     {
         $date ??= today();
 
-        return Attendance::query()
-            ->with('attendanceLocation')
-            ->where('intern_id', $intern->id)
-            ->whereDate('date', $date->toDateString())
-            ->first();
+        return Cache::remember(
+            $this->todayAttendanceCacheKey($intern->id, $date),
+            now()->addSeconds(20),
+            function () use ($intern, $date) {
+                return Attendance::query()
+                    ->with('attendanceLocation')
+                    ->where('intern_id', $intern->id)
+                    ->whereDate('date', $date->toDateString())
+                    ->first();
+            }
+        );
     }
 
     public function getAttendancesForIntern(Intern $intern, array $filters = []): LengthAwarePaginator
@@ -120,26 +127,32 @@ class AttendanceService
     {
         $month ??= today();
 
-        $monthlyQuery = Attendance::query()
-            ->where('intern_id', $intern->id)
-            ->forMonth($month->year, $month->month);
+        return Cache::remember(
+            $this->internSummaryCacheKey($intern->id, $month),
+            now()->addSeconds(20),
+            function () use ($intern, $month) {
+                $monthlyQuery = Attendance::query()
+                    ->where('intern_id', $intern->id)
+                    ->forMonth($month->year, $month->month);
 
-        $counts = (clone $monthlyQuery)
-            ->select('status', DB::raw('count(*) as aggregate'))
-            ->groupBy('status')
-            ->pluck('aggregate', 'status');
+                $counts = (clone $monthlyQuery)
+                    ->select('status', DB::raw('count(*) as aggregate'))
+                    ->groupBy('status')
+                    ->pluck('aggregate', 'status');
 
-        return [
-            'todayAttendance' => $this->getTodayAttendanceForIntern($intern),
-            'attendanceThisMonth' => (clone $monthlyQuery)->count(),
-            'attendanceStatusCounts' => $this->buildStatusCountPayload($counts),
-            'recentAttendances' => Attendance::query()
-                ->with('attendanceLocation')
-                ->where('intern_id', $intern->id)
-                ->latest('date')
-                ->take(5)
-                ->get(),
-        ];
+                return [
+                    'todayAttendance' => $this->getTodayAttendanceForIntern($intern),
+                    'attendanceThisMonth' => (clone $monthlyQuery)->count(),
+                    'attendanceStatusCounts' => $this->buildStatusCountPayload($counts),
+                    'recentAttendances' => Attendance::query()
+                        ->with('attendanceLocation')
+                        ->where('intern_id', $intern->id)
+                        ->latest('date')
+                        ->take(5)
+                        ->get(),
+                ];
+            }
+        );
     }
 
     public function getMonitoringInterns(User $user, array $filters = [], ?CarbonInterface $monitorDate = null, ?CarbonInterface $month = null): LengthAwarePaginator
@@ -147,9 +160,15 @@ class AttendanceService
         $monitorDate ??= today();
         $month ??= $monitorDate;
 
-        return $this->buildMonitoringInternQuery($user, $filters, $monitorDate, $month)
-            ->paginate($filters['per_page'] ?? 10)
-            ->withQueryString();
+        return Cache::remember(
+            $this->monitoringInternsCacheKey($user->id, $filters, $monitorDate, $month),
+            now()->addSeconds(20),
+            function () use ($user, $filters, $monitorDate, $month) {
+                return $this->buildMonitoringInternQuery($user, $filters, $monitorDate, $month)
+                    ->paginate($filters['per_page'] ?? 10)
+                    ->withQueryString();
+            }
+        );
     }
 
     public function getMonitoringInternListSummary(User $user, array $filters = [], ?CarbonInterface $monitorDate = null, ?CarbonInterface $month = null): array
@@ -157,64 +176,70 @@ class AttendanceService
         $monitorDate ??= today();
         $month ??= $monitorDate;
 
-        $interns = $this->buildMonitoringInternQuery($user, $filters, $monitorDate, $month)->get();
-        $summary = [
-            'hadir' => 0,
-            'terlambat' => 0,
-            'izin' => 0,
-            'sakit' => 0,
-            'belum_absen' => 0,
-        ];
+        return Cache::remember(
+            $this->monitoringSummaryCacheKey($user->id, $filters, $monitorDate, $month),
+            now()->addSeconds(20),
+            function () use ($user, $filters, $monitorDate, $month) {
+                $interns = $this->buildMonitoringInternQuery($user, $filters, $monitorDate, $month)->get();
+                $summary = [
+                    'hadir' => 0,
+                    'terlambat' => 0,
+                    'izin' => 0,
+                    'sakit' => 0,
+                    'belum_absen' => 0,
+                ];
 
-        foreach ($interns as $intern) {
-            $todayAttendance = $intern->attendances->first();
+                foreach ($interns as $intern) {
+                    $todayAttendance = $intern->attendances->first();
 
-            if (! $todayAttendance) {
-                $summary['belum_absen']++;
-                continue;
+                    if (! $todayAttendance) {
+                        $summary['belum_absen']++;
+                        continue;
+                    }
+
+                    match ($todayAttendance->status) {
+                        Attendance::STATUS_PRESENT => $summary['hadir']++,
+                        Attendance::STATUS_LATE => $summary['terlambat']++,
+                        Attendance::STATUS_PERMISSION => $summary['izin']++,
+                        Attendance::STATUS_SICK => $summary['sakit']++,
+                        default => $summary['belum_absen']++,
+                    };
+                }
+
+                return [
+                    [
+                        'key' => 'hadir',
+                        'label' => 'Hadir',
+                        'count' => $summary['hadir'],
+                        'badge' => 'success',
+                    ],
+                    [
+                        'key' => 'terlambat',
+                        'label' => 'Terlambat',
+                        'count' => $summary['terlambat'],
+                        'badge' => 'warning',
+                    ],
+                    [
+                        'key' => 'izin',
+                        'label' => 'Izin',
+                        'count' => $summary['izin'],
+                        'badge' => 'info',
+                    ],
+                    [
+                        'key' => 'sakit',
+                        'label' => 'Sakit',
+                        'count' => $summary['sakit'],
+                        'badge' => 'danger',
+                    ],
+                    [
+                        'key' => 'belum_absen',
+                        'label' => 'Belum Absen',
+                        'count' => $summary['belum_absen'],
+                        'badge' => 'secondary',
+                    ],
+                ];
             }
-
-            match ($todayAttendance->status) {
-                Attendance::STATUS_PRESENT => $summary['hadir']++,
-                Attendance::STATUS_LATE => $summary['terlambat']++,
-                Attendance::STATUS_PERMISSION => $summary['izin']++,
-                Attendance::STATUS_SICK => $summary['sakit']++,
-                default => $summary['belum_absen']++,
-            };
-        }
-
-        return [
-            [
-                'key' => 'hadir',
-                'label' => 'Hadir',
-                'count' => $summary['hadir'],
-                'badge' => 'success',
-            ],
-            [
-                'key' => 'terlambat',
-                'label' => 'Terlambat',
-                'count' => $summary['terlambat'],
-                'badge' => 'warning',
-            ],
-            [
-                'key' => 'izin',
-                'label' => 'Izin',
-                'count' => $summary['izin'],
-                'badge' => 'info',
-            ],
-            [
-                'key' => 'sakit',
-                'label' => 'Sakit',
-                'count' => $summary['sakit'],
-                'badge' => 'danger',
-            ],
-            [
-                'key' => 'belum_absen',
-                'label' => 'Belum Absen',
-                'count' => $summary['belum_absen'],
-                'badge' => 'secondary',
-            ],
-        ];
+        );
     }
 
     public function checkIn(User $user, array $locationPayload): Attendance
@@ -268,6 +293,8 @@ class AttendanceService
             icon: 'ri-login-box-line'
         );
 
+        $this->invalidateAttendanceCaches($intern, $user);
+
         return $attendance->refresh();
     }
 
@@ -318,6 +345,8 @@ class AttendanceService
             icon: 'ri-logout-box-r-line'
         );
 
+        $this->invalidateAttendanceCaches($intern, $user);
+
         return $attendance->refresh();
     }
 
@@ -354,6 +383,8 @@ class AttendanceService
             $attendance->status === Attendance::STATUS_SICK ? 'danger' : 'info',
             icon: $attendance->status === Attendance::STATUS_SICK ? 'ri-heart-pulse-line' : 'ri-file-list-3-line'
         );
+
+        $this->invalidateAttendanceCaches($intern, $user);
 
         return $attendance;
     }
@@ -488,6 +519,7 @@ class AttendanceService
         ];
 
         return Intern::query()
+            ->where('status', 'active')
             ->with([
                 'user',
                 'division',
@@ -665,5 +697,44 @@ class AttendanceService
         }
 
         return false;
+    }
+
+    private function invalidateAttendanceCaches(Intern $intern, User $user): void
+    {
+        $today = today();
+        Cache::forget($this->todayAttendanceCacheKey($intern->id, $today));
+        Cache::forget($this->internSummaryCacheKey($intern->id, $today));
+        Cache::forget($this->monitoringSummaryCacheKey($user->id, [], $today, $today));
+        Cache::forget($this->monitoringInternsCacheKey($user->id, [], $today, $today));
+    }
+
+    private function todayAttendanceCacheKey(int $internId, CarbonInterface $date): string
+    {
+        return sprintf('ims.attendance.today.%d.%s', $internId, $date->toDateString());
+    }
+
+    private function internSummaryCacheKey(int $internId, CarbonInterface $month): string
+    {
+        return sprintf('ims.attendance.summary.%d.%s', $internId, $month->format('Y-m'));
+    }
+
+    private function monitoringSummaryCacheKey(int $userId, array $filters, CarbonInterface $monitorDate, CarbonInterface $month): string
+    {
+        return sprintf(
+            'ims.attendance.monitor.summary.%d.%s.%s',
+            $userId,
+            md5(json_encode($filters)),
+            $monitorDate->toDateString().'|'.$month->format('Y-m')
+        );
+    }
+
+    private function monitoringInternsCacheKey(int $userId, array $filters, CarbonInterface $monitorDate, CarbonInterface $month): string
+    {
+        return sprintf(
+            'ims.attendance.monitor.list.%d.%s.%s',
+            $userId,
+            md5(json_encode($filters)),
+            $monitorDate->toDateString().'|'.$month->format('Y-m')
+        );
     }
 }

@@ -22,6 +22,16 @@ class EnsureInternOnboardingComplete
             abort(403, 'Akun intern belum terhubung dengan data magang. Hubungi admin.');
         }
 
+        if ($intern->isPeriodExpired()) {
+            $intern->markPeriodCompleted();
+
+            if (! $request->routeIs('intern.period-ended')) {
+                return redirect()
+                    ->route('intern.period-ended')
+                    ->with('status', 'Masa magang Anda telah berakhir. Silakan hubungi admin jika ada informasi yang perlu dikonfirmasi.');
+            }
+        }
+
         if ($intern->registration_status !== 'approved' && ! $request->routeIs('intern.approval.pending')) {
             return redirect()
                 ->route('intern.approval.pending')

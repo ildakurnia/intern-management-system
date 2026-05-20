@@ -43,7 +43,7 @@ class UserController extends Controller
             $query->where('division_id', $request->division_id);
         }
 
-        $users     = $query->get();
+        $users     = $query->paginate(15)->withQueryString();
         $roles     = Role::all();
         $divisions = Division::where('is_active', true)->get();
 

@@ -161,6 +161,7 @@ class MenuPermissionSeeder extends Seeder
                     ['name' => 'intern.attendances.submissions.create', 'label' => 'Create Submission Form'],
                     ['name' => 'intern.attendances.submissions.store', 'label' => 'Save Submission'],
                     ['name' => 'mentor.attendances.index', 'label' => 'Mentor Read Attendance'],
+                    ['name' => 'mentor.attendances.show', 'label' => 'Mentor Read Attendance Detail'],
                     ['name' => 'admin.attendances.index', 'label' => 'Admin Read Attendance'],
                     ['name' => 'admin.attendances.show', 'label' => 'Admin Read Attendance Detail'],
                 ],

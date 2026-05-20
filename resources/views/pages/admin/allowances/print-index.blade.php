@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>Perhitungan Uang Saku Mahasiswa</title>
+  <title>Perhitungan Uang Saku Intern</title>
   <style>
     :root {
       --text: #172033;
@@ -312,6 +312,25 @@
   $totalAmount = $rows->sum('allowance_amount');
   $totalAttendance = $rows->sum('attendance_days');
   $generatedAt = now();
+  $filterDescriptions = [];
+
+  if (! empty($selectedFilters['search'])) {
+    $filterDescriptions[] = 'Pencarian: '.$selectedFilters['search'];
+  }
+
+  if (! empty($selectedFilters['type'])) {
+    $filterDescriptions[] = 'Tipe: '.($filterOptions['types'][$selectedFilters['type']] ?? $selectedFilters['type']);
+  }
+
+  if (! empty($selectedFilters['institution_id'])) {
+    $selectedInstitution = $filterOptions['institutions']->firstWhere('id', (int) $selectedFilters['institution_id']);
+    $filterDescriptions[] = 'Asal Sekolah/Kampus: '.($selectedInstitution?->name ?? $selectedFilters['institution_id']);
+  }
+
+  if (! empty($selectedFilters['division_id'])) {
+    $selectedDivision = $filterOptions['divisions']->firstWhere('id', (int) $selectedFilters['division_id']);
+    $filterDescriptions[] = 'Divisi: '.(($selectedDivision?->code ? $selectedDivision->code.' - ' : '').($selectedDivision?->name ?? $selectedFilters['division_id']));
+  }
 @endphp
 
   <div class="actions">
@@ -323,7 +342,7 @@
       <div class="document-head-top">
         <div class="company-block">
           <h3>{{ config('allowance.company_name') }}</h3>
-          <p>Dokumen Rekap Uang Saku Mahasiswa Magang</p>
+          <p>Dokumen Rekap Uang Saku Intern Magang</p>
         </div>
         <div class="meta-block">
           <div class="document-code">ID Dokumen: {{ $documentCode }}</div>
@@ -332,12 +351,12 @@
       </div>
 
       <div class="title-block">
-        <h1>Perhitungan Uang Saku Mahasiswa Berdasarkan Absensi</h1>
+        <h1>Perhitungan Uang Saku Intern Berdasarkan Absensi</h1>
         <h2>Periode {{ strtoupper($periodLabel) }}</h2>
         <div class="title-note">
-          Rekap ini digunakan sebagai dasar administrasi penyaluran uang saku mahasiswa eligible.
-          @if ($selectedSearch)
-            Filter nama: {{ $selectedSearch }}.
+          Rekap ini digunakan sebagai dasar administrasi penyaluran uang saku intern.
+          @if ($filterDescriptions !== [])
+            <br>Filter aktif: {{ implode(' • ', $filterDescriptions) }}.
           @endif
         </div>
       </div>
@@ -346,9 +365,9 @@
     <table class="summary-table">
       <tr>
         <td>
-          <span class="summary-label">Mahasiswa Eligible</span>
+          <span class="summary-label">Intern Tersaring</span>
           <span class="summary-value">{{ $rows->count() }}</span>
-          <span class="summary-meta">Jumlah mahasiswa yang masuk perhitungan.</span>
+          <span class="summary-meta">Jumlah intern sesuai filter aktif.</span>
         </td>
         <td>
           <span class="summary-label">Hari Hadir</span>
@@ -356,9 +375,9 @@
           <span class="summary-meta">Akumulasi hadir dan terlambat bulan ini.</span>
         </td>
         <td>
-          <span class="summary-label">Total Penyaluran</span>
+          <span class="summary-label">Total Uang Saku</span>
           <span class="summary-value">Rp {{ number_format($totalAmount, 0, ',', '.') }}</span>
-          <span class="summary-meta">Total nominal siap diproses.</span>
+          <span class="summary-meta">Akumulasi nominal dari data yang tampil.</span>
         </td>
       </tr>
     </table>
@@ -367,8 +386,8 @@
       <thead>
         <tr>
           <th style="width: 44px;">No</th>
-          <th class="text-left" style="width: 220px;">Nama Mahasiswa</th>
-          <th class="text-left" style="width: 170px;">Asal Kampus</th>
+          <th class="text-left" style="width: 220px;">Nama Intern</th>
+          <th class="text-left" style="width: 170px;">Asal Sekolah/Kampus</th>
           <th class="text-left" style="width: 170px;">Unit Penempatan</th>
           <th style="width: 86px;">1 (Satu) Bulan</th>
           <th style="width: 110px;">UT/Bulan (Rupiah)</th>
@@ -383,7 +402,8 @@
             <td>{{ $index + 1 }}</td>
             <td class="text-left name-cell">
               <strong>{{ $row['intern']->name }}</strong>
-              <small>{{ $row['intern']->nim ?: ($row['intern']->email ?: '-') }}</small>
+              <small>{{ $row['identifier_label'] }}: {{ $row['identifier_value'] }}</small>
+              <small>{{ $row['participant_type_label'] }}</small>
             </td>
             <td class="text-left">{{ $row['institution_label'] }}</td>
             <td class="text-left">{{ $row['intern']->division->name ?? '-' }}</td>
@@ -402,7 +422,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="9" style="padding: 18px; color: var(--muted);">Tidak ada mahasiswa yang masuk rekap pada periode ini.</td>
+          <td colspan="9" style="padding: 18px; color: var(--muted);">Tidak ada intern yang masuk rekap pada periode ini.</td>
           </tr>
         @endforelse
         @if ($rows->isNotEmpty())
@@ -416,7 +436,7 @@
     </table>
 
     <div class="notes">
-      Catatan: perhitungan uang saku menggunakan rumus Rp {{ number_format(config('allowance.max_amount', 500000), 0, ',', '.') }} / {{ config('allowance.max_workdays', 22) }} x jumlah kehadiran mahasiswa. Jumlah kehadiran yang dihitung mencakup status hadir dan terlambat, dengan batas maksimum {{ config('allowance.max_workdays', 22) }} hari per mahasiswa.
+      Catatan: perhitungan uang saku menggunakan rumus Rp {{ number_format(config('allowance.max_amount', 500000), 0, ',', '.') }} / {{ config('allowance.max_workdays', 22) }} x jumlah kehadiran intern. Jumlah kehadiran yang dihitung mencakup status hadir dan terlambat, dengan batas maksimum {{ config('allowance.max_workdays', 22) }} hari per intern. Total kehadiran yang tercatat pada rekap ini adalah {{ number_format($totalAttendance, 0, ',', '.') }} hari.
     </div>
 
     <div class="approval-section">
@@ -430,7 +450,7 @@
 
     <div class="document-bottom">
       <div>{{ config('allowance.company_name') }} &bull; Dokumen Internal</div>
-      <div>Halaman rekap uang saku mahasiswa</div>
+      <div>Halaman rekap uang saku intern</div>
     </div>
   </div>
 

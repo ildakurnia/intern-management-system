@@ -93,6 +93,52 @@
       color: #cbd5e1;
     }
 
+    .ims-page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      z-index: 2600;
+      pointer-events: none;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .ims-page-transition::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(91, 110, 240, 0), rgba(91, 110, 240, 0.85), rgba(91, 110, 240, 0));
+      transform: translateX(-100%);
+    }
+
+    html.ims-navigating .ims-page-transition {
+      opacity: 1;
+    }
+
+    html.ims-navigating .ims-page-transition::before {
+      animation: imsLine 0.55s ease-in-out infinite;
+    }
+
+    html[data-bs-theme="dark"] .ims-page-transition {
+      opacity: 1;
+    }
+
+    html[data-bs-theme="dark"] .ims-page-transition::before {
+      background: linear-gradient(90deg, rgba(125, 145, 255, 0), rgba(125, 145, 255, 0.9), rgba(125, 145, 255, 0));
+    }
+
+    @keyframes imsLine {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
     @media (max-width: 991.98px) {
       .ims-topbar-shell {
         padding: 0.58rem 0.8rem;
@@ -103,6 +149,7 @@
 @endonce
 
 <div class="navbar-nav-right d-flex align-items-center justify-content-end w-100" id="navbar-collapse">
+  <div class="ims-page-transition" aria-hidden="true"></div>
   <div class="ims-topbar-shell">
     <div class="d-flex align-items-center gap-3 min-w-0">
       @if (!isset($navbarHideToggle))
@@ -147,10 +194,8 @@
       @endif
 
       @php
-        $notifications = Auth::check() && \Illuminate\Support\Facades\Schema::hasTable('notifications')
-          ? \App\Models\Notification::forUser(Auth::id())->limit(10)->get()
-          : collect();
-        $unreadCount = $notifications->whereNull('read_at')->count();
+        $notifications = $topbarNotifications ?? collect();
+        $unreadCount = $topbarUnreadCount ?? $notifications->whereNull('read_at')->count();
       @endphp
       <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-2">
         <a class="nav-link dropdown-toggle hide-arrow ims-topbar-icon"

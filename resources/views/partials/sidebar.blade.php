@@ -89,7 +89,7 @@
     <nav class="menu">
         <a href="{{ route('mentor.logbooks.index') }}" class="{{ request()->routeIs('mentor.logbooks.*') ? 'active' : '' }}">
             <span class="menu-icon">LB</span>
-            <span class="menu-label">Logbook Mentee</span>
+            <span class="menu-label">Logbook Intern</span>
         </a>
     </nav>
     @endcan

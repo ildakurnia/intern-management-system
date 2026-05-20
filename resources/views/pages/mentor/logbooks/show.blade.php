@@ -4,6 +4,115 @@
 
 @section('page-style')
   <style>
+  .mentor-logbook-detail-page {
+    font-family: var(--bs-body-font-family);
+    --mentor-logbook-card-bg: var(--bs-card-bg);
+    --mentor-logbook-card-soft: var(--bs-body-bg);
+    --mentor-logbook-border: var(--bs-border-color);
+      --mentor-logbook-title: var(--bs-heading-color);
+      --mentor-logbook-text: var(--bs-body-color);
+      --mentor-logbook-soft: var(--bs-secondary-color);
+      --mentor-logbook-primary: var(--bs-primary);
+      --mentor-logbook-danger: var(--bs-danger);
+      --mentor-logbook-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+    }
+
+    html[data-bs-theme="dark"] .mentor-logbook-detail-page {
+      --mentor-logbook-card-bg: rgba(24, 28, 42, 0.88);
+      --mentor-logbook-card-soft: rgba(17, 24, 39, 0.94);
+      --mentor-logbook-border: rgba(148, 163, 184, 0.14);
+      --mentor-logbook-title: #f8fafc;
+      --mentor-logbook-text: #e5e7eb;
+      --mentor-logbook-soft: #94a3b8;
+      --mentor-logbook-primary: #a5b4fc;
+      --mentor-logbook-danger: #fda4af;
+      --mentor-logbook-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+    }
+
+    .mentor-logbook-detail-page .card {
+      border-color: var(--mentor-logbook-border);
+      background: var(--mentor-logbook-card-bg);
+      box-shadow: var(--mentor-logbook-shadow);
+    }
+
+    .mentor-logbook-detail-page .card-header,
+    .mentor-logbook-detail-page .card-footer {
+      background: var(--mentor-logbook-card-bg);
+      border-color: var(--mentor-logbook-border);
+    }
+
+    .mentor-logbook-detail-page .card.shadow-none {
+      background: var(--mentor-logbook-card-soft);
+    }
+
+    .mentor-logbook-detail-page .text-heading,
+    .mentor-logbook-detail-page h5,
+    .mentor-logbook-detail-page h6,
+    .mentor-logbook-detail-page p,
+    .mentor-logbook-detail-page small {
+      color: var(--mentor-logbook-text);
+    }
+
+    .mentor-logbook-detail-page .text-body-secondary,
+    .mentor-logbook-detail-page .text-body,
+    .mentor-logbook-detail-page .accordion-body p,
+    .mentor-logbook-detail-page .accordion-body small {
+      color: var(--mentor-logbook-soft) !important;
+    }
+
+    .mentor-logbook-detail-page .accordion-item,
+    .mentor-logbook-detail-page .accordion-button {
+      border-color: var(--mentor-logbook-border);
+      background: var(--mentor-logbook-card-bg);
+      color: var(--mentor-logbook-title);
+    }
+
+    .mentor-logbook-detail-page .accordion-button:not(.collapsed) {
+      background: color-mix(in srgb, var(--mentor-logbook-card-bg) 86%, var(--bs-primary));
+      color: var(--mentor-logbook-title);
+      box-shadow: none;
+    }
+
+    .mentor-logbook-detail-page .btn-outline-secondary {
+      color: var(--mentor-logbook-title);
+      border-color: var(--mentor-logbook-border);
+      background: var(--mentor-logbook-card-bg);
+    }
+
+    .mentor-logbook-detail-page .btn-outline-secondary:hover,
+    .mentor-logbook-detail-page .btn-outline-secondary:focus {
+      color: var(--mentor-logbook-primary);
+      border-color: rgba(var(--bs-primary-rgb), 0.22);
+      background: rgba(var(--bs-primary-rgb), 0.08);
+    }
+
+    .mentor-logbook-detail-page .bg-label-primary {
+      background: rgba(var(--bs-primary-rgb), 0.12) !important;
+      color: var(--mentor-logbook-primary) !important;
+    }
+
+    .mentor-logbook-detail-page .bg-label-danger {
+      background: rgba(var(--bs-danger-rgb), 0.12) !important;
+      color: var(--mentor-logbook-danger) !important;
+    }
+
+    .mentor-logbook-detail-page .badge {
+      box-shadow: none;
+    }
+
+    .mentor-logbook-detail-page .mentor-logbook-detail-surface {
+      background: var(--mentor-logbook-card-soft) !important;
+      border-color: var(--mentor-logbook-border) !important;
+    }
+
+    .mentor-logbook-detail-page .mentor-logbook-detail-muted {
+      color: var(--mentor-logbook-soft) !important;
+    }
+
+    .mentor-logbook-detail-page .mentor-logbook-detail-title {
+      color: var(--mentor-logbook-title);
+    }
+
     @media (max-width: 991.98px) {
       .stick-top {
         position: static !important;
@@ -21,12 +130,20 @@
       .accordion-body p {
         word-break: break-word;
       }
+
+      .mentor-logbook-detail-page h2 {
+        font-size: 1.4rem;
+      }
+
+      .mentor-logbook-detail-page .card-header {
+        padding-inline: 1rem;
+      }
     }
   </style>
 @endsection
 
 @section('content')
-  <div class="g-3">
+  <div class="mentor-logbook-detail-page g-3">
     @include('partials.app-breadcrumb', [
       'items' => [
         ['label' => 'Dashboard', 'url' => route('dashboard.mentor')],
@@ -52,19 +169,19 @@
 
             <div class="card shadow-none border">
               <div class="card-body">
-                <div class="d-flex align-items-center mb-4 p-4 bg-label-primary rounded-3">
+                <div class="d-flex align-items-center mb-4 p-4 border rounded-3 mentor-logbook-detail-surface">
                   <i class="icon-base ri ri-calendar-event-line icon-24px text-primary me-3"></i>
                   <div>
-                    <small class="text-body-secondary d-block">Tanggal Laporan</small>
+                    <small class="mentor-logbook-detail-muted d-block">Tanggal Laporan</small>
                     <h6 class="mb-0 fw-semibold">{{ \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('l, d F Y') }}</h6>
                   </div>
                 </div>
 
-                <h5>Uraian Aktivitas</h5>
+                <h5 class="mentor-logbook-detail-title">Uraian Aktivitas</h5>
                 <p class="mb-0">{{ $logbook->uraian_aktivitas }}</p>
                 <hr class="my-6" />
 
-                <h5>Pembelajaran yang Diperoleh</h5>
+                <h5 class="mentor-logbook-detail-title">Pembelajaran yang Diperoleh</h5>
                 <div class="d-flex flex-wrap row-gap-2">
                   <div>
                     <p class="mb-2"><i class="icon-base ri ri-check-line icon-20px me-2 text-success"></i>{{ $logbook->pembelajaran_diperoleh }}</p>
@@ -92,11 +209,11 @@
                   </div>
                   <div class="d-flex flex-column">
                     <h6 class="mb-1">{{ $logbook->intern->user->name ?? $logbook->intern->name }}</h6>
-                    <small>{{ $logbook->intern->division->name ?? '-' }}</small>
+                        <small class="mentor-logbook-detail-muted">{{ $logbook->intern->division->name ?? '-' }}</small>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -110,7 +227,7 @@
                   aria-expanded="true" aria-controls="logbookInfo">
                   <span class="d-flex flex-column">
                     <span class="h5 mb-0">Ringkasan Logbook</span>
-                    <span class="text-body fw-normal">Data laporan intern bimbingan</span>
+                    <span class="mentor-logbook-detail-muted fw-normal">Data laporan intern bimbingan</span>
                   </span>
                 </button>
               </div>
@@ -119,28 +236,28 @@
                   <div class="mb-4 d-flex align-items-center">
                     <i class="icon-base ri ri-user-3-line icon-20px me-3 text-primary"></i>
                     <div>
-                      <small class="text-body-secondary">Nama Intern</small>
+                      <small class="mentor-logbook-detail-muted">Nama Intern</small>
                       <p class="mb-0 fw-medium">{{ $logbook->intern->user->name ?? $logbook->intern->name }}</p>
                     </div>
                   </div>
                   <div class="mb-4 d-flex align-items-center">
                     <i class="icon-base ri ri-building-line icon-20px me-3 text-primary"></i>
                     <div>
-                      <small class="text-body-secondary">Divisi</small>
+                      <small class="mentor-logbook-detail-muted">Divisi</small>
                       <p class="mb-0 fw-medium">{{ $logbook->intern->division->name ?? '-' }}</p>
                     </div>
                   </div>
                   <div class="mb-4 d-flex align-items-center">
                     <i class="icon-base ri ri-calendar-check-line icon-20px me-3 text-primary"></i>
                     <div>
-                      <small class="text-body-secondary">Tanggal Laporan</small>
+                      <small class="mentor-logbook-detail-muted">Tanggal Laporan</small>
                       <p class="mb-0 fw-medium">{{ \Carbon\Carbon::parse($logbook->tanggal)->translatedFormat('d M Y') }}</p>
                     </div>
                   </div>
                   <div class="mb-4 d-flex align-items-center">
                     <i class="icon-base ri ri-time-line icon-20px me-3 text-primary"></i>
                     <div>
-                      <small class="text-body-secondary">Dibuat</small>
+                      <small class="mentor-logbook-detail-muted">Dibuat</small>
                       <p class="mb-0 fw-medium">{{ $logbook->created_at->diffForHumans() }}</p>
                     </div>
                   </div>
@@ -148,7 +265,7 @@
                     <div class="mb-4 d-flex align-items-center">
                       <i class="icon-base ri ri-error-warning-line icon-20px me-3 text-danger"></i>
                       <div>
-                        <small class="text-body-secondary">Status Kendala</small>
+                        <small class="mentor-logbook-detail-muted">Status Kendala</small>
                         <p class="mb-0 fw-medium text-danger">Ada Kendala</p>
                       </div>
                     </div>

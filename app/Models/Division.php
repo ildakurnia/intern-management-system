@@ -27,6 +27,11 @@ class Division extends Model
         return $this->hasMany(Intern::class);
     }
 
+    public function activeInterns(): HasMany
+    {
+        return $this->hasMany(Intern::class)->where('status', 'active');
+    }
+
     /**
      * Mentors (users) assigned to this division
      */
@@ -35,5 +40,10 @@ class Division extends Model
         // Hanya hitung user yang benar-benar berperan sebagai mentor.
         // User intern juga punya division_id, jadi tanpa filter ini count bisa ikut membengkak.
         return $this->hasMany(User::class)->role('mentor');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

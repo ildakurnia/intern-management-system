@@ -39,7 +39,7 @@ class LogbookController extends Controller
             ->orderBy('tanggal')
             ->get();
 
-        return view('pages.intern.logbooks.index', compact('logbooks', 'calendarMonth'));
+        return view('pages.intern.logbooks.index', compact('logbooks', 'calendarMonth', 'intern'));
     }
 
     public function create()

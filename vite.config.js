@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import html from '@rollup/plugin-html';
 import { glob } from 'glob';
+import os from 'os';
 import path from 'path';
 // import iconsPlugin from './vite.icons.plugin.js';
 
@@ -12,6 +13,24 @@ import path from 'path';
  */
 function GetFilesArray(query) {
   return glob.sync(query);
+}
+
+/**
+ * Resolve a LAN-accessible IPv4 address for dev server URLs.
+ * Falls back to localhost if no external interface is available.
+ */
+function getLanIpAddress() {
+  const interfaces = os.networkInterfaces();
+
+  for (const network of Object.values(interfaces)) {
+    for (const config of network ?? []) {
+      if (config.family === 'IPv4' && !config.internal) {
+        return config.address;
+      }
+    }
+  }
+
+  return 'localhost';
 }
 
 // Page JS Files
@@ -72,6 +91,14 @@ export default defineConfig({
     libsWindowAssignment(),
     // iconsPlugin()
   ],
+  server: {
+    host: '0.0.0.0',
+    strictPort: true,
+    hmr: {
+      host: process.env.VITE_DEV_SERVER_HOST || getLanIpAddress()
+    },
+    origin: `http://${process.env.VITE_DEV_SERVER_HOST || getLanIpAddress()}:5173`
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'resources')

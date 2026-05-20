@@ -32,6 +32,12 @@
       'siswa' => 'Siswa',
       default => 'Intern',
   };
+  $internTypeTone = match ($intern?->type) {
+      'mahasiswa' => 'primary',
+      'siswa' => 'info',
+      default => 'secondary',
+  };
+  $todayStatusTone = $todayStatusBadge;
 
   if (! $hasCompletedProfile) {
       $primaryActionUrl = route('intern.profile.edit');
@@ -119,6 +125,7 @@
     .intern-dashboard {
       display: grid;
       gap: 1.5rem;
+      font-family: var(--bs-body-font-family);
     }
 
     .intern-dashboard-card {
@@ -126,6 +133,7 @@
       border-radius: 1.6rem;
       background: rgba(255, 255, 255, 0.96);
       box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+      color: #1f2937;
     }
 
     .intern-dashboard-hero {
@@ -178,7 +186,82 @@
       color: rgba(255, 255, 255, 0.92);
       font-size: 0.86rem;
       font-weight: 700;
-      letter-spacing: -0.01em;
+      letter-spacing: 0;
+    }
+
+    .intern-dashboard-pill--type {
+      border-color: rgba(99, 102, 241, 0.22);
+      background: rgba(99, 102, 241, 0.16);
+      color: #5b63e6;
+      font-weight: 800;
+    }
+
+    .intern-dashboard-pill--type.is-primary {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: rgba(99, 102, 241, 0.26);
+      color: #5b63e6;
+    }
+
+    .intern-dashboard-pill--type.is-info {
+      background: rgba(14, 165, 233, 0.18);
+      border-color: rgba(14, 165, 233, 0.26);
+      color: #0284c7;
+    }
+
+    .intern-dashboard-pill--type.is-secondary {
+      background: rgba(148, 163, 184, 0.16);
+      border-color: rgba(148, 163, 184, 0.24);
+      color: #64748b;
+    }
+
+    .intern-dashboard-pill--type .intern-dashboard-pill-dot {
+      background: #818cf8;
+      box-shadow: 0 0 0 0.35rem rgba(129, 140, 248, 0.18);
+    }
+
+    .intern-dashboard-pill--type.is-info .intern-dashboard-pill-dot {
+      background: #38bdf8;
+      box-shadow: 0 0 0 0.35rem rgba(56, 189, 248, 0.18);
+    }
+
+    .intern-dashboard-pill--type.is-secondary .intern-dashboard-pill-dot {
+      background: #cbd5e1;
+      box-shadow: 0 0 0 0.35rem rgba(203, 213, 225, 0.14);
+    }
+
+    .intern-dashboard-pill--status {
+      border-color: rgba(255, 255, 255, 0.18);
+      font-weight: 800;
+    }
+
+    .intern-dashboard-pill--status.is-success {
+      background: rgba(34, 197, 94, 0.16);
+      border-color: rgba(34, 197, 94, 0.28);
+      color: #16a34a;
+    }
+
+    .intern-dashboard-pill--status.is-warning {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #d97706;
+    }
+
+    .intern-dashboard-pill--status.is-info {
+      background: rgba(14, 165, 233, 0.16);
+      border-color: rgba(14, 165, 233, 0.28);
+      color: #0284c7;
+    }
+
+    .intern-dashboard-pill--status.is-danger {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #dc2626;
+    }
+
+    .intern-dashboard-pill--status.is-secondary {
+      background: rgba(148, 163, 184, 0.16);
+      border-color: rgba(148, 163, 184, 0.26);
+      color: #64748b;
     }
 
     .intern-dashboard-pill-dot {
@@ -188,6 +271,31 @@
       background: currentColor;
       box-shadow: 0 0 0 0.35rem rgba(255, 255, 255, 0.08);
       opacity: 0.95;
+    }
+
+    .intern-dashboard-pill--status.is-success .intern-dashboard-pill-dot {
+      background: #4ade80;
+      box-shadow: 0 0 0 0.35rem rgba(74, 222, 128, 0.18);
+    }
+
+    .intern-dashboard-pill--status.is-warning .intern-dashboard-pill-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 0 0.35rem rgba(251, 191, 36, 0.18);
+    }
+
+    .intern-dashboard-pill--status.is-info .intern-dashboard-pill-dot {
+      background: #38bdf8;
+      box-shadow: 0 0 0 0.35rem rgba(56, 189, 248, 0.18);
+    }
+
+    .intern-dashboard-pill--status.is-danger .intern-dashboard-pill-dot {
+      background: #fb7185;
+      box-shadow: 0 0 0 0.35rem rgba(251, 113, 133, 0.18);
+    }
+
+    .intern-dashboard-pill--status.is-secondary .intern-dashboard-pill-dot {
+      background: #cbd5e1;
+      box-shadow: 0 0 0 0.35rem rgba(203, 213, 225, 0.14);
     }
 
     .intern-dashboard-title {
@@ -244,9 +352,9 @@
     }
 
     .intern-dashboard-btn-primary {
-      background: #fff;
-      color: #3143d0;
-      box-shadow: 0 16px 28px rgba(15, 23, 42, 0.14);
+      color: #fff;
+      background: linear-gradient(180deg, #5b6ee6 0%, #465ad6 100%);
+      box-shadow: 0 14px 24px rgba(58, 69, 170, 0.18);
     }
 
     .intern-dashboard-btn-secondary {
@@ -256,9 +364,56 @@
     }
 
     .intern-dashboard-btn-primary:hover,
-    .intern-dashboard-btn-secondary:hover {
+    .intern-dashboard-btn-primary:focus {
+      color: #fff;
+      background: linear-gradient(180deg, #6579eb 0%, #4f63dc 100%);
+      box-shadow: 0 16px 28px rgba(58, 69, 170, 0.2);
+    }
+
+    .intern-dashboard-btn-secondary:hover,
+    .intern-dashboard-btn-secondary:focus {
       transform: translateY(-1px);
-      color: inherit;
+      color: #fff;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-btn-primary {
+      background: linear-gradient(180deg, #5569de 0%, #4357cc 100%);
+      box-shadow: 0 14px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-btn-primary:hover,
+    html[data-bs-theme="dark"] .intern-dashboard-btn-primary:focus {
+      background: linear-gradient(180deg, #6275e5 0%, #4d61d6 100%);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-btn-secondary:hover,
+    html[data-bs-theme="dark"] .intern-dashboard-btn-secondary:focus {
+      color: #fff;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-success {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: rgba(34, 197, 94, 0.26);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-warning {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: rgba(245, 158, 11, 0.28);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-info {
+      background: rgba(14, 165, 233, 0.18);
+      border-color: rgba(14, 165, 233, 0.26);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.28);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-secondary {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.24);
     }
 
     .intern-dashboard-aside {
@@ -485,6 +640,8 @@
       color: #475569;
       font-size: 0.96rem;
       line-height: 1.75;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .intern-activity-featured-meta {
@@ -495,6 +652,13 @@
       color: #64748b;
       font-size: 0.84rem;
       font-weight: 700;
+      min-width: 0;
+    }
+
+    .intern-activity-featured-meta > span:first-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .intern-activity-item {
@@ -542,6 +706,8 @@
       color: #334155;
       font-size: 0.96rem;
       line-height: 1.7;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .intern-activity-item-footer {
@@ -552,6 +718,7 @@
       color: #64748b;
       font-size: 0.84rem;
       font-weight: 700;
+      min-width: 0;
     }
 
     .intern-activity-item-link {
@@ -702,6 +869,8 @@
       color: #64748b;
       font-size: 0.88rem;
       line-height: 1.6;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .intern-timeline-step-detail.is-locked {
@@ -755,6 +924,249 @@
       .intern-dashboard-aside-time {
         font-size: 2.8rem;
       }
+
+      .intern-activity-featured-meta,
+      .intern-activity-item-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .intern-activity-featured-meta .intern-activity-item-link {
+        margin-top: 0.25rem;
+      }
+
+      .intern-activity-featured,
+      .intern-activity-item {
+        padding: 0.95rem;
+      }
+
+      .intern-activity-featured-title {
+        font-size: 1rem;
+      }
+
+      .intern-activity-featured-text,
+      .intern-activity-item-text {
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      .intern-activity-item-date {
+        gap: 0.35rem;
+      }
+
+      .intern-activity-item-date span,
+      .intern-activity-featured-meta > span:first-child {
+        overflow-wrap: anywhere;
+      }
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-card {
+      border-color: rgba(148, 163, 184, 0.18);
+      background: rgba(24, 28, 42, 0.88);
+      color: #e5e7eb;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-hero {
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 24%),
+        linear-gradient(135deg, #172554 0%, #1e3a8a 48%, #4338ca 100%);
+      box-shadow: 0 28px 52px rgba(10, 15, 35, 0.34);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-primary {
+      background: rgba(99, 102, 241, 0.22);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-info {
+      background: rgba(14, 165, 233, 0.22);
+      border-color: rgba(14, 165, 233, 0.3);
+      color: #7dd3fc;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-secondary {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.26);
+      color: #e2e8f0;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-success {
+      color: #86efac;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-warning {
+      color: #fcd34d;
+      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.14);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-info {
+      color: #7dd3fc;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-danger {
+      color: #fda4af;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-secondary {
+      color: #cbd5e1;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-primary .intern-dashboard-pill-dot {
+      background: #818cf8;
+      box-shadow: 0 0 0 0.35rem rgba(129, 140, 248, 0.16);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-info .intern-dashboard-pill-dot {
+      background: #38bdf8;
+      box-shadow: 0 0 0 0.35rem rgba(56, 189, 248, 0.16);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--type.is-secondary .intern-dashboard-pill-dot {
+      background: #cbd5e1;
+      box-shadow: 0 0 0 0.35rem rgba(203, 213, 225, 0.12);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-success {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.32);
+      color: #dcfce7;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-warning {
+      background: rgba(245, 158, 11, 0.22);
+      border-color: rgba(245, 158, 11, 0.34);
+      color: #fde68a;
+      box-shadow: 0 10px 24px rgba(245, 158, 11, 0.14);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-info {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: rgba(14, 165, 233, 0.32);
+      color: #cffafe;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.32);
+      color: #fecaca;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-secondary {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.28);
+      color: #e2e8f0;
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-success .intern-dashboard-pill-dot {
+      background: #4ade80;
+      box-shadow: 0 0 0 0.35rem rgba(74, 222, 128, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-warning .intern-dashboard-pill-dot {
+      background: #fbbf24;
+      box-shadow: 0 0 0 0.35rem rgba(251, 191, 36, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-info .intern-dashboard-pill-dot {
+      background: #38bdf8;
+      box-shadow: 0 0 0 0.35rem rgba(56, 189, 248, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-danger .intern-dashboard-pill-dot {
+      background: #fb7185;
+      box-shadow: 0 0 0 0.35rem rgba(251, 113, 133, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-pill--status.is-secondary .intern-dashboard-pill-dot {
+      background: #cbd5e1;
+      box-shadow: 0 0 0 0.35rem rgba(203, 213, 225, 0.14);
+    }
+
+    html[data-bs-theme="dark"] .intern-dashboard-aside {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    html[data-bs-theme="dark"] .intern-summary-value,
+    html[data-bs-theme="dark"] .intern-panel-title,
+    html[data-bs-theme="dark"] .intern-onboarding-title,
+    html[data-bs-theme="dark"] .intern-empty-activity h4,
+    html[data-bs-theme="dark"] .intern-timeline-step-title,
+    html[data-bs-theme="dark"] .intern-activity-featured-title {
+      color: #f8fafc;
+    }
+
+    html[data-bs-theme="dark"] .intern-summary-label,
+    html[data-bs-theme="dark"] .intern-summary-meta,
+    html[data-bs-theme="dark"] .intern-panel-subtitle,
+    html[data-bs-theme="dark"] .intern-onboarding-summary,
+    html[data-bs-theme="dark"] .intern-empty-activity p,
+    html[data-bs-theme="dark"] .intern-timeline-step-detail,
+    html[data-bs-theme="dark"] .intern-activity-featured-text,
+    html[data-bs-theme="dark"] .intern-activity-item-text,
+    html[data-bs-theme="dark"] .intern-activity-item-footer,
+    html[data-bs-theme="dark"] .intern-activity-featured-meta,
+    html[data-bs-theme="dark"] .intern-dashboard-aside-note,
+    html[data-bs-theme="dark"] .intern-dashboard-aside-label,
+    html[data-bs-theme="dark"] .intern-dashboard-aside-date,
+    html[data-bs-theme="dark"] .intern-dashboard-meta {
+      color: #cbd5e1;
+    }
+
+    html[data-bs-theme="dark"] .intern-activity-featured {
+      border-color: rgba(96, 165, 250, 0.18);
+      background: linear-gradient(180deg, rgba(24, 28, 42, 0.95), rgba(17, 24, 39, 0.96));
+    }
+
+    html[data-bs-theme="dark"] .intern-activity-item {
+      border-color: rgba(148, 163, 184, 0.12);
+      background: rgba(17, 24, 39, 0.82);
+    }
+
+    html[data-bs-theme="dark"] .intern-activity-item-date {
+      color: #a5b4fc;
+    }
+
+    html[data-bs-theme="dark"] .intern-activity-item-date i {
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.16);
+    }
+
+    html[data-bs-theme="dark"] .intern-empty-activity-action,
+    html[data-bs-theme="dark"] .intern-timeline-action {
+      box-shadow: none;
+    }
+
+    html[data-bs-theme="dark"] .intern-onboarding-progress {
+      background: rgba(148, 163, 184, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-timeline::before {
+      background: rgba(71, 85, 105, 0.9);
+    }
+
+    html[data-bs-theme="dark"] .intern-timeline-marker.is-locked {
+      background: #334155;
+      color: #cbd5e1;
+    }
+
+    html[data-bs-theme="dark"] .intern-timeline-marker.is-active {
+      background: rgba(15, 23, 42, 0.92);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      box-shadow: 0 0 0 0.5rem rgba(15, 23, 42, 0.9);
+    }
+
+    html[data-bs-theme="dark"] .intern-activity-featured:hover,
+    html[data-bs-theme="dark"] .intern-activity-item:hover {
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.22);
     }
   </style>
 @endsection
@@ -765,11 +1177,11 @@
       <div class="intern-dashboard-hero-grid">
         <div>
           <div class="intern-dashboard-pills">
-            <span class="intern-dashboard-pill">
+            <span class="intern-dashboard-pill intern-dashboard-pill--type is-{{ $internTypeTone }}">
               <span class="intern-dashboard-pill-dot"></span>
               {{ $internTypeLabel }}
             </span>
-            <span class="intern-dashboard-pill">
+            <span class="intern-dashboard-pill intern-dashboard-pill--status is-{{ $todayStatusTone }}">
               <span class="intern-dashboard-pill-dot"></span>
               {{ strtoupper($todayStatusLabel) }}
             </span>
@@ -825,7 +1237,7 @@
         </span>
         <h3 class="intern-summary-value">{{ $internPeriod['daysPassed'] }}</h3>
         <p class="intern-summary-label">Hari Magang Berjalan</p>
-        <p class="intern-summary-meta">{{ $periodLabel }} • {{ $internPeriod['percentage'] }}% perjalanan magang.</p>
+        <p class="intern-summary-meta">{{ $periodLabel }} &bull; {{ $internPeriod['percentage'] }}% perjalanan magang.</p>
       </article>
 
       <article class="intern-dashboard-card intern-summary-card">
@@ -834,7 +1246,7 @@
         </span>
         <h3 class="intern-summary-value">{{ $divisionLabel }}</h3>
         <p class="intern-summary-label">Divisi Penempatan</p>
-        <p class="intern-summary-meta">{{ $institutionLabel }} • status akun {{ $registrationLabel }}.</p>
+        <p class="intern-summary-meta">{{ $institutionLabel }} &bull; status akun {{ $registrationLabel }}.</p>
       </article>
 
       <article class="intern-dashboard-card intern-summary-card">

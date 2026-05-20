@@ -5,8 +5,9 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Models\Division;
 use App\Models\Logbook;
-use App\Models\User;
 use App\Models\Intern;
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -36,39 +37,48 @@ class DashboardService
      */
     public function buildPageData(User $user, string $expectedRole): array
     {
-        $base = [
-            'pageTitle'       => $this->titleForRole($expectedRole),
-            'pageDescription' => $this->descriptionForRole($expectedRole),
-            'roleLabel'       => $expectedRole === 'superadmin' ? 'Superadmin' : ucfirst($expectedRole),
-            'user'            => $user,
-        ];
+        $cacheKey = sprintf(
+            'ims.dashboard.%s.%d.%s',
+            $expectedRole,
+            $user->id,
+            (string) optional($user->updated_at)->timestamp
+        );
 
-        // Data untuk admin/superadmin
-        if ($expectedRole === 'superadmin') {
-            $base = array_merge($base, $this->superadminStats());
-        }
+        return Cache::remember($cacheKey, now()->addMinutes(2), function () use ($user, $expectedRole) {
+            $base = [
+                'pageTitle'       => $this->titleForRole($expectedRole),
+                'pageDescription' => $this->descriptionForRole($expectedRole),
+                'roleLabel'       => $expectedRole === 'superadmin' ? 'Superadmin' : ucfirst($expectedRole),
+                'user'            => $user,
+            ];
 
-        if ($expectedRole === 'admin') {
-            $base = array_merge($base, $this->adminStats($user));
-        }
+            // Data untuk admin/superadmin
+            if ($expectedRole === 'superadmin') {
+                $base = array_merge($base, $this->superadminStats());
+            }
 
-        // Data untuk intern
-        if ($expectedRole === 'intern') {
-            $base = array_merge($base, $this->internStats($user));
-        }
+            if ($expectedRole === 'admin') {
+                $base = array_merge($base, $this->adminStats($user));
+            }
 
-        // Data untuk mentor
-        if ($expectedRole === 'mentor') {
-            $base = array_merge($base, $this->mentorStats($user));
-        }
+            // Data untuk intern
+            if ($expectedRole === 'intern') {
+                $base = array_merge($base, $this->internStats($user));
+            }
 
-        return $base;
+            // Data untuk mentor
+            if ($expectedRole === 'mentor') {
+                $base = array_merge($base, $this->mentorStats($user));
+            }
+
+            return $base;
+        });
     }
 
     private function superadminStats(): array
     {
         $totalLogbooks = Logbook::count();
-        $totalInterns = Intern::count();
+        $totalInterns = Intern::active()->count();
         $logbookThisMonth = Logbook::whereMonth('tanggal', now()->month)
             ->whereYear('tanggal', now()->year)
             ->count();
@@ -83,7 +93,7 @@ class DashboardService
         }
 
         // Distribusi intern per divisi
-        $divisionData  = Intern::with('division')
+        $divisionData  = Intern::active()->with('division')
             ->get()
             ->groupBy(fn($i) => $i->division->name ?? 'Lainnya');
         $divisionLabels = $divisionData->keys()->toArray();
@@ -115,19 +125,19 @@ class DashboardService
 
     private function adminStats(User $user): array
     {
-        $totalInterns = Intern::count();
+        $totalInterns = Intern::active()->count();
         $logbookThisMonth = Logbook::whereMonth('tanggal', now()->month)
             ->whereYear('tanggal', now()->year)
             ->count();
 
-        $onboardingRegister = Intern::where('registration_status', 'pending')->count();
-        $onboardingCompleting = Intern::where('registration_status', 'approved')
+        $onboardingRegister = Intern::active()->where('registration_status', 'pending')->count();
+        $onboardingCompleting = Intern::active()->where('registration_status', 'approved')
             ->where(function ($query) {
                 $query->whereNull('profile_completed_at')
                     ->orWhereNull('documents_completed_at');
             })
             ->count();
-        $onboardingActive = Intern::where('registration_status', 'approved')
+        $onboardingActive = Intern::active()->where('registration_status', 'approved')
             ->whereNotNull('profile_completed_at')
             ->whereNotNull('documents_completed_at')
             ->count();
@@ -145,12 +155,12 @@ class DashboardService
                 ->latest('tanggal')
                 ->take(5)
                 ->get(),
-            'recentInterns' => Intern::with(['user', 'division'])
+            'recentInterns' => Intern::active()->with(['user', 'division'])
                 ->latest()
                 ->take(5)
                 ->get(),
             'divisionSnapshots' => Division::query()
-                ->withCount('interns')
+                ->withCount(['activeInterns as interns_count'])
                 ->orderByDesc('interns_count')
                 ->take(6)
                 ->get(),
@@ -278,10 +288,12 @@ class DashboardService
             });
 
         $onboardingRegister = (clone $internQuery)
+            ->where('status', 'active')
             ->where('registration_status', 'pending')
             ->count();
 
         $onboardingCompleting = (clone $internQuery)
+            ->where('status', 'active')
             ->where('registration_status', 'approved')
             ->where(function ($query) {
                 $query->whereNull('profile_completed_at')
@@ -290,6 +302,7 @@ class DashboardService
             ->count();
 
         $onboardingActive = (clone $internQuery)
+            ->where('status', 'active')
             ->where('registration_status', 'approved')
             ->whereNotNull('profile_completed_at')
             ->whereNotNull('documents_completed_at')
@@ -298,7 +311,7 @@ class DashboardService
         return [
             'pageDescription' => 'Pantau aktivitas dan progres onboarding intern bimbingan Anda.',
             'mentorDivisionName' => $user->division?->name ?? 'Divisi Mentor',
-            'totalInterns' => (clone $internQuery)->count(),
+            'totalInterns' => (clone $internQuery)->where('status', 'active')->count(),
             'logbookThisMonth' => (clone $logbookQuery)
                 ->whereMonth('tanggal', now()->month)
                 ->whereYear('tanggal', now()->year)
@@ -315,6 +328,7 @@ class DashboardService
                 ->take(5)
                 ->get(),
             'recentInterns' => (clone $internQuery)
+                ->where('status', 'active')
                 ->with(['user', 'division'])
                 ->latest()
                 ->take(5)

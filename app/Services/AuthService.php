@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Intern;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
@@ -27,6 +30,7 @@ class AuthService
         }
 
         $request->session()->regenerate();
+        Cache::forget('ims.active-session-users.15');
 
         return $this->dashboardService->resolveDashboardRouteName(Auth::user());
     }
@@ -37,6 +41,29 @@ class AuthService
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        Cache::forget('ims.active-session-users.'.max((int) config('session.lifetime', 120), 15));
+    }
+
+    public function getActiveSessionUsersCount(int $minutes = 15): int
+    {
+        if (! Schema::hasTable('sessions')) {
+            return 0;
+        }
+
+        $minutes = max($minutes, (int) config('session.lifetime', $minutes));
+
+        return Cache::remember(
+            "ims.active-session-users.{$minutes}",
+            now()->addSeconds(30),
+            function () use ($minutes): int {
+                return (int) DB::table('sessions')
+                    ->whereNotNull('user_id')
+                    ->where('last_activity', '>=', now()->subMinutes($minutes)->timestamp)
+                    ->distinct()
+                    ->count('user_id');
+            }
+        );
     }
 
     private function resolveLoginEmail(string $login): ?string

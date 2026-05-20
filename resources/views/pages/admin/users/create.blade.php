@@ -121,8 +121,8 @@
                   <div class="form-floating form-floating-outline">
                     <input type="text" class="form-control @error('identification_number') is-invalid @enderror" 
                       id="identification_number" name="identification_number"
-                      placeholder="Contoh: 102210xx" value="{{ old('identification_number') }}" />
-                    <label for="identification_number text-uppercase" id="id_label">NIM / NISN</label>
+                      placeholder="Contoh: 12345 atau 102210xx" value="{{ old('identification_number') }}" />
+                    <label for="identification_number text-uppercase" id="id_label">NIS / NIM</label>
                     @error('identification_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                   </div>
                 </div>
@@ -140,7 +140,7 @@
                 ])
 
                 <div
-                  class="col-md-6 {{ old('role') === 'intern' && old('type') === 'mahasiswa' && old('institution_id') == app(\App\Services\InstitutionService::class)->getAllowanceEligibleInstitutionId() ? '' : 'd-none' }}"
+                  class="col-md-6 {{ old('role') === 'intern' ? '' : 'd-none' }}"
                   id="admin_bank_account_wrapper">
                   <div class="form-floating form-floating-outline">
                     <input
@@ -148,11 +148,11 @@
                       class="form-control @error('bank_account_number') is-invalid @enderror"
                       id="bank_account_number"
                       name="bank_account_number"
-                      placeholder="Nomor rekening mahasiswa"
+                      placeholder="Nomor rekening intern"
                       value="{{ old('bank_account_number') }}" />
                     <label for="bank_account_number">No Rekening</label>
                     @error('bank_account_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    <small class="text-body-secondary mt-1 d-block">Wajib untuk mahasiswa Politeknik Negeri Batam.</small>
+                    <small class="text-body-secondary mt-1 d-block">Wajib untuk siswa dan mahasiswa yang masuk program intern.</small>
                   </div>
                 </div>
 
@@ -206,12 +206,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const internSection = document.getElementById('intern_section');
   const typeSelect    = document.getElementById('type');
   const institutionInput = document.getElementById('admin_institution_search');
-  const institutionIdInput = document.getElementById('admin_institution_id');
   const startDateInput   = document.getElementById('start_date');
   const endDateInput     = document.getElementById('end_date');
   const bankAccountWrapper = document.getElementById('admin_bank_account_wrapper');
   const bankAccountInput = document.getElementById('bank_account_number');
-  const eligibleInstitutionId = '{{ app(\App\Services\InstitutionService::class)->getAllowanceEligibleInstitutionId() }}';
 
   function toggleInternSection() {
     const isIntern = roleSelect.value === 'intern';
@@ -228,11 +226,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function syncBankAccountVisibility() {
-    const isInternMahasiswa = roleSelect.value === 'intern' && typeSelect.value === 'mahasiswa';
-    const isEligibleInstitution = institutionIdInput && institutionIdInput.value === eligibleInstitutionId;
-    const shouldShow = isInternMahasiswa && isEligibleInstitution;
+    const shouldShow = roleSelect.value === 'intern';
 
-    bankAccountWrapper.classList.toggle('d-none', !shouldShow);
+    bankAccountWrapper?.classList.toggle('d-none', !shouldShow);
     bankAccountInput.required = shouldShow;
 
     if (!shouldShow) {
@@ -242,8 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   roleSelect.addEventListener('change', toggleInternSection);
   typeSelect.addEventListener('change', syncBankAccountVisibility);
-  institutionIdInput?.addEventListener('change', syncBankAccountVisibility);
-  institutionIdInput?.addEventListener('input', syncBankAccountVisibility);
   institutionInput?.addEventListener('change', () => setTimeout(syncBankAccountVisibility, 60));
   institutionInput?.addEventListener('input', () => setTimeout(syncBankAccountVisibility, 60));
 

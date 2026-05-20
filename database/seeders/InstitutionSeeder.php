@@ -14,7 +14,6 @@ class InstitutionSeeder extends Seeder
             ['name' => 'Politeknik Negeri Batam'],
             [
                 'is_active' => true,
-                'is_allowance_eligible' => true,
             ],
         );
 

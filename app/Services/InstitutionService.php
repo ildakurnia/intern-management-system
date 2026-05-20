@@ -8,25 +8,9 @@ use Illuminate\Support\Collection;
 
 class InstitutionService
 {
-    public function getAllowanceEligibleInstitutionId(): ?int
-    {
-        return Institution::query()
-            ->active()
-            ->where('is_allowance_eligible', true)
-            ->value('id');
-    }
-
     public function requiresBankAccount(?string $type, ?string $institutionId): bool
     {
-        if ($type !== config('allowance.eligible_type', 'mahasiswa')) {
-            return false;
-        }
-
-        if (! $institutionId) {
-            return false;
-        }
-
-        return (int) $institutionId === (int) $this->getAllowanceEligibleInstitutionId();
+        return in_array($type, config('allowance.eligible_types', ['siswa', 'mahasiswa']), true);
     }
 
     public function search(string $query, int $limit = 8): Collection
@@ -127,7 +111,6 @@ class InstitutionService
             return Institution::query()->create([
                 'name' => $normalizedName,
                 'is_active' => true,
-                'is_allowance_eligible' => false,
             ]);
         }
 

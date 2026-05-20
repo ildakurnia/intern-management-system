@@ -191,116 +191,181 @@
   }
 
   @media (max-width: 767.98px) {
+    .monitoring-admin-page .card {
+      border-color: var(--bs-border-color);
+      box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.06);
+    }
+
+    .monitoring-header-card,
+    .monitoring-summary-card,
+    .monitoring-mobile-card {
+      background: var(--bs-card-bg);
+      color: var(--bs-body-color);
+    }
+
+    .monitoring-header-card,
+    .monitoring-summary-card,
+    .monitoring-mobile-card {
+      border-color: var(--bs-border-color);
+    }
+
+    .monitoring-title,
+    .monitoring-mobile-name {
+      color: var(--bs-heading-color);
+    }
+
+    .monitoring-soft-text,
+    .monitoring-mobile-email {
+      color: var(--bs-secondary-color);
+    }
+
+    .monitoring-filter-shell {
+      background: var(--bs-body-bg);
+      border-color: var(--bs-border-color);
+    }
+
+    .monitoring-filter-shell label {
+      color: var(--bs-secondary-color);
+    }
+
+    .monitoring-filter-shell .form-control,
+    .monitoring-filter-shell .form-select {
+      background: var(--bs-card-bg);
+    }
+
+    .monitoring-summary-badge {
+      background: var(--bs-tertiary-bg);
+      color: var(--bs-heading-color) !important;
+    }
+
+    .monitoring-summary-value {
+      color: var(--bs-heading-color);
+    }
+
     .monitoring-mobile-shell {
       display: grid;
       gap: 1rem;
     }
 
     .monitoring-mobile-card {
+      padding: 1rem;
+      border-radius: 1rem;
       border: 1px solid var(--bs-border-color);
-      border-radius: 1.1rem;
-      background: var(--bs-card-bg);
+      background: #fff;
       overflow: hidden;
+      box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.06);
+      display: grid;
+      gap: 0.95rem;
     }
 
-    .monitoring-mobile-card .card-header,
-    .monitoring-mobile-card .card-body {
-      background: transparent;
-    }
-
-    .monitoring-mobile-card .card-header {
-      padding: 1rem;
-    }
-
-    .monitoring-mobile-card .card-body {
-      padding: 1rem;
+    .monitoring-mobile-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
     }
 
     .monitoring-mobile-name {
       margin: 0;
-      color: var(--bs-heading-color);
       font-size: 1rem;
       font-weight: 800;
       line-height: 1.25;
+      color: var(--bs-heading-color);
     }
 
-    .monitoring-mobile-email,
-    .monitoring-mobile-meta {
-      color: var(--bs-secondary-color);
+    .monitoring-mobile-email {
+      margin-top: 0.2rem;
       font-size: 0.875rem;
+      color: var(--bs-secondary-color);
+      word-break: break-word;
+    }
+
+    .monitoring-mobile-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .monitoring-mobile-badges .badge {
+      border-radius: 999px;
+    }
+
+    .monitoring-mobile-stack {
+      display: grid;
+      gap: 0.75rem;
     }
 
     .monitoring-mobile-meta-list {
       display: grid;
+      gap: 0.55rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .monitoring-mobile-meta-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .monitoring-mobile-meta-row span,
+    .monitoring-mobile-tile span {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      color: var(--bs-secondary-color);
+    }
+
+    .monitoring-mobile-meta-row strong {
+      text-align: right;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--bs-heading-color);
+    }
+
+    .monitoring-mobile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.65rem;
     }
 
-    .monitoring-mobile-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      color: var(--bs-body-color);
-      font-size: 0.875rem;
-      line-height: 1.35;
-    }
-
-    .monitoring-mobile-status {
-      margin-top: 0.85rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .monitoring-mobile-status .badge {
-      border-radius: 999px;
-    }
-
-    .monitoring-mobile-standalone {
-      display: grid;
-      gap: 0.45rem;
-      margin-top: 0.9rem;
-      padding-top: 0.9rem;
-      border-top: 1px solid var(--bs-border-color);
-    }
-
-    .monitoring-mobile-stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 0.9rem;
-    }
-
-    .monitoring-mobile-stat {
-      border: 1px solid var(--bs-border-color);
+    .monitoring-mobile-tile {
+      padding: 0.8rem 0.85rem;
       border-radius: 0.9rem;
-      padding: 0.75rem 0.85rem;
-      background: rgba(var(--bs-emphasis-color-rgb), 0.02);
+      border: 1px solid var(--bs-border-color);
+      background: #fff;
+      min-width: 0;
     }
 
-    .monitoring-mobile-stat small {
+    .monitoring-mobile-tile strong {
       display: block;
-      margin-bottom: 0.3rem;
-      color: var(--bs-secondary-color);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+      font-size: 0.94rem;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--bs-heading-color);
+      word-break: break-word;
     }
 
-    .monitoring-mobile-stat strong {
-      color: var(--bs-heading-color);
-      font-size: 0.95rem;
-      font-weight: 700;
+    .monitoring-mobile-tile--wide {
+      grid-column: span 2;
     }
 
     .monitoring-mobile-actions {
-      margin-top: 1rem;
+      display: grid;
+      gap: 0.6rem;
     }
 
     .monitoring-mobile-actions .btn {
       width: 100%;
       border-radius: 0.85rem;
+    }
+
+    .monitoring-mobile-empty .monitoring-mobile-actions {
+      display: none;
     }
   }
 </style>
@@ -488,65 +553,52 @@
             @php
               $todayAttendance = $intern->attendances->first();
               $rowStatus = $resolveStatus($todayAttendance);
-              $initials = collect(explode(' ', trim($intern->name)))
-                ->filter()
-                ->take(2)
-                ->map(fn ($part) => mb_substr($part, 0, 1))
-                ->implode('');
               $categoryLabel = ucfirst($intern->type ?? 'intern');
             @endphp
 
             <div class="monitoring-mobile-card">
-              <div class="card-header border-bottom">
-                <div class="d-flex align-items-start justify-content-between gap-3">
-                  <div class="d-flex align-items-center gap-3 min-w-0">
-                    <span class="monitoring-avatar flex-shrink-0">{{ strtoupper($initials ?: 'IN') }}</span>
-                    <div class="min-w-0">
-                      <h6 class="monitoring-mobile-name text-truncate">{{ $intern->name }}</h6>
-                      <div class="monitoring-mobile-email text-truncate">{{ $intern->user?->email ?? $intern->email ?? '-' }}</div>
-                    </div>
-                  </div>
-                  <span class="badge bg-label-{{ $rowStatus['badge'] }} rounded-pill flex-shrink-0">
-                    {{ $rowStatus['label'] }}
-                  </span>
+              <div class="monitoring-mobile-head">
+                <div class="min-w-0">
+                  <h6 class="monitoring-mobile-name text-truncate">{{ $intern->name }}</h6>
+                  <div class="monitoring-mobile-email text-truncate">{{ $intern->user?->email ?? $intern->email ?? '-' }}</div>
                 </div>
+                <span class="badge bg-label-{{ $rowStatus['badge'] }} rounded-pill flex-shrink-0">
+                  {{ $rowStatus['label'] }}
+                </span>
               </div>
 
-              <div class="card-body">
+              <div class="monitoring-mobile-stack">
                 <div class="monitoring-mobile-meta-list">
-                  <div class="monitoring-mobile-meta-item">
-                    <i class="ri ri-community-line"></i>
-                    <span>{{ $intern->division->name ?? '-' }}</span>
+                  <div class="monitoring-mobile-meta-row">
+                    <span>Divisi</span>
+                    <strong>{{ $intern->division->name ?? '-' }}</strong>
                   </div>
-                  <div class="monitoring-mobile-meta-item">
-                    <i class="ri ri-price-tag-3-line"></i>
-                    <span class="monitoring-category-badge">{{ $categoryLabel }}</span>
+                  <div class="monitoring-mobile-meta-row">
+                    <span>Kategori</span>
+                    <strong>{{ $categoryLabel }}</strong>
                   </div>
-                </div>
-
-                <div class="monitoring-mobile-status">
-                  <div class="small monitoring-soft-text">{{ $rowStatus['meta'] }}</div>
-                </div>
-
-                <div class="monitoring-mobile-standalone">
-                  <div class="monitoring-mobile-meta-item">
-                    <i class="ri ri-login-box-line"></i>
-                    <span>Check In: {{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</span>
-                  </div>
-                  <div class="monitoring-mobile-meta-item">
-                    <i class="ri ri-logout-box-r-line"></i>
-                    <span>Check Out: {{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</span>
+                  <div class="monitoring-mobile-meta-row">
+                    <span>Status</span>
+                    <strong>{{ $rowStatus['label'] }}</strong>
                   </div>
                 </div>
 
-                <div class="monitoring-mobile-stats">
-                  <div class="monitoring-mobile-stat">
-                    <small>Total Kehadiran</small>
+                <div class="monitoring-mobile-grid">
+                  <div class="monitoring-mobile-tile">
+                    <span>Check In</span>
+                    <strong>{{ $todayAttendance?->check_in_at?->format('H:i') ?? '-' }}</strong>
+                  </div>
+                  <div class="monitoring-mobile-tile">
+                    <span>Check Out</span>
+                    <strong>{{ $todayAttendance?->check_out_at?->format('H:i') ?? '-' }}</strong>
+                  </div>
+                  <div class="monitoring-mobile-tile">
+                    <span>Total Kehadiran</span>
                     <strong>{{ $intern->attendance_records_count }}/{{ $workingDays }} Hari</strong>
                   </div>
-                  <div class="monitoring-mobile-stat">
-                    <small>Status Hari Ini</small>
-                    <strong>{{ $rowStatus['label'] }}</strong>
+                  <div class="monitoring-mobile-tile monitoring-mobile-tile--wide">
+                    <span>Catatan</span>
+                    <strong>{{ $rowStatus['meta'] }}</strong>
                   </div>
                 </div>
 
@@ -558,7 +610,7 @@
               </div>
             </div>
           @empty
-            <div class="monitoring-mobile-card text-center p-4">
+            <div class="monitoring-mobile-card monitoring-mobile-empty text-center">
               <h6 class="mb-2">Belum Ada Intern yang Sesuai</h6>
               <p class="monitoring-soft-text mb-0">Coba ubah pencarian atau kategori untuk melihat data intern lainnya.</p>
             </div>

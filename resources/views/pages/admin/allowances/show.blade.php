@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Detail Uang Saku Mahasiswa')
+@section('title', 'Detail Uang Saku Intern')
 
 @section('page-style')
 <style>
@@ -404,8 +404,8 @@
   <div class="col-12">
     <div class="d-flex flex-column flex-xl-row justify-content-between gap-4 align-items-start">
       <div>
-        <h3 class="allowance-panel-title">Detail Uang Saku Mahasiswa</h3>
-        <p class="allowance-soft-text mb-0">Tinjau identitas mahasiswa, rumus perhitungan, dan detail kehadiran sebelum rekap dicetak.</p>
+        <h3 class="allowance-panel-title">Detail Uang Saku Intern</h3>
+        <p class="allowance-soft-text mb-0">Tinjau identitas intern, rumus perhitungan, dan detail kehadiran sebelum rekap dicetak.</p>
         <small class="allowance-soft-text d-block mt-2">Periode {{ $monthLabel }}</small>
       </div>
       <div class="d-flex flex-wrap gap-2">
@@ -417,7 +417,7 @@
 
   <div class="col-xl-5">
     <div class="card allowance-hero-card allowance-profile-card">
-      <span class="allowance-profile-badge">Detail Uang Saku Mahasiswa</span>
+      <span class="allowance-profile-badge">Detail Uang Saku Intern</span>
       <div class="allowance-profile-grid">
         <div class="allowance-profile-row">
           <div class="allowance-profile-label">Nama</div>
@@ -428,7 +428,7 @@
           <div class="allowance-profile-value">{{ $intern->division->name ?? '-' }}</div>
         </div>
         <div class="allowance-profile-row">
-          <div class="allowance-profile-label">Institusi</div>
+          <div class="allowance-profile-label">Asal Sekolah/Kampus</div>
           <div class="allowance-profile-value">{{ $allowance['institution_label'] }}</div>
         </div>
         <div class="allowance-profile-row">
@@ -436,8 +436,8 @@
           <div class="allowance-profile-value text-primary">{{ $monthLabel }}</div>
         </div>
         <div class="allowance-profile-row">
-          <div class="allowance-profile-label">NIM</div>
-          <div class="allowance-profile-value">{{ $intern->nim ?: '-' }}</div>
+          <div class="allowance-profile-label">{{ $allowance['identifier_label'] }}</div>
+          <div class="allowance-profile-value">{{ $allowance['identifier_value'] }}</div>
         </div>
       </div>
     </div>

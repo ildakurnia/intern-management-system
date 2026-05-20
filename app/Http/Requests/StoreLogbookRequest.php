@@ -22,18 +22,27 @@ class StoreLogbookRequest extends FormRequest
      */
     public function rules(): array
     {
-        $internId = $this->user()->intern->id ?? null;
+        $intern = $this->user()?->intern;
+        $internId = $intern->id ?? null;
         $logbookId = $this->route('logbook');
+        $startDate = $intern?->start_date?->toDateString();
+
+        $tanggalRules = [
+            'required',
+            'date',
+            'before_or_equal:today',
+        ];
+
+        if ($startDate) {
+            $tanggalRules[] = 'after_or_equal:' . $startDate;
+        }
+
+        $tanggalRules[] = Rule::unique('logbooks')->where(function ($query) use ($internId) {
+            return $query->where('intern_id', $internId);
+        })->ignore($logbookId);
 
         return [
-            'tanggal' => [
-                'required',
-                'date',
-                'before_or_equal:today',
-                Rule::unique('logbooks')->where(function ($query) use ($internId) {
-                    return $query->where('intern_id', $internId);
-                })->ignore($logbookId),
-            ],
+            'tanggal' => $tanggalRules,
             'uraian_aktivitas' => 'required|string|min:30',
             'pembelajaran_diperoleh' => 'required|string',
             'kendala_dialami' => 'nullable|string',
@@ -48,8 +57,9 @@ class StoreLogbookRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'tanggal.after_or_equal' => 'Tanggal logbook tidak boleh sebelum masa magang dimulai.',
+            'tanggal.before_or_equal' => 'Tanggal logbook tidak boleh melebihi hari ini.',
             'tanggal.unique' => 'Anda sudah membuat logbook untuk tanggal ini.',
         ];
     }
 }
-    

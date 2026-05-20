@@ -83,6 +83,106 @@ document.addEventListener('DOMContentLoaded', function () {
     Waves.attach('.nav-pills .nav-item .nav-link', ['waves-light']);
   }
 
+  const prefetchCache = new Set();
+
+  function prefetchUrl(url) {
+    if (!url || prefetchCache.has(url)) {
+      return;
+    }
+
+    prefetchCache.add(url);
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    link.as = 'document';
+    document.head.appendChild(link);
+  }
+
+  function isPrefetchableLink(anchor) {
+    if (!anchor || !anchor.href) {
+      return false;
+    }
+
+    const url = new URL(anchor.href, window.location.origin);
+
+    if (url.origin !== window.location.origin) {
+      return false;
+    }
+
+    if (anchor.target && anchor.target !== '_self') {
+      return false;
+    }
+
+    if (anchor.hasAttribute('download')) {
+      return false;
+    }
+
+    if (anchor.getAttribute('rel')?.includes('nofollow')) {
+      return false;
+    }
+
+    return ['GET', null, ''].includes((anchor.dataset.method || '').toUpperCase())
+      && url.pathname !== window.location.pathname;
+  }
+
+  document.addEventListener(
+    'mouseover',
+    event => {
+      const anchor = event.target.closest('a[href]');
+      if (isPrefetchableLink(anchor)) {
+        prefetchUrl(anchor.href);
+      }
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    'touchstart',
+    event => {
+      const anchor = event.target.closest('a[href]');
+      if (isPrefetchableLink(anchor)) {
+        prefetchUrl(anchor.href);
+      }
+    },
+    { passive: true }
+  );
+
+  function showPageTransition() {
+    document.documentElement.classList.add('ims-navigating');
+  }
+
+  function hidePageTransition() {
+    document.documentElement.classList.remove('ims-navigating');
+  }
+
+  document.addEventListener(
+    'pointerdown',
+    event => {
+      const anchor = event.target.closest('a[href]');
+      if (isPrefetchableLink(anchor)) {
+        prefetchUrl(anchor.href);
+        requestAnimationFrame(showPageTransition);
+      }
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    'submit',
+    event => {
+      const form = event.target;
+      if (form && form.tagName === 'FORM') {
+        requestAnimationFrame(showPageTransition);
+      }
+    },
+    true
+  );
+
+  window.addEventListener('beforeunload', showPageTransition);
+  window.addEventListener('pageshow', hidePageTransition);
+  document.addEventListener('DOMContentLoaded', hidePageTransition);
+
   // Initialize menu
   //-----------------
 

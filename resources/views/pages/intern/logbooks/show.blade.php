@@ -17,6 +17,33 @@
       font-weight: 700;
     }
 
+    .intern-logbook-back-btn {
+      background: linear-gradient(135deg, #5b6ee6, #465ad6);
+      border: 1px solid rgba(71, 85, 221, 0.22);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(58, 69, 170, 0.16);
+    }
+
+    .intern-logbook-back-btn:hover,
+    .intern-logbook-back-btn:focus {
+      color: #fff;
+      background: linear-gradient(135deg, #6678ea, #4f63dc);
+      border-color: rgba(71, 85, 221, 0.3);
+      box-shadow: 0 12px 24px rgba(58, 69, 170, 0.2);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-back-btn {
+      background: linear-gradient(135deg, #5569de, #4357cc);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-logbook-back-btn:hover,
+    html[data-bs-theme="dark"] .intern-logbook-back-btn:focus {
+      background: linear-gradient(135deg, #6275e5, #4d61d6);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
     @media (max-width: 767.98px) {
       .intern-logbook-lock-badge {
         width: 100%;
@@ -131,7 +158,7 @@
         <div class="btn btn-outline-secondary d-flex align-items-center justify-content-center disabled">
           <i class="icon-base ri ri-lock-2-line icon-16px me-2"></i> Logbook Sudah Terkunci
         </div>
-        <a href="{{ route('intern.logbooks.index') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
+        <a href="{{ route('intern.logbooks.index') }}" class="btn intern-logbook-back-btn d-flex align-items-center justify-content-center">
           <i class="icon-base ri ri-arrow-left-line icon-16px me-2"></i> Kembali ke Daftar
         </a>
       </div>

@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 Schedule::command('attendance:mark-absent')
     ->dailyAt(config('attendance.auto_mark_absent_at'));
+
+Schedule::command('interns:sync-expired')
+    ->dailyAt(config('attendance.auto_mark_absent_at'));

@@ -53,6 +53,8 @@
     .intern-profile-page {
       display: grid;
       gap: 1rem;
+      font-family: var(--bs-body-font-family);
+      color: var(--bs-body-color);
     }
 
     .intern-profile-shell {
@@ -60,6 +62,39 @@
       border-radius: 1.55rem;
       background: rgba(255, 255, 255, 0.97);
       box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+    }
+
+    .intern-profile-page .form-label,
+    .intern-profile-page .form-text {
+      color: var(--bs-body-color);
+    }
+
+    .intern-profile-page .form-control,
+    .intern-profile-page .form-select {
+      min-height: 2.85rem;
+      border-radius: 1rem;
+      border-color: var(--bs-border-color);
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      box-shadow: none;
+    }
+
+    .intern-profile-page .form-control::placeholder {
+      color: var(--bs-secondary-color);
+    }
+
+    .intern-profile-page .form-control:focus,
+    .intern-profile-page .form-select:focus {
+      border-color: rgba(var(--bs-primary-rgb), 0.35);
+      box-shadow: 0 0 0 0.18rem rgba(var(--bs-primary-rgb), 0.12);
+    }
+
+    .intern-profile-page .form-control[readonly],
+    .intern-profile-page .form-control:disabled,
+    .intern-profile-page .form-select:disabled {
+      background-color: var(--bs-tertiary-bg);
+      color: var(--bs-secondary-color);
+      opacity: 1;
     }
 
     .intern-profile-hero {
@@ -259,6 +294,101 @@
 
     .intern-profile-footer .btn {
       min-width: 10.5rem;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-page {
+      color: #e5e7eb;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-shell {
+      border-color: rgba(148, 163, 184, 0.16);
+      background: rgba(24, 28, 42, 0.88);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-name,
+    html[data-bs-theme="dark"] .intern-profile-section-title,
+    html[data-bs-theme="dark"] .intern-profile-photo-box h4 {
+      color: #f8fafc;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-desc,
+    html[data-bs-theme="dark"] .intern-profile-side small,
+    html[data-bs-theme="dark"] .intern-profile-side strong,
+    html[data-bs-theme="dark"] .intern-profile-section-note,
+    html[data-bs-theme="dark"] .intern-profile-photo-box p,
+    html[data-bs-theme="dark"] .intern-profile-progress-label {
+      color: #cbd5e1;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-badge {
+      background: rgba(99, 102, 241, 0.18);
+      color: #c7d2fe;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-progress {
+      background: rgba(148, 163, 184, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-section {
+      border-color: rgba(148, 163, 184, 0.14);
+      background: linear-gradient(180deg, rgba(24, 28, 42, 0.94), rgba(17, 24, 39, 0.96));
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-section-title i {
+      background: rgba(99, 102, 241, 0.18);
+      color: #a5b4fc;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-photo-box {
+      border-color: rgba(148, 163, 184, 0.22);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-page .form-control,
+    html[data-bs-theme="dark"] .intern-profile-page .form-select {
+      background-color: rgba(15, 23, 42, 0.72);
+      border-color: rgba(148, 163, 184, 0.18);
+      color: #e5e7eb;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-page .form-control::placeholder {
+      color: #94a3b8;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-page .form-control[readonly],
+    html[data-bs-theme="dark"] .intern-profile-page .form-control:disabled,
+    html[data-bs-theme="dark"] .intern-profile-page .form-select:disabled {
+      background-color: rgba(15, 23, 42, 0.55);
+      color: #94a3b8;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-page .form-label,
+    html[data-bs-theme="dark"] .intern-profile-page .form-text {
+      color: #cbd5e1;
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-outline-secondary {
+      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.28);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-outline-secondary:hover,
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-outline-secondary:focus {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-primary {
+      border-color: transparent;
+      background: linear-gradient(180deg, #5569de 0%, #4357cc 100%);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+    }
+
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-primary:hover,
+    html[data-bs-theme="dark"] .intern-profile-footer .btn-primary:focus {
+      background: linear-gradient(180deg, #6275e5 0%, #4d61d6 100%);
     }
 
     @media (max-width: 991.98px) {
@@ -479,7 +609,7 @@
                     value="{{ old('bank_account_number', $intern->bank_account_number) }}"
                     placeholder="Masukkan nomor rekening">
                   @error('bank_account_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                  <div class="form-text">Wajib diisi khusus mahasiswa Politeknik Negeri Batam untuk proses uang saku.</div>
+                  <div class="form-text">Wajib diisi untuk siswa dan mahasiswa agar proses uang saku dapat berjalan dengan benar.</div>
                 </div>
               </div>
             </div>
@@ -503,30 +633,4 @@
 
 @section('page-script')
   @include('partials.forms.institution-picker-script')
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const eligibleInstitutionId = '{{ $institutionService->getAllowanceEligibleInstitutionId() }}';
-      const institutionIdInput = document.getElementById('intern_institution_id');
-      const bankAccountCard = document.getElementById('bank_account_card');
-      const bankAccountInput = document.getElementById('bank_account_number');
-
-      function syncBankAccountVisibility() {
-        const shouldShow = institutionIdInput && institutionIdInput.value && institutionIdInput.value === eligibleInstitutionId;
-
-        bankAccountCard.classList.toggle('d-none', !shouldShow);
-        bankAccountInput.required = shouldShow;
-
-        if (!shouldShow) {
-          bankAccountInput.value = '';
-        }
-      }
-
-      institutionIdInput?.addEventListener('change', syncBankAccountVisibility);
-      institutionIdInput?.addEventListener('input', syncBankAccountVisibility);
-      document.getElementById('intern_institution_search')?.addEventListener('change', () => setTimeout(syncBankAccountVisibility, 60));
-      document.getElementById('intern_institution_search')?.addEventListener('input', () => setTimeout(syncBankAccountVisibility, 60));
-
-      syncBankAccountVisibility();
-    });
-  </script>
 @endsection

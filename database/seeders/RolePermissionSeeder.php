@@ -66,6 +66,7 @@ class RolePermissionSeeder extends Seeder
             'mentor.logbooks.index',
             'mentor.logbooks.show',
             'mentor.attendances.index',
+            'mentor.attendances.show',
         ]);
 
         $internRole = Role::firstOrCreate(['name' => 'intern', 'guard_name' => 'web']);

@@ -25,6 +25,10 @@ class HasAnyRoleOrPermission
             return $next($request);
         }
 
+        if ($routeName === 'intern.documents.preview' && $user->can('intern.documents.edit')) {
+            return $next($request);
+        }
+
         abort(403, 'Anda tidak memiliki akses ke fitur ini.');
     }
 }

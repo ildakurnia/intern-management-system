@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationService
 {
@@ -31,7 +32,7 @@ class NotificationService
             'info'    => 'ri-information-line',
         ];
 
-        return Notification::create([
+        $notification = Notification::create([
             'user_id' => $userId,
             'notifiable_type' => \App\Models\User::class,
             'notifiable_id' => $userId,
@@ -43,5 +44,9 @@ class NotificationService
             'url'     => $url,
             'read_at' => null,
         ]);
+
+        Cache::forget("ims.topbar.notifications.{$userId}");
+
+        return $notification;
     }
 }
