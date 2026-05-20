@@ -4,6 +4,62 @@
 @section('page_heading', 'Login')
 
 @section('content')
+    <style>
+        .auth-active-users {
+            position: relative;
+            overflow: hidden;
+            margin-top: .7rem;
+            padding: .45rem .6rem;
+            border-radius: .8rem;
+            border: 1px solid rgba(91, 110, 240, 0.16);
+            background:
+                radial-gradient(circle at top right, rgba(91, 110, 240, 0.08), transparent 24%),
+                linear-gradient(135deg, rgba(91, 110, 240, 0.05), rgba(91, 110, 240, 0.02));
+            box-shadow: 0 6px 12px rgba(91, 110, 240, 0.05);
+        }
+
+        .auth-active-users::after {
+            content: '';
+            position: absolute;
+            inset: auto -35% -70% auto;
+            width: 4.5rem;
+            height: 4.5rem;
+            border-radius: 50%;
+            background: rgba(91, 110, 240, 0.08);
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .auth-active-users-label {
+            display: inline-flex;
+            align-items: center;
+            gap: .28rem;
+            margin-bottom: .1rem;
+            color: #64748b;
+            font-size: .62rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .auth-active-users-label i {
+            color: #5b6ef0;
+            font-size: .78rem;
+        }
+
+        .auth-active-users-value {
+            color: #1f2937;
+            font-size: 1.1rem;
+            line-height: 1;
+            font-weight: 800;
+        }
+
+        .auth-active-users-copy {
+            color: #64748b;
+            font-size: .66rem;
+            margin-top: .08rem;
+        }
+    </style>
+
     <section class="auth-cover auth-cover-enterprise">
         <div class="auth-cover-brand">
             <img src="{{ asset('assets/img/branding/logo.png') }}" alt="IMS Logo">
@@ -82,6 +138,18 @@
                     <div class="auth-form-header">
                         <h3>Masuk ke IMS</h3>
                         <p class="panel-subtitle">Masuk dengan email atau NIM/NIS terdaftar.</p>
+                        <div class="auth-active-users">
+                            <div class="d-flex align-items-start justify-content-between gap-2 position-relative" style="z-index: 1;">
+                                <div class="min-w-0">
+                                    <div class="auth-active-users-label">
+                                        <i class="ri ri-user-3-line"></i>
+                                        <span>User sedang login</span>
+                                    </div>
+                                    <div class="auth-active-users-value">{{ $activeUsersCount ?? 0 }}</div>
+                                    <div class="auth-active-users-copy">sedang aktif</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     @if ($errors->any())

@@ -36,13 +36,52 @@
     .mentor-logbook-page {
       display: grid;
       gap: 1rem;
+      font-family: var(--bs-body-font-family);
+      --mentor-logbook-card-bg: var(--bs-card-bg);
+      --mentor-logbook-card-soft: var(--bs-body-bg);
+      --mentor-logbook-modal-bg: #ffffff;
+      --mentor-logbook-modal-surface: #f6f8ff;
+      --mentor-logbook-border: var(--bs-border-color);
+      --mentor-logbook-border-strong: rgba(var(--bs-primary-rgb), 0.18);
+      --mentor-logbook-title: var(--bs-heading-color);
+      --mentor-logbook-text: var(--bs-body-color);
+      --mentor-logbook-soft: var(--bs-secondary-color);
+      --mentor-logbook-muted: var(--bs-tertiary-color);
+      --mentor-logbook-primary: var(--bs-primary);
+      --mentor-logbook-success: var(--bs-success);
+      --mentor-logbook-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+      --mentor-logbook-hover: rgba(var(--bs-primary-rgb), 0.08);
+    }
+
+    html[data-bs-theme="dark"] .mentor-logbook-page {
+      --mentor-logbook-card-bg: #1a2033;
+      --mentor-logbook-card-soft: #12182a;
+      --mentor-logbook-modal-bg: #1a2033;
+      --mentor-logbook-modal-surface: #222a42;
+      --mentor-logbook-border: rgba(148, 163, 184, 0.14);
+      --mentor-logbook-border-strong: rgba(99, 102, 241, 0.28);
+      --mentor-logbook-title: #f8fafc;
+      --mentor-logbook-text: #e5e7eb;
+      --mentor-logbook-soft: #94a3b8;
+      --mentor-logbook-muted: #64748b;
+      --mentor-logbook-primary: #a5b4fc;
+      --mentor-logbook-success: #4ade80;
+      --mentor-logbook-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+      --mentor-logbook-hover: rgba(99, 102, 241, 0.14);
+    }
+
+    .mentor-logbook-modal .modal-backdrop.show,
+    .modal-backdrop.show {
+      opacity: 0.22;
+      background: rgba(15, 23, 42, 0.65);
     }
 
     .mentor-logbook-shell {
-      border: 1px solid rgba(148, 163, 184, 0.14);
+      border: 1px solid var(--mentor-logbook-border);
       border-radius: 1.6rem;
-      background: rgba(255, 255, 255, 0.97);
-      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+      background: var(--mentor-logbook-card-bg);
+      box-shadow: var(--mentor-logbook-shadow);
+      overflow: hidden;
     }
 
     .mentor-logbook-header {
@@ -50,12 +89,13 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
-      padding: 1.35rem 1.4rem 0;
+      padding: 1.35rem 1.4rem 1rem;
+      border-bottom: 1px solid var(--mentor-logbook-border);
     }
 
     .mentor-logbook-title {
       margin: 0;
-      color: #172033;
+      color: var(--mentor-logbook-title);
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -63,7 +103,7 @@
 
     .mentor-logbook-subtitle {
       margin: 0.45rem 0 0;
-      color: #64748b;
+      color: var(--mentor-logbook-soft);
       font-size: 0.92rem;
       line-height: 1.6;
     }
@@ -74,15 +114,20 @@
       gap: 0.45rem;
       padding: 0.7rem 0.9rem;
       border-radius: 999px;
-      background: rgba(37, 99, 235, 0.08);
-      color: #2563eb;
+      background: rgba(var(--bs-primary-rgb), 0.12);
+      color: var(--mentor-logbook-primary);
       font-size: 0.86rem;
       font-weight: 700;
       white-space: nowrap;
+      border: 1px solid rgba(var(--bs-primary-rgb), 0.12);
+    }
+
+    .mentor-logbook-total i {
+      font-size: 0.95rem;
     }
 
     .mentor-logbook-calendar-wrap {
-      padding: 1.1rem 1.4rem 1.4rem;
+      padding: 1.15rem 1.4rem 1.4rem;
     }
 
     .mentor-logbook-calendar-board {
@@ -109,25 +154,25 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(15, 23, 42, 0.22);
+      border: 1px solid var(--mentor-logbook-border);
       border-radius: 0.9rem;
-      color: #1f2937;
-      background: #fff;
+      color: var(--mentor-logbook-title);
+      background: var(--mentor-logbook-card-bg);
       text-decoration: none;
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .mentor-logbook-month-button:hover {
       transform: translateY(-1px);
-      border-color: rgba(37, 99, 235, 0.24);
+      border-color: var(--mentor-logbook-border-strong);
       box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
-      color: #1d4ed8;
+      color: var(--mentor-logbook-primary);
     }
 
     .mentor-logbook-month-label {
       min-width: 11rem;
       text-align: center;
-      color: #1f2937;
+      color: var(--mentor-logbook-title);
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.02em;
@@ -146,21 +191,21 @@
 
     .mentor-logbook-weekday {
       padding: 0.55rem;
-      color: #334155;
+      color: var(--mentor-logbook-soft);
       font-size: 0.92rem;
       font-weight: 600;
       text-align: center;
     }
 
     .mentor-logbook-week {
-      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      border-top: 1px solid var(--mentor-logbook-border);
     }
 
     .mentor-logbook-day {
       min-height: 8rem;
       padding: 0.4rem;
-      background: rgba(248, 250, 252, 0.45);
-      border-right: 1px solid rgba(148, 163, 184, 0.12);
+      background: var(--mentor-logbook-card-soft);
+      border-right: 1px solid var(--mentor-logbook-border);
     }
 
     .mentor-logbook-week .mentor-logbook-day:last-child {
@@ -180,14 +225,14 @@
       border: 0;
       border-radius: 1rem;
       background: transparent;
-      color: #64748b;
+      color: var(--mentor-logbook-soft);
       text-align: left;
       transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease;
     }
 
     .mentor-logbook-day-button:hover:not(:disabled) {
-      background: rgba(37, 99, 235, 0.08);
-      color: #1d4ed8;
+      background: var(--mentor-logbook-hover);
+      color: var(--mentor-logbook-primary);
       transform: translateY(-1px);
     }
 
@@ -208,25 +253,25 @@
     }
 
     .mentor-logbook-day.is-today .mentor-logbook-day-number {
-      background: #2d8cff;
+      background: var(--mentor-logbook-primary);
       color: #fff;
     }
 
     .mentor-logbook-day.is-has-logbook .mentor-logbook-day-button {
-      color: #1f2937;
+      color: var(--mentor-logbook-text);
     }
 
     .mentor-logbook-day.is-has-logbook .mentor-logbook-day-button:hover {
-      background: rgba(34, 197, 94, 0.08);
-      color: #166534;
+      background: rgba(var(--bs-success-rgb), 0.08);
+      color: var(--mentor-logbook-success);
     }
 
     .mentor-logbook-day.is-outside {
-      background: rgba(249, 250, 251, 0.72);
+      background: color-mix(in srgb, var(--mentor-logbook-card-soft) 82%, var(--bs-body-bg));
     }
 
     .mentor-logbook-day.is-outside .mentor-logbook-day-button {
-      color: #c0c6d4;
+      color: var(--mentor-logbook-muted);
     }
 
     .mentor-logbook-day-summary {
@@ -239,13 +284,13 @@
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      color: #2563eb;
+      color: var(--mentor-logbook-primary);
       font-size: 0.78rem;
       font-weight: 700;
     }
 
     .mentor-logbook-day-names {
-      color: #475569;
+      color: var(--mentor-logbook-text);
       font-size: 0.76rem;
       line-height: 1.45;
       display: -webkit-box;
@@ -255,7 +300,7 @@
     }
 
     .mentor-logbook-day-empty {
-      color: #cbd5e1;
+      color: var(--mentor-logbook-muted);
       font-size: 0.76rem;
       font-weight: 600;
     }
@@ -265,7 +310,7 @@
       flex-wrap: wrap;
       gap: 1rem;
       margin-top: 1rem;
-      color: #64748b;
+      color: var(--mentor-logbook-soft);
       font-size: 0.82rem;
     }
 
@@ -278,7 +323,7 @@
     .mentor-logbook-mobile-hint {
       display: none;
       margin-bottom: 0.9rem;
-      color: #64748b;
+      color: var(--mentor-logbook-soft);
       font-size: 0.82rem;
       line-height: 1.5;
     }
@@ -292,52 +337,83 @@
 
     .mentor-logbook-modal .modal-content {
       border: 0;
-      border-radius: 1.35rem;
-      box-shadow: 0 24px 54px rgba(15, 23, 42, 0.18);
+      border-radius: 1.6rem;
+      background: #ffffff !important;
+      box-shadow: 0 24px 54px rgba(15, 23, 42, 0.12);
+      overflow: hidden;
     }
 
     .mentor-logbook-modal .modal-header,
+    .mentor-logbook-modal .modal-body,
     .mentor-logbook-modal .modal-footer {
+      background: #ffffff;
       border: 0;
+    }
+
+    .mentor-logbook-modal .modal-body {
+      max-height: calc(100vh - 11rem);
+      overflow-y: auto;
+    }
+
+    .mentor-logbook-modal .btn-close {
+      box-shadow: none;
+      opacity: 0.75;
     }
 
     .mentor-logbook-modal-list {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.9rem;
     }
 
     .mentor-logbook-modal-item {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem 1.05rem;
-      border: 1px solid rgba(148, 163, 184, 0.16);
-      border-radius: 1rem;
-      background: rgba(248, 250, 252, 0.72);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 1.1rem;
+      padding: 1.05rem 1.1rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 1.15rem;
+      background: #ffffff;
+      box-shadow: none;
+      border-left: 0;
+    }
+
+    .mentor-logbook-modal-item > div {
+      min-width: 0;
     }
 
     .mentor-logbook-modal-name {
-      color: #1f2937;
-      font-size: 0.98rem;
+      color: var(--mentor-logbook-title);
+      font-size: 1rem;
       font-weight: 700;
+      line-height: 1.35;
+      word-break: break-word;
     }
 
     .mentor-logbook-modal-meta {
-      margin-top: 0.2rem;
-      color: #64748b;
+      margin-top: 0.18rem;
+      color: var(--mentor-logbook-soft);
       font-size: 0.82rem;
+      word-break: break-word;
     }
 
     .mentor-logbook-modal-text {
-      margin-top: 0.45rem;
-      color: #475569;
+      margin-top: 0.4rem;
+      color: var(--mentor-logbook-text);
       font-size: 0.84rem;
       line-height: 1.55;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .mentor-logbook-modal-item .btn {
+      align-self: flex-start;
+      min-width: 8.5rem;
+      white-space: nowrap;
     }
 
     @media (max-width: 767.98px) {
@@ -368,22 +444,23 @@
       }
 
       .mentor-logbook-calendar-grid {
-        width: 100%;
-        min-width: 0;
+        width: max-content;
+        min-width: 42rem;
       }
 
       .mentor-logbook-calendar-board {
-        overflow-x: visible;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
       }
 
       .mentor-logbook-day {
-        min-height: 4.85rem;
+        min-height: 5.35rem;
         padding: 0.15rem;
       }
 
       .mentor-logbook-day-button {
         align-items: center;
-        min-height: 4.45rem;
+        min-height: 4.9rem;
         gap: 0.3rem;
         padding: 0.35rem 0.15rem;
         border-radius: 0.65rem;
@@ -423,16 +500,27 @@
       }
 
       .mentor-logbook-modal .modal-dialog {
-        margin: 0.9rem;
+        margin: 0.75rem;
       }
 
       .mentor-logbook-modal-item {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        border-left-width: 3px;
       }
 
       .mentor-logbook-modal-item .btn {
         width: 100%;
+        min-width: 0;
       }
+
+      .mentor-logbook-modal .modal-body {
+        max-height: calc(100vh - 9.5rem);
+      }
+    }
+
+    html[data-bs-theme="dark"] .mentor-logbook-legend-dot {
+      box-shadow: 0 0 0 0.25rem rgba(34, 197, 94, 0.12);
     }
   </style>
 @endsection
@@ -532,16 +620,16 @@
   </div>
 
   <div class="modal fade mentor-logbook-modal" id="mentorLogbookCalendarModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
       <div class="modal-content">
-        <div class="modal-header px-4 pt-4">
+        <div class="modal-header px-4 pt-4 pb-2">
           <div>
             <h5 class="modal-title mb-1" id="mentorLogbookModalTitle">Logbook Tanggal</h5>
             <small class="text-body-secondary" id="mentorLogbookModalSubtitle">Daftar laporan intern pada tanggal ini.</small>
           </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body px-4 pb-4">
+        <div class="modal-body px-4 pb-4 pt-2">
           <div class="mentor-logbook-modal-list" id="mentorLogbookModalList"></div>
         </div>
       </div>
@@ -591,7 +679,7 @@
             <div>
               <div class="mentor-logbook-modal-name">${entry.intern_nama}</div>
               <div class="mentor-logbook-modal-meta">${entry.divisi}</div>
-              <div class="mentor-logbook-modal-text">${truncate(entry.uraian_aktivitas, 140)}</div>
+              <div class="mentor-logbook-modal-text">${truncate(entry.uraian_aktivitas, 160)}</div>
             </div>
             <a href="${entry.detail_url}" class="btn btn-outline-primary btn-sm">Lihat Detail</a>
           `;

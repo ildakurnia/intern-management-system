@@ -11,6 +11,12 @@
 @section('content')
     <style>
         @media (max-width: 767.98px) {
+            .intern-detail-mobile .card-surface {
+                background: var(--bs-card-bg);
+                border: 1px solid var(--bs-border-color);
+                box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.06);
+            }
+
             .page-intro {
                 display: none;
             }
@@ -42,13 +48,13 @@
                 font-size: 1.15rem;
                 line-height: 1.25;
                 font-weight: 800;
-                color: var(--body-color, #1f2744);
+                color: var(--bs-heading-color);
             }
 
             .intern-mobile-sub {
                 margin-top: 0.2rem;
                 font-size: 0.9rem;
-                color: var(--text-muted, #8d93ac);
+                color: var(--bs-secondary-color);
                 word-break: break-word;
             }
 
@@ -83,7 +89,7 @@
                 margin: 0;
                 font-size: 1rem;
                 font-weight: 800;
-                color: var(--body-color, #1f2744);
+                color: var(--bs-heading-color);
             }
 
             .intern-mobile-section-head {
@@ -100,7 +106,7 @@
                 margin: 0;
                 font-size: 1rem;
                 font-weight: 800;
-                color: var(--body-color, #1f2744);
+                color: var(--bs-heading-color);
             }
 
             .intern-card-heading i {
@@ -122,7 +128,7 @@
                 align-items: flex-start;
                 gap: 0.7rem;
                 padding: 0.7rem 0;
-                border-bottom: 1px solid rgba(90, 96, 141, 0.12);
+                border-bottom: 1px solid var(--bs-border-color);
             }
 
             .intern-mobile-kv-item:last-child {
@@ -138,8 +144,8 @@
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
-                background: rgba(67, 56, 202, 0.08);
-                color: #4338ca;
+                background: var(--bs-tertiary-bg);
+                color: var(--bs-primary);
             }
 
             .intern-mobile-kv-label {
@@ -147,14 +153,14 @@
                 font-size: 0.76rem;
                 text-transform: uppercase;
                 letter-spacing: 0.04em;
-                color: var(--text-muted, #8d93ac);
+                color: var(--bs-secondary-color);
                 margin-bottom: 0.2rem;
             }
 
             .intern-mobile-kv-value {
                 font-size: 0.94rem;
                 font-weight: 600;
-                color: var(--body-color, #1f2744);
+                color: var(--bs-heading-color);
                 word-break: break-word;
             }
 
@@ -169,7 +175,7 @@
                 justify-content: space-between;
                 gap: 0.75rem;
                 padding: 0.8rem 0;
-                border-bottom: 1px solid rgba(90, 96, 141, 0.12);
+                border-bottom: 1px solid var(--bs-border-color);
             }
 
             .intern-mobile-status:last-child {
@@ -178,7 +184,7 @@
             }
 
             .intern-mobile-status span {
-                color: var(--text-muted, #8d93ac);
+                color: var(--bs-secondary-color);
                 font-size: 0.9rem;
             }
 
@@ -218,8 +224,8 @@
             <div class="intern-mobile-badges">
                 <span class="pill">{{ ucfirst($intern->type) }}</span>
                 <span class="pill">{{ $intern->division?->name ?? 'Tanpa Divisi' }}</span>
-                <span class="pill {{ $intern->status === 'active' ? 'pill-success' : '' }}">
-                    {{ ucfirst($intern->status) }}
+                <span class="pill {{ $intern->status === 'completed' ? 'pill-secondary' : ($intern->status === 'terminated' ? 'pill-danger' : 'pill-success') }}">
+                    {{ $intern->status_label }}
                 </span>
             </div>
 
@@ -378,7 +384,11 @@
                     </div>
                     <div>
                         <dt>Status Magang</dt>
-                        <dd>{{ ucfirst($intern->status) }}</dd>
+                        <dd>
+                            <span class="badge rounded-pill bg-label-{{ $intern->status === 'completed' ? 'secondary' : ($intern->status === 'terminated' ? 'danger' : 'success') }}">
+                                {{ $intern->status_label }}
+                            </span>
+                        </dd>
                     </div>
                     <div>
                         <dt>Akun Login</dt>

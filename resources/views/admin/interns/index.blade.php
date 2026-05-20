@@ -4,6 +4,16 @@
 
 @section('page-style')
 <style>
+  @media (min-width: 768px) {
+    .content-wrapper > .container-xxl.container-p-y,
+    .content-wrapper > .container-fluid.container-p-y {
+      max-width: none !important;
+      width: 100% !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+  }
+
   @media (max-width: 767.98px) {
     .intern-mobile-shell {
       display: grid;
@@ -145,7 +155,11 @@
             <span class="badge bg-label-secondary rounded-pill">{{ $intern->division->name ?? 'Belum ada divisi' }}</span>
           </td>
           <td data-label="Onboarding">
-            @if($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments())
+            @if($intern->status === 'completed')
+              <span class="badge bg-label-secondary rounded-pill">Selesai</span>
+            @elseif($intern->status === 'terminated')
+              <span class="badge bg-label-danger rounded-pill">Dihentikan</span>
+            @elseif($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments())
               <span class="badge bg-label-success rounded-pill">Aktif</span>
             @elseif($intern->registration_status === 'approved')
               <span class="badge bg-label-info rounded-pill">Melengkapi Data</span>
@@ -196,7 +210,13 @@
           $onboardingBadge = 'bg-label-warning';
           $onboardingLabel = 'Register';
 
-          if ($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments()) {
+          if ($intern->status === 'completed') {
+            $onboardingBadge = 'bg-label-secondary';
+            $onboardingLabel = 'Selesai';
+          } elseif ($intern->status === 'terminated') {
+            $onboardingBadge = 'bg-label-danger';
+            $onboardingLabel = 'Dihentikan';
+          } elseif ($intern->registration_status === 'approved' && $intern->hasCompletedProfile() && $intern->hasCompletedDocuments()) {
             $onboardingBadge = 'bg-label-success';
             $onboardingLabel = 'Aktif';
           } elseif ($intern->registration_status === 'approved') {

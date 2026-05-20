@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -154,8 +155,19 @@ class Intern extends Model
 
     public function refreshOperationalStatus(): void
     {
-        if (in_array($this->status, ['completed', 'terminated'], true)) {
-            return;
+        $this->syncOperationalStatus();
+    }
+
+    public function syncOperationalStatus(?CarbonInterface $date = null): bool
+    {
+        $date ??= today();
+
+        if ($this->status === 'terminated') {
+            return false;
+        }
+
+        if ($this->isPeriodExpired($date)) {
+            return $this->markPeriodCompleted();
         }
 
         $shouldBeActive = $this->registration_status === 'approved'
@@ -164,7 +176,46 @@ class Intern extends Model
 
         if ($shouldBeActive && $this->status !== 'active') {
             $this->forceFill(['status' => 'active'])->save();
+            return true;
         }
+
+        return false;
+    }
+
+    public function isPeriodExpired(?CarbonInterface $date = null): bool
+    {
+        $date ??= today();
+
+        return $this->end_date !== null && $date->gt($this->end_date);
+    }
+
+    public function markPeriodCompleted(): bool
+    {
+        if (in_array($this->status, ['completed', 'terminated'], true)) {
+            return false;
+        }
+
+        return (bool) $this->forceFill(['status' => 'completed'])->save();
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'active' => 'Aktif',
+            'completed' => 'Selesai',
+            'terminated' => 'Dihentikan',
+            default => ucfirst((string) $this->status),
+        };
+    }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'active' => 'success',
+            'completed' => 'secondary',
+            'terminated' => 'danger',
+            default => 'info',
+        };
     }
 
     public function getInstitutionLabelAttribute(): string

@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Uang Saku Mahasiswa')
+@section('title', 'Uang Saku Intern')
 
 @section('page-style')
 <style>
@@ -101,7 +101,7 @@
 
   .allowance-filter-grid {
     display: grid;
-    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr) auto;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
     gap: 1rem;
     align-items: end;
   }
@@ -111,7 +111,6 @@
   }
 
   .allowance-filter-field.search-field {
-    justify-self: start;
     width: 100%;
   }
 
@@ -137,7 +136,8 @@
     display: inline-flex;
     gap: 0.65rem;
     align-items: center;
-    justify-self: end;
+    justify-self: start;
+    flex-wrap: wrap;
   }
 
   .allowance-filter-actions .btn-primary {
@@ -428,6 +428,192 @@
     align-items: center;
   }
 
+  .allowance-mobile-shell {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .allowance-mobile-card {
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--allowance-border);
+    background: var(--allowance-card-bg);
+    box-shadow: var(--allowance-shadow);
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .allowance-mobile-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .allowance-mobile-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.35rem;
+    color: var(--allowance-soft);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .allowance-mobile-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--allowance-avatar-bg);
+    color: var(--allowance-avatar-color);
+    flex-shrink: 0;
+  }
+
+  .allowance-mobile-name {
+    margin: 0;
+    color: var(--allowance-title-color);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .allowance-mobile-sub {
+    margin-top: 0.2rem;
+    color: var(--allowance-soft);
+    font-size: 0.875rem;
+    word-break: break-word;
+  }
+
+  .allowance-mobile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .allowance-mobile-badges .badge {
+    border-radius: 999px;
+  }
+
+  .allowance-mobile-stack {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .allowance-mobile-meta-list {
+    display: grid;
+    gap: 0.55rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--allowance-border);
+  }
+
+  .allowance-mobile-meta-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .allowance-mobile-meta-row span,
+  .allowance-mobile-tile span,
+  .allowance-mobile-note-label {
+    display: block;
+    color: var(--allowance-soft);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .allowance-mobile-meta-row strong {
+    text-align: right;
+    color: var(--allowance-title-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .allowance-mobile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .allowance-mobile-tile {
+    padding: 0.8rem 0.85rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--allowance-border);
+    background: var(--allowance-card-bg);
+    min-width: 0;
+  }
+
+  .allowance-mobile-tile strong {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--allowance-title-color);
+    font-size: 0.94rem;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .allowance-mobile-tile--wide {
+    grid-column: span 2;
+  }
+
+  .allowance-mobile-note {
+    padding: 0.9rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--allowance-border);
+    background: var(--allowance-card-bg);
+  }
+
+  .allowance-mobile-note-value {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--allowance-title-color);
+    font-size: 0.94rem;
+    font-weight: 500;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+
+  .allowance-mobile-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .allowance-mobile-actions .btn,
+  .allowance-mobile-actions .allowance-icon-btn {
+    width: 100%;
+    min-height: 2.75rem;
+    border-radius: 0.9rem;
+  }
+
+  .allowance-mobile-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    padding-top: 0.1rem;
+  }
+
+  .allowance-mobile-foot .badge {
+    border-radius: 999px;
+  }
+
+  .allowance-mobile-foot-text {
+    color: var(--allowance-soft);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
   .allowance-print-group {
     display: flex;
     width: 100%;
@@ -451,7 +637,7 @@
   }
 
   .layout-menu-collapsed .allowance-page .allowance-filter-grid {
-    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   }
 
   .layout-menu-collapsed .allowance-page .allowance-print-group {
@@ -486,20 +672,6 @@
       max-width: none;
     }
 
-    .allowance-filter-grid,
-    .allowance-table-head {
-      grid-template-columns: 1fr;
-      align-items: stretch;
-    }
-
-    .allowance-filter-grid {
-      gap: 0.75rem;
-    }
-
-    .allowance-filter-field.search-field {
-      width: 100%;
-    }
-
     .allowance-filter-actions {
       width: 100%;
     }
@@ -520,6 +692,148 @@
       flex: 0 0 2.85rem !important;
     }
   }
+
+  @media (max-width: 767.98px) {
+    .allowance-page .card {
+      border-radius: 1rem;
+      box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.06);
+    }
+
+    .allowance-header-card,
+    .allowance-summary-card,
+    .allowance-table-card,
+    .allowance-promo-card,
+    .allowance-filter-shell {
+      color: var(--bs-body-color);
+    }
+
+    .allowance-header-card,
+    .allowance-summary-card,
+    .allowance-table-card,
+    .allowance-promo-card {
+      border-color: var(--bs-border-color);
+    }
+
+    .allowance-header-card {
+      padding: 1rem;
+    }
+
+    .allowance-header-copy {
+      margin-bottom: 1rem;
+    }
+
+    .allowance-title,
+    .allowance-summary-title,
+    .allowance-table-head h5,
+    .allowance-promo-card h3,
+    .allowance-print-label {
+      color: var(--bs-heading-color);
+    }
+
+    .allowance-soft-text {
+      color: var(--bs-secondary-color);
+    }
+
+    .allowance-filter-shell {
+      padding: 0.9rem;
+      box-shadow: none;
+      background: var(--bs-card-bg);
+      border-color: var(--bs-border-color);
+    }
+
+    .allowance-filter-shell label {
+      color: var(--bs-secondary-color);
+    }
+
+    .allowance-filter-shell .form-control,
+    .allowance-filter-shell .form-select {
+      min-height: 2.65rem;
+    }
+
+    .allowance-print-shell {
+      border-top-color: var(--bs-border-color);
+      gap: 0.75rem;
+      margin-top: 0.9rem;
+      padding-top: 0.9rem;
+    }
+
+    .allowance-table-head {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
+      gap: 0.6rem;
+    }
+
+    .allowance-table-badge {
+      align-self: flex-start;
+    }
+
+    .allowance-summary-card {
+      padding: 1rem;
+    }
+
+    .allowance-summary-value {
+      font-size: 1.95rem;
+    }
+
+    .allowance-summary-card.featured {
+      background: linear-gradient(135deg, var(--allowance-primary-deep) 0%, #4c39dd 100%);
+      box-shadow: 0 22px 48px rgba(67, 56, 202, 0.22);
+    }
+
+    .allowance-summary-card.featured .allowance-summary-value,
+    .allowance-summary-card.featured .allowance-soft-text,
+    .allowance-summary-card.featured .allowance-summary-title {
+      color: #fff !important;
+    }
+
+    .allowance-summary-card.featured .allowance-summary-icon {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .allowance-chip {
+      margin-bottom: 0.35rem;
+    }
+
+    .allowance-avatar {
+      width: 2.45rem;
+      height: 2.45rem;
+    }
+
+    .allowance-attendance-breakdown {
+      gap: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .allowance-total-line {
+      font-size: 1.15rem;
+    }
+
+    .allowance-icon-btn {
+      background: var(--bs-card-bg);
+      color: var(--bs-body-color);
+      border-color: var(--bs-border-color);
+      min-height: 2.75rem;
+      width: 100%;
+      border-radius: 0.9rem;
+    }
+
+    .allowance-action-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+      width: 100%;
+    }
+
+    .allowance-action-group .btn,
+    .allowance-action-group .allowance-icon-btn {
+      width: 100%;
+    }
+
+    .allowance-table-card .table-responsive {
+      display: none;
+    }
+  }
 </style>
 @endsection
 
@@ -527,9 +841,9 @@
 @php
   $monthLabel = \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->locale('id')->translatedFormat('F Y');
   $summaryIconMap = [
-    0 => ['icon' => 'ri-user-star-line', 'class' => 'primary', 'kicker' => 'Aktif'],
-    1 => ['icon' => 'ri-calendar-check-line', 'class' => 'warning', 'kicker' => null],
-    2 => ['icon' => 'ri-wallet-3-line', 'class' => 'info', 'kicker' => null],
+    0 => ['icon' => 'ri-group-line', 'class' => 'primary', 'kicker' => 'Tercatat'],
+    1 => ['icon' => 'ri-calendar-check-line', 'class' => 'success', 'kicker' => null],
+    2 => ['icon' => 'ri-wallet-3-line', 'class' => 'warning', 'kicker' => null],
   ];
 @endphp
 
@@ -537,8 +851,8 @@
   <div class="col-12">
     <div class="card allowance-header-card">
       <div class="allowance-header-copy">
-        <h3 class="allowance-title">Manajemen Uang Saku Mahasiswa</h3>
-        <p class="allowance-soft-text mb-0">Kelola dan monitor pencairan dana saku mahasiswa magang berdasarkan tingkat kehadiran secara real-time.</p>
+        <h3 class="allowance-title">Manajemen Uang Saku Intern</h3>
+        <p class="allowance-soft-text mb-0">Kelola dan monitor pencairan dana saku intern dari berbagai sekolah dan kampus berdasarkan tingkat kehadiran secara real-time.</p>
       </div>
 
       <form class="allowance-filter-shell m-0" method="GET">
@@ -552,19 +866,51 @@
               value="{{ $selectedMonth }}"
               class="form-control" />
           </div>
+          <div class="allowance-filter-field">
+            <label for="allowance-type">Tipe Intern</label>
+            <select id="allowance-type" name="type" class="form-select">
+              @foreach ($filterOptions['types'] as $value => $label)
+                <option value="{{ $value }}" {{ $selectedFilters['type'] === $value ? 'selected' : '' }}>
+                  {{ $label }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="allowance-filter-field">
+            <label for="allowance-institution">Asal Sekolah/Kampus</label>
+            <select id="allowance-institution" name="institution_id" class="form-select">
+              <option value="">Semua asal</option>
+              @foreach ($filterOptions['institutions'] as $institution)
+                <option value="{{ $institution->id }}" {{ $selectedFilters['institution_id'] == $institution->id ? 'selected' : '' }}>
+                  {{ $institution->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="allowance-filter-field">
+            <label for="allowance-division">Divisi</label>
+            <select id="allowance-division" name="division_id" class="form-select">
+              <option value="">Semua divisi</option>
+              @foreach ($filterOptions['divisions'] as $division)
+                <option value="{{ $division->id }}" {{ $selectedFilters['division_id'] == $division->id ? 'selected' : '' }}>
+                  {{ $division->code ? $division->code.' - ' : '' }}{{ $division->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
           <div class="allowance-filter-field search-field">
-            <label for="allowance-search">Cari Nama Mahasiswa</label>
+            <label for="allowance-search">Search Nama / NIS / NIM</label>
             <input
               id="allowance-search"
               type="text"
               name="search"
-              value="{{ $selectedSearch }}"
+              value="{{ $selectedFilters['search'] }}"
               class="form-control"
-              placeholder="Masukkan nama atau NIM mahasiswa..." />
+              placeholder="Cari nama, NIS/NIM, sekolah, atau divisi..." />
           </div>
           <div class="allowance-filter-actions">
             <button type="submit" class="btn btn-primary px-4"><i class="ri ri-filter-3-line me-1"></i>Terapkan</button>
-            <a href="{{ route('admin.allowances.index') }}" class="btn btn-outline-secondary allowance-reset-btn" aria-label="Reset filter">
+            <a href="{{ route('admin.allowances.index', ['month' => $selectedMonth]) }}" class="btn btn-outline-secondary allowance-reset-btn" aria-label="Reset filter">
               <i class="ri ri-refresh-line"></i>
             </a>
           </div>
@@ -574,7 +920,7 @@
           <div class="allowance-print-label mb-2"><i class="ri ri-printer-line me-1"></i>Opsi Pencetakan Laporan</div>
           <div class="allowance-print-group">
             <a
-              href="{{ route('admin.allowances.print', ['month' => $selectedMonth, 'search' => $selectedSearch]) }}"
+              href="{{ route('admin.allowances.print', $printQuery) }}"
               target="_blank"
               class="btn btn-outline-primary px-4">
               <i class="ri ri-printer-line me-1"></i>Cetak Hasil Filter
@@ -583,7 +929,7 @@
               href="{{ route('admin.allowances.print', ['month' => $selectedMonth]) }}"
               target="_blank"
               class="btn btn-outline-secondary px-4">
-              <i class="ri ri-group-line me-1"></i>Cetak Semua Mahasiswa
+              <i class="ri ri-group-line me-1"></i>Cetak Semua Intern
             </a>
           </div>
         </div>
@@ -617,17 +963,17 @@
     <div class="card allowance-table-card">
       <div class="allowance-table-head">
         <div>
-          <h5 class="mb-1">Daftar Mahasiswa Polibatam</h5>
-          <p class="allowance-soft-text mb-0">Ringkasan mahasiswa eligible yang digunakan untuk menghitung dan mencetak uang saku.</p>
+          <h5 class="mb-1">Daftar Intern Tersaring</h5>
+          <p class="allowance-soft-text mb-0">Daftar intern yang cocok dengan filter aktif untuk membantu pengecekan allowance dan pencetakan PDF.</p>
         </div>
         <span class="allowance-table-badge">Update: {{ now()->locale('id')->translatedFormat('d M Y') }}</span>
       </div>
-      <div class="table-responsive ims-card-table-wrap">
+      <div class="table-responsive ims-card-table-wrap d-none d-md-block">
         <table class="table align-middle ims-card-table">
           <thead>
             <tr>
-              <th>Mahasiswa</th>
-              <th>Divisi & Institusi</th>
+              <th>Intern</th>
+              <th>Divisi & Sekolah/Kampus</th>
               <th>Kehadiran</th>
               <th>Tarif & Total</th>
               <th>Aksi</th>
@@ -648,16 +994,17 @@
                 $showDivisionChip = $divisionCode !== '' && strcasecmp($divisionCode, $divisionName) !== 0;
               @endphp
               <tr>
-                <td data-label="Mahasiswa" class="ims-card-primary">
+                <td data-label="Intern" class="ims-card-primary">
                   <div class="d-flex align-items-center gap-3">
                     <span class="allowance-avatar success">{{ strtoupper($initials ?: 'IN') }}</span>
                     <div>
                       <div class="fw-semibold">{{ $intern->name }}</div>
-                      <small class="allowance-soft-text">{{ $intern->nim ?: ($intern->email ?? '-') }}</small>
+                      <small class="allowance-soft-text">{{ $row['identifier_label'] }}: {{ $row['identifier_value'] }}</small>
+                      <span class="badge rounded-pill text-bg-secondary mt-2">{{ $row['participant_type_label'] }}</span>
                     </div>
                   </div>
                 </td>
-                <td data-label="Divisi & Institusi">
+                <td data-label="Divisi & Sekolah/Kampus">
                   @if ($showDivisionChip)
                     <div class="allowance-chip">{{ $divisionCode }}</div>
                   @endif
@@ -695,14 +1042,113 @@
               <tr>
                 <td colspan="5">
                   <div class="allowance-empty-state">
-                    <h6 class="mb-2">Belum Ada Mahasiswa Eligible</h6>
-                    <p class="allowance-soft-text mb-0">Mahasiswa Polibatam yang memakai institusi resmi akan muncul di daftar ini.</p>
+                    <h6 class="mb-2">Belum Ada Intern yang Cocok</h6>
+                    <p class="allowance-soft-text mb-0">Coba ubah filter untuk melihat intern siswa atau mahasiswa yang lain.</p>
                   </div>
                 </td>
               </tr>
             @endforelse
           </tbody>
         </table>
+      </div>
+
+      <div class="allowance-mobile-shell d-md-none p-3 pt-0">
+        @forelse ($allowances as $row)
+          @php
+            $intern = $row['intern'];
+            $initials = collect(explode(' ', trim($intern->name)))
+              ->filter()
+              ->take(2)
+              ->map(fn ($part) => mb_substr($part, 0, 1))
+              ->implode('');
+            $attendanceProgress = max($row['max_workdays'], 1);
+            $divisionCode = trim((string) ($intern->division->code ?? ''));
+            $divisionName = trim((string) ($intern->division->name ?? '-'));
+            $showDivisionChip = $divisionCode !== '' && strcasecmp($divisionCode, $divisionName) !== 0;
+          @endphp
+
+          <article class="allowance-mobile-card">
+            <div class="allowance-mobile-head">
+              <div class="min-w-0">
+                <div class="allowance-mobile-eyebrow">
+                  <span class="allowance-mobile-icon">
+                    <i class="ri ri-user-3-line"></i>
+                  </span>
+                  <span>Intern Tersaring</span>
+                </div>
+                <h6 class="allowance-mobile-name text-truncate">{{ $intern->name }}</h6>
+                <div class="allowance-mobile-sub text-truncate">{{ $row['identifier_label'] }}: {{ $row['identifier_value'] }}</div>
+              </div>
+              <span class="badge rounded-pill text-bg-secondary flex-shrink-0">{{ $row['participant_type_label'] }}</span>
+            </div>
+
+            <div class="allowance-mobile-stack">
+              <div class="allowance-mobile-meta-list">
+                <div class="allowance-mobile-meta-row">
+                  <span>Divisi</span>
+                  <strong>{{ $divisionName }}</strong>
+                </div>
+                <div class="allowance-mobile-meta-row">
+                  <span>Sekolah / Kampus</span>
+                  <strong>{{ $row['institution_label'] }}</strong>
+                </div>
+                @if ($showDivisionChip)
+                  <div class="allowance-chip" style="margin-bottom:0; width: fit-content;">{{ $divisionCode }}</div>
+                @endif
+              </div>
+
+              <div class="allowance-mobile-grid">
+                <div class="allowance-mobile-tile">
+                  <span>Kehadiran</span>
+                  <strong>{{ $row['counted_days'] }} hari</strong>
+                </div>
+                <div class="allowance-mobile-tile">
+                  <span>Maksimal</span>
+                  <strong>{{ $attendanceProgress }} hari</strong>
+                </div>
+                <div class="allowance-mobile-tile">
+                  <span>Allowance</span>
+                  <strong>{{ $row['allowance_amount_label'] }}</strong>
+                </div>
+                <div class="allowance-mobile-tile allowance-mobile-tile--wide">
+                  <span>Max Pencairan</span>
+                  <strong>{{ $row['max_amount_label'] }}</strong>
+                </div>
+              </div>
+
+              <div class="allowance-mobile-note">
+                <span class="allowance-mobile-note-label">Rincian Kehadiran</span>
+                <div class="allowance-attendance-breakdown mb-0">
+                  <span class="text-success">
+                    <span class="dot" style="background:#12a150;"></span>{{ $row['present_days'] }}
+                  </span>
+                  <span class="text-danger">
+                    <span class="dot" style="background:#d63535;"></span>Terlambat {{ $row['late_days'] }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="allowance-mobile-actions">
+                <a href="{{ route('admin.allowances.show.print', ['intern' => $intern, 'month' => $selectedMonth]) }}" target="_blank" class="allowance-icon-btn" aria-label="Cetak PDF {{ $intern->name }}">
+                  <i class="ri ri-file-pdf-line"></i>
+                </a>
+                <a href="{{ route('admin.allowances.show', ['intern' => $intern, 'month' => $selectedMonth]) }}" class="btn btn-primary">
+                  Lihat Detail
+                </a>
+              </div>
+
+              <div class="allowance-mobile-foot">
+                <span class="badge bg-label-info">{{ $row['participant_type_label'] }}</span>
+                <span class="allowance-mobile-foot-text">Siap dicek untuk periode {{ $monthLabel }}</span>
+              </div>
+            </div>
+          </article>
+        @empty
+          <div class="allowance-mobile-card text-center">
+            <h6 class="mb-2">Belum Ada Intern yang Cocok</h6>
+            <p class="allowance-soft-text mb-0">Coba ubah filter untuk melihat intern siswa atau mahasiswa yang lain.</p>
+          </div>
+        @endforelse
       </div>
 
       @if ($allowances->hasPages())
@@ -716,7 +1162,7 @@
   <div class="col-12">
     <div class="card allowance-promo-card">
       <h3 class="text-white mb-2">Automatisasi Laporan Bulanan</h3>
-      <p class="mb-0">Modul uang saku membaca kehadiran mahasiswa secara otomatis, lalu menyiapkan rekap dan cetak PDF tanpa menghitung manual satu per satu.</p>
+      <p class="mb-0">Modul uang saku membaca kehadiran intern secara otomatis, lalu menyiapkan rekap dan cetak PDF tanpa menghitung manual satu per satu.</p>
     </div>
   </div>
 </div>

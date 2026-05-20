@@ -49,7 +49,7 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/intern/register', [RegisteredInternController::class, 'store'])->name('intern.register.store');
 });
 
-Route::middleware('auth')->group(function (): void {
+Route::middleware(['auth', 'sync.expired.interns'])->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::view('/settings', 'pages.settings.index')->middleware('role:superadmin')->name('settings.index');
     Route::get('/account/profile', [ProfileController::class, 'edit'])
@@ -176,7 +176,7 @@ Route::middleware('auth')->group(function (): void {
                 ->middleware('can:mentor.attendances.index');
             Route::get('/attendances/{intern}', [MentorAttendanceController::class, 'show'])
                 ->name('attendances.show')
-                ->middleware('can:mentor.attendances.index');
+                ->middleware('can:mentor.attendances.show');
         });
     });
 
@@ -187,12 +187,26 @@ Route::middleware('auth')->group(function (): void {
             Route::get('/approval-pending', function () {
                 $intern = request()->user()->intern;
 
+                if ($intern && $intern->isPeriodExpired()) {
+                    return redirect()->route('intern.period-ended');
+                }
+
                 if ($intern && $intern->registration_status === 'approved') {
                     return redirect()->route('dashboard.intern');
                 }
 
                 return view('pages.intern.approval-pending', compact('intern'));
             })->name('approval.pending');
+
+            Route::get('/period-ended', function () {
+                $intern = request()->user()->intern;
+
+                if ($intern && ! $intern->isPeriodExpired()) {
+                    return redirect()->route('dashboard.intern');
+                }
+
+                return view('pages.intern.period-ended', compact('intern'));
+            })->name('period-ended');
         });
 
     Route::prefix('intern')
@@ -202,6 +216,7 @@ Route::middleware('auth')->group(function (): void {
             Route::get('/profile', [InternProfileController::class, 'edit'])->name('profile.edit');
             Route::put('/profile', [InternProfileController::class, 'update'])->name('profile.update');
             Route::get('/documents', [InternDocumentController::class, 'edit'])->name('documents.edit');
+            Route::get('/documents/{field}/preview', [InternDocumentController::class, 'preview'])->name('documents.preview');
             Route::put('/documents', [InternDocumentController::class, 'update'])->name('documents.update');
             
             // INTERN LOGBOOKS

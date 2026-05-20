@@ -5,15 +5,28 @@
 @section('page-style')
 <style>
   .mentor-attendance-detail {
-    --detail-primary: #4338ca;
-    --detail-border: rgba(84, 90, 130, 0.14);
-    --detail-soft: #8d93ac;
+    --detail-primary: #5b6ef0;
+    --detail-primary-soft: rgba(91, 110, 240, 0.14);
+    --detail-border: var(--bs-border-color);
+    --detail-soft: var(--bs-secondary-color);
+    --detail-heading: var(--bs-heading-color);
+    --detail-surface: rgba(var(--bs-body-color-rgb), 0.03);
+    --detail-card-bg: var(--bs-card-bg);
+  }
+
+  html[data-bs-theme="dark"] .mentor-attendance-detail {
+    --detail-border: rgba(255, 255, 255, 0.08);
+    --detail-soft: #9aa3c2;
+    --detail-heading: #f4f7ff;
+    --detail-surface: rgba(255, 255, 255, 0.035);
+    --detail-card-bg: #1a2033;
+    --detail-primary-soft: rgba(109, 124, 255, 0.18);
   }
 
   .mentor-attendance-detail .card {
-    border-radius: 1.5rem;
+    border-radius: 1.35rem;
     border: 1px solid var(--detail-border);
-    box-shadow: 0 18px 45px rgba(31, 38, 69, 0.06);
+    box-shadow: 0 16px 34px rgba(31, 38, 69, 0.06);
   }
 
   .mentor-detail-hero {
@@ -49,9 +62,9 @@
 
   .mentor-detail-box {
     border-radius: 1.15rem;
-    border: 1px solid rgba(90, 96, 141, 0.12);
-    padding: 1rem 1.05rem;
-    background: #fff;
+    border: 1px solid var(--detail-border);
+    padding: 0.95rem 1rem;
+    background: var(--detail-card-bg);
     height: 100%;
   }
 
@@ -62,19 +75,20 @@
   }
 
   .mentor-detail-box strong {
-    color: #202844;
+    color: var(--detail-heading);
     font-size: 1.15rem;
   }
 
   .mentor-detail-kpi-card {
-    padding: 1.35rem;
+    padding: 1.2rem;
     height: 100%;
+    background: var(--detail-card-bg);
   }
 
   .mentor-detail-kpi-card h3 {
     margin: 0.8rem 0 0;
-    font-size: 2.2rem;
-    color: #161f39;
+    font-size: 2rem;
+    color: var(--detail-heading);
   }
 
   .mentor-detail-kpi-icon {
@@ -85,6 +99,131 @@
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
+  }
+
+  .mentor-attendance-detail .mentor-detail-filter-shell {
+    border-radius: 1.15rem;
+    border: 1px solid var(--detail-border);
+    background: var(--detail-surface);
+    padding: 0.9rem;
+  }
+
+  .mentor-attendance-detail .mentor-detail-filter-shell .form-control,
+  .mentor-attendance-detail .mentor-detail-filter-shell .form-select {
+    border-radius: 0.95rem;
+    min-height: 2.75rem;
+  }
+
+  .mentor-attendance-detail .mentor-detail-filter-shell > .form-control,
+  .mentor-attendance-detail .mentor-detail-filter-shell > .form-select,
+  .mentor-attendance-detail .mentor-detail-filter-shell > .btn {
+    flex: 1 1 190px;
+    min-width: 0;
+  }
+
+  .mentor-attendance-table-mobile {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .mentor-attendance-mobile-card {
+    border-radius: 1.15rem;
+    border: 1px solid var(--detail-border);
+    background: var(--detail-card-bg);
+    padding: 1rem;
+    box-shadow: 0 12px 28px rgba(31, 38, 69, 0.04);
+  }
+
+  .mentor-attendance-mobile-meta {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .mentor-attendance-mobile-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.95rem;
+    background: var(--detail-surface);
+  }
+
+  .mentor-attendance-mobile-row span {
+    color: var(--detail-soft);
+    font-size: 0.8rem;
+  }
+
+  .mentor-attendance-mobile-row strong {
+    color: var(--detail-heading);
+    font-size: 0.95rem;
+  }
+
+  .mentor-detail-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.42rem 0.7rem;
+    border-radius: 999px;
+    background: var(--detail-surface);
+    color: var(--detail-heading);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 991.98px) {
+    .mentor-attendance-detail .mentor-detail-hero .card-body {
+      padding: 1.15rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-kpi-card {
+      padding: 1rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-kpi-card h3 {
+      font-size: 1.75rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-box {
+      padding: 0.85rem 0.9rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-filter-shell {
+      padding: 0.8rem;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .mentor-attendance-detail .card {
+      border-radius: 1.1rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-hero .card-body {
+      padding: 1rem;
+    }
+
+    .mentor-attendance-detail h4,
+    .mentor-attendance-detail h2 {
+      word-break: break-word;
+    }
+
+    .mentor-attendance-detail .mentor-detail-box strong {
+      font-size: 1rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-kpi-card h3 {
+      font-size: 1.55rem;
+    }
+
+    .mentor-attendance-detail .mentor-detail-filter-shell > .form-control,
+    .mentor-attendance-detail .mentor-detail-filter-shell > .form-select,
+    .mentor-attendance-detail .mentor-detail-filter-shell > .btn {
+      flex-basis: 100%;
+      width: 100%;
+    }
+
+    .mentor-attendance-detail .mentor-detail-filter-shell > .btn {
+      justify-content: center;
+    }
   }
 </style>
 @endsection
@@ -283,7 +422,7 @@
   <div class="col-12">
     <div class="row g-4">
       @foreach ($attendanceSummary['attendanceStatusCounts'] as $item)
-        <div class="col-md-6 col-xl">
+        <div class="col-6 col-xl">
           <div class="card mentor-detail-kpi-card">
             <span class="mentor-detail-kpi-icon bg-label-{{ $item['badge'] }} text-{{ $item['badge'] }}">
               <i class="ri ri-bar-chart-grouped-line"></i>
@@ -303,7 +442,7 @@
           <h5 class="mb-1">Riwayat Absensi Lengkap</h5>
           <small class="mentor-detail-soft">Pantau semua catatan absensi intern ini berdasarkan bulan dan status.</small>
         </div>
-        <form class="d-flex flex-wrap gap-3" method="GET">
+        <form class="mentor-detail-filter-shell d-flex flex-wrap gap-3 m-0" method="GET">
           <input type="month" name="month" value="{{ $selectedMonth }}" class="form-control" style="min-width: 190px;" />
           <select name="status" class="form-select" style="min-width: 180px;">
             <option value="">Semua Status</option>
@@ -315,7 +454,7 @@
         </form>
       </div>
       <div class="card-body p-0">
-        <div class="table-responsive">
+        <div class="table-responsive d-none d-lg-block">
           <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
               <tr>
@@ -350,9 +489,43 @@
             </tbody>
           </table>
         </div>
+
+        <div class="mentor-attendance-table-mobile d-lg-none p-3">
+          @forelse ($attendances as $attendance)
+            <div class="mentor-attendance-mobile-card">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <div class="fw-semibold">{{ $attendance->date->locale('id')->translatedFormat('d M Y') }}</div>
+                  <small class="mentor-detail-soft">{{ $attendance->date->locale('id')->translatedFormat('l') }}</small>
+                </div>
+                <span class="badge bg-label-{{ $attendance->status_badge_class }}">{{ $attendance->status_label }}</span>
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 mt-3">
+                <span class="mentor-detail-chip">In: {{ $attendance->check_in_at?->format('H:i') ?? '-' }}</span>
+                <span class="mentor-detail-chip">Out: {{ $attendance->check_out_at?->format('H:i') ?? '-' }}</span>
+                <span class="mentor-detail-chip">{{ $attendance->check_in_distance_meters !== null ? $attendance->check_in_distance_meters.' m' : '-' }}</span>
+              </div>
+
+              <div class="mt-3">
+                <div class="mentor-detail-soft small mb-1">Lokasi</div>
+                <div class="fw-medium">{{ $attendance->attendanceLocation?->name ?? '-' }}</div>
+              </div>
+
+              <div class="mt-3">
+                <div class="mentor-detail-soft small mb-1">Keterangan</div>
+                <div>{{ $attendance->reason ?: '-' }}</div>
+              </div>
+            </div>
+          @empty
+            <div class="mentor-attendance-mobile-card text-center">
+              Belum ada riwayat absensi untuk filter ini.
+            </div>
+          @endforelse
+        </div>
       </div>
       @if ($attendances->hasPages())
-        <div class="card-footer bg-white border-top-0">
+        <div class="card-footer bg-transparent border-top-0">
           {{ $attendances->links('pagination::bootstrap-5') }}
         </div>
       @endif

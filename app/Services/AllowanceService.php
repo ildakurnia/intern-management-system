@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Attendance;
-use App\Models\Institution;
 use App\Models\Intern;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -17,8 +16,8 @@ class AllowanceService
     {
         $month ??= today();
 
-        $paginator = $this->buildEligibleInternQuery($filters, $month)
-            ->paginate($filters['per_page'] ?? 10)
+        $paginator = $this->buildAllowanceQuery($filters, $month)
+            ->paginate(max((int) ($filters['per_page'] ?? 10), 1))
             ->withQueryString();
 
         $paginator->setCollection(
@@ -32,7 +31,7 @@ class AllowanceService
     {
         $month ??= today();
 
-        return $this->buildEligibleInternQuery($filters, $month)
+        return $this->buildAllowanceQuery($filters, $month)
             ->get()
             ->map(fn (Intern $intern) => $this->buildAllowanceRow($intern, $month));
     }
@@ -41,12 +40,17 @@ class AllowanceService
     {
         $rows = $this->getMonthlyAllowanceCollection($filters, $month);
 
+        return $this->getMonthlyAllowanceSummaryFromRows($rows);
+    }
+
+    public function getMonthlyAllowanceSummaryFromRows(Collection $rows): array
+    {
         return [
             [
-                'label' => 'Mahasiswa Eligible',
+                'label' => 'Intern Tersaring',
                 'count' => $rows->count(),
                 'badge' => 'primary',
-                'meta' => 'Mahasiswa Polibatam yang masuk perhitungan bulan ini.',
+                'meta' => 'Intern siswa atau mahasiswa yang cocok dengan filter aktif.',
             ],
             [
                 'label' => 'Hari Hadir',
@@ -58,7 +62,7 @@ class AllowanceService
                 'label' => 'Total Uang Saku',
                 'count' => $this->formatCurrency($rows->sum('allowance_amount')),
                 'badge' => 'info',
-                'meta' => 'Total nominal yang siap dicetak pada bulan terpilih.',
+                'meta' => 'Akumulasi nominal dari data yang tampil.',
             ],
         ];
     }
@@ -88,16 +92,12 @@ class AllowanceService
             ...$row,
             'attendances' => $attendances,
             'status_counts' => $statusCounts,
-            'eligible_institution' => $this->getEligibleInstitution(),
         ];
     }
 
     public function isEligibleIntern(Intern $intern): bool
     {
-        $intern->loadMissing('institutionReference');
-
-        return $intern->type === config('allowance.eligible_type', 'mahasiswa')
-            && (bool) $intern->institutionReference?->is_allowance_eligible;
+        return $this->resolveAllowanceEligibility($intern)['is_eligible'];
     }
 
     public function parseMonth(?string $month): CarbonInterface
@@ -112,16 +112,11 @@ class AllowanceService
         return 'Rp '.number_format((float) $amount, 0, ',', '.');
     }
 
-    private function buildEligibleInternQuery(array $filters, CarbonInterface $month): Builder
+    private function buildAllowanceQuery(array $filters, CarbonInterface $month): Builder
     {
-        return Intern::query()
+        $query = Intern::query()
             ->with(['division', 'institutionReference', 'user'])
-            ->where('type', config('allowance.eligible_type', 'mahasiswa'))
-            ->whereHas('institutionReference', function (Builder $builder) {
-                $builder
-                    ->where('is_active', true)
-                    ->where('is_allowance_eligible', true);
-            })
+            ->whereIn('type', $this->eligibleTypes())
             ->withCount([
                 'attendances as attendance_days_count' => function (Builder $builder) use ($month) {
                     $builder
@@ -142,6 +137,15 @@ class AllowanceService
                         ->where('status', Attendance::STATUS_LATE);
                 },
             ])
+            ->when(! empty($filters['type']) && in_array($filters['type'], $this->eligibleTypes(), true), function (Builder $builder) use ($filters) {
+                $builder->where('type', $filters['type']);
+            })
+            ->when(! empty($filters['institution_id']), function (Builder $builder) use ($filters) {
+                $builder->where('institution_id', $filters['institution_id']);
+            })
+            ->when(! empty($filters['division_id']), function (Builder $builder) use ($filters) {
+                $builder->where('division_id', $filters['division_id']);
+            })
             ->when(! empty($filters['search']), function (Builder $builder) use ($filters) {
                 $search = trim((string) $filters['search']);
 
@@ -149,18 +153,37 @@ class AllowanceService
                     $nested
                         ->where('name', 'like', '%'.$search.'%')
                         ->orWhere('email', 'like', '%'.$search.'%')
+                        ->orWhere('nis', 'like', '%'.$search.'%')
+                        ->orWhere('nim', 'like', '%'.$search.'%')
+                        ->orWhere('institution', 'like', '%'.$search.'%')
+                        ->orWhere('institution_manual_name', 'like', '%'.$search.'%')
+                        ->orWhereHas('division', function (Builder $divisionQuery) use ($search) {
+                            $divisionQuery
+                                ->where('name', 'like', '%'.$search.'%')
+                                ->orWhere('code', 'like', '%'.$search.'%');
+                        })
+                        ->orWhereHas('institutionReference', function (Builder $institutionQuery) use ($search) {
+                            $institutionQuery->where('name', 'like', '%'.$search.'%');
+                        })
                         ->orWhereHas('user', function (Builder $userQuery) use ($search) {
                             $userQuery
                                 ->where('name', 'like', '%'.$search.'%')
                                 ->orWhere('email', 'like', '%'.$search.'%');
                         });
                 });
-            })
-            ->orderBy('name');
+            });
+
+        return $query->orderBy('name')->orderBy('id');
     }
 
     private function buildAllowanceRow(Intern $intern, CarbonInterface $month, ?Collection $attendances = null): array
     {
+        $intern->loadMissing('institutionReference');
+        $identifierLabel = $intern->type === 'siswa' ? 'NIS' : 'NIM';
+        $identifierValue = trim((string) ($intern->type === 'siswa' ? $intern->nis : $intern->nim));
+        $eligibility = $this->resolveAllowanceEligibility($intern);
+        $isEligible = $eligibility['is_eligible'];
+
         $attendanceDays = $attendances
             ? $attendances->whereIn('status', [Attendance::STATUS_PRESENT, Attendance::STATUS_LATE])->count()
             : (int) ($intern->attendance_days_count ?? 0);
@@ -177,9 +200,11 @@ class AllowanceService
         $maxAmount = (int) config('allowance.max_amount', 500000);
         $dailyRate = $maxAmount / max($maxWorkdays, 1);
         $countedDays = min($attendanceDays, $maxWorkdays);
-        $allowanceAmount = $countedDays >= $maxWorkdays
-            ? $maxAmount
-            : (int) round($dailyRate * $countedDays);
+        $allowanceAmount = $isEligible
+            ? ($countedDays >= $maxWorkdays
+                ? $maxAmount
+                : (int) round($dailyRate * $countedDays))
+            : 0;
 
         return [
             'intern' => $intern,
@@ -196,14 +221,52 @@ class AllowanceService
             'max_workdays' => $maxWorkdays,
             'is_capped' => $attendanceDays > $maxWorkdays,
             'institution_label' => $intern->institution_label,
+            'identifier_label' => $identifierLabel,
+            'identifier_value' => $identifierValue !== '' ? $identifierValue : '-',
+            'participant_type_label' => $intern->type === 'siswa' ? 'Siswa' : 'Mahasiswa',
+            'is_eligible' => $isEligible,
         ];
     }
 
-    private function getEligibleInstitution(): ?Institution
+    private function resolveAllowanceEligibility(Intern $intern): array
     {
-        return Institution::query()
-            ->where('is_active', true)
-            ->where('is_allowance_eligible', true)
-            ->first();
+        $intern->loadMissing('institutionReference');
+
+        if (! in_array($intern->type, $this->eligibleTypes(), true)) {
+            return [
+                'is_eligible' => false,
+                'reason' => 'Tipe intern tidak masuk kategori allowance.',
+            ];
+        }
+
+        if (! $intern->institutionReference) {
+            return [
+                'is_eligible' => false,
+                'reason' => 'Asal sekolah/kampus belum dipilih.',
+            ];
+        }
+
+        if (! $intern->institutionReference->is_active) {
+            return [
+                'is_eligible' => false,
+                'reason' => 'Asal sekolah/kampus belum aktif untuk allowance.',
+            ];
+        }
+
+        return [
+            'is_eligible' => true,
+            'reason' => 'Memenuhi syarat allowance.',
+        ];
+    }
+
+    private function eligibleTypes(): array
+    {
+        $eligibleTypes = config('allowance.eligible_types', [config('allowance.eligible_type', 'mahasiswa')]);
+
+        if (! is_array($eligibleTypes)) {
+            $eligibleTypes = [$eligibleTypes];
+        }
+
+        return array_values(array_filter($eligibleTypes, fn ($type) => is_string($type) && trim($type) !== ''));
     }
 }

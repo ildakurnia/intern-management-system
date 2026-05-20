@@ -11,9 +11,25 @@ class DivisionService
     /**
      * Get all divisions with counts
      */
-    public function getAllDivisions(): Collection
+    public function getAllDivisions(?string $status = null, ?string $search = null): Collection
     {
-        return Division::withCount(['interns', 'mentors'])->latest()->get();
+        $query = Division::withCount(['activeInterns as interns_count', 'mentors'])->orderBy('name');
+
+        if ($status === 'active') {
+            $query->where('is_active', true);
+        } elseif ($status === 'inactive') {
+            $query->where('is_active', false);
+        }
+
+        if ($search) {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('code', 'like', '%'.$search.'%')
+                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
+        return $query->get();
     }
 
     /**
@@ -37,7 +53,7 @@ class DivisionService
      */
     public function deleteDivision(Division $division): bool
     {
-        if ($division->interns()->exists() || $division->mentors()->exists()) {
+        if ($division->activeInterns()->exists() || $division->mentors()->exists()) {
             return false;
         }
 

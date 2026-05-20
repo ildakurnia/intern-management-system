@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>Cetak Detail Uang Saku</title>
+  <title>Cetak Detail Uang Saku Intern</title>
   <style>
     body { font-family: Arial, sans-serif; color: #18213f; margin: 28px; font-size: 13px; }
     h1,h2,h3,p { margin: 0; }
@@ -69,8 +69,8 @@
     <div class="brand">
       <div class="company">{{ config('allowance.company_name') }}</div>
       <div class="brand-line"></div>
-      <h1>Detail Uang Saku Mahasiswa</h1>
-      <p class="muted">Rekap resmi uang saku mahasiswa untuk periode {{ $monthLabel }}.</p>
+      <h1>Detail Uang Saku Intern</h1>
+      <p class="muted">Rekap resmi uang saku intern untuk periode {{ $monthLabel }}.</p>
     </div>
     <div class="print-meta">
       <div><strong>Tanggal Cetak</strong></div>
@@ -83,7 +83,7 @@
   <div class="section-card">
     <div class="identity-grid">
       <div>
-        <span class="identity-label">Nama Mahasiswa</span>
+        <span class="identity-label">Nama Intern</span>
         <strong>{{ $intern->name }}</strong>
       </div>
       <div>
@@ -91,12 +91,12 @@
         <strong>{{ $intern->division->name ?? '-' }}</strong>
       </div>
       <div>
-        <span class="identity-label">Institusi</span>
+        <span class="identity-label">Asal Sekolah/Kampus</span>
         <strong>{{ $allowance['institution_label'] }}</strong>
       </div>
       <div>
-        <span class="identity-label">NIM</span>
-        <strong>{{ $intern->nim ?: '-' }}</strong>
+        <span class="identity-label">{{ $allowance['identifier_label'] }}</span>
+        <strong>{{ $allowance['identifier_value'] }}</strong>
       </div>
     </div>
   </div>
@@ -132,7 +132,7 @@
 
   <div class="table-title">
     <h3>Riwayat Absensi Bulan {{ $monthLabel }}</h3>
-    <p class="muted">Tabel berikut menjadi dasar perhitungan uang saku mahasiswa pada periode berjalan.</p>
+    <p class="muted">Tabel berikut menjadi dasar perhitungan uang saku intern pada periode berjalan.</p>
   </div>
 
   <table>
@@ -169,7 +169,7 @@
   </table>
 
   <div class="footer-note">
-    Dokumen ini dicetak dari sistem dan digunakan sebagai rekap administrasi uang saku mahasiswa.
+    Dokumen ini dicetak dari sistem dan digunakan sebagai rekap administrasi uang saku intern.
   </div>
 
   <div class="signature-grid">

@@ -2,15 +2,6 @@
 
 @section('title', 'Manajemen Divisi')
 
-@section('vendor-style')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss',
-         'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss'])
-@endsection
-
-@section('vendor-script')
-  @vite(['resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js'])
-@endsection
-
 @section('page-style')
 <style>
   .ims-theme-edit-btn {
@@ -205,47 +196,97 @@
 @endsection
 
 @section('content')
-<div>
-  <div class="row g-6">
-    <div class="col-12">
-      <div class="card shadow-sm border-0">
-      
-        {{-- Header & Toolbar --}}
-        <div class="card-header border-bottom py-4">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 ims-mobile-toolbar">
-            <div>
-              <h5 class="m-0 fw-bold">Daftar Divisi / Departemen</h5>
-              <small class="text-body-secondary">Kelola struktur organisasi Persero Batam</small>
-            </div>
-            <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
-              <select id="filterStatus" class="form-select form-select-sm" style="min-width: 150px;">
-                <option value="">Semua Status</option>
-                <option value="Aktif">Aktif</option>
-                <option value="Non-aktif">Non-aktif</option>
-              </select>
-              <a href="{{ route('admin.divisions.create') }}" class="btn btn-primary text-nowrap">
-                <i class="ri ri-add-line me-1"></i> Tambah Divisi
-              </a>
-            </div>
+<div class="row g-6">
+  <div class="col-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 py-4 ims-mobile-toolbar">
+        <div class="card-title mb-0">
+          <h5 class="m-0 me-2 text-primary fw-bold">Daftar Divisi / Departemen</h5>
+          <small class="text-body-secondary">Kelola struktur organisasi Persero Batam</small>
         </div>
+        <a href="{{ route('admin.divisions.create') }}" class="btn btn-primary shadow-sm text-nowrap">
+          <i class="ri ri-add-line me-1"></i> Tambah Divisi
+        </a>
       </div>
 
-        {{-- Table Container --}}
-        <div class="card-body p-0 d-none d-md-block">
-          <div class="table-responsive p-0 p-md-2">
-            <table class="table mb-0 mobile-card-table" id="tableDivisions">
-              <thead>
-                <tr>
-                  <th class="py-3">Kode</th>
-                  <th class="py-3">Nama Divisi</th>
-                  <th class="py-3 text-center">Total Intern</th>
-                  <th class="py-3 text-center">Total Mentor</th>
-                  <th class="py-3 text-center">Status</th>
-                  <th class="py-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="table-border-bottom-0">
-                @foreach($divisions as $div)
+      <div class="card-body border-bottom py-3">
+        <form method="GET" action="{{ route('admin.divisions.index') }}" id="divisionFilterForm">
+          <div class="row g-4 align-items-center">
+            <div class="col-md-5">
+              <div class="form-floating form-floating-outline">
+                <input
+                  type="text"
+                  name="search"
+                  class="form-control"
+                  id="searchDivision"
+                  placeholder="Cari kode atau nama divisi..."
+                  value="{{ $search }}"
+                />
+                <label for="searchDivision">Cari Kode / Nama</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating form-floating-outline">
+                <select name="status" id="filterStatus" class="form-select" onchange="document.getElementById('divisionFilterForm').submit()">
+                  <option value="">Semua Status</option>
+                  <option value="active" @selected($status === 'active')>Aktif</option>
+                  <option value="inactive" @selected($status === 'inactive')>Non-aktif</option>
+                </select>
+                <label for="filterStatus">Status</label>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="d-flex gap-2 h-100 align-items-stretch" style="padding-top: 1.5px;">
+                <button type="submit" class="btn btn-primary shadow-sm flex-grow-1 px-2">
+                  <i class="ri ri-search-line me-1"></i> Cari
+                </button>
+                @if(request()->hasAny(['search', 'status']))
+                  <a href="{{ route('admin.divisions.index') }}" class="btn btn-outline-danger d-flex align-items-center justify-content-center px-3" title="Reset filter" aria-label="Reset filter">
+                    <i class="ri ri-refresh-line"></i>
+                  </a>
+                @endif
+              </div>
+            </div>
+          </div>
+        </form>
+
+        @if(request()->hasAny(['search', 'status']))
+          <div class="mt-2 d-flex align-items-center gap-2 flex-wrap">
+            <small class="text-body-secondary">Filter aktif:</small>
+            @if($search)
+              <span class="badge bg-label-primary rounded-pill">
+                Pencarian: "{{ $search }}"
+                <a href="{{ request()->fullUrlWithoutQuery(['search']) }}" class="ms-1 text-primary" aria-label="Hapus filter pencarian">&times;</a>
+              </span>
+            @endif
+            @if($status)
+              <span class="badge bg-label-info rounded-pill">
+                Status: {{ $status === 'active' ? 'Aktif' : 'Non-aktif' }}
+                <a href="{{ request()->fullUrlWithoutQuery(['status']) }}" class="ms-1 text-info" aria-label="Hapus filter status">&times;</a>
+              </span>
+            @endif
+            <span class="text-body-secondary small">&mdash; {{ $divisions->count() }} divisi ditemukan</span>
+          </div>
+        @endif
+      </div>
+
+      <div class="card-body p-0 d-none d-md-block">
+        <div class="table-responsive ims-card-table-wrap p-0 p-md-2">
+          <table class="table table-hover mb-0 ims-card-table">
+            <thead class="table-light">
+              <tr>
+                <th class="py-3">Kode</th>
+                <th class="py-3">Nama Divisi</th>
+                <th class="py-3 text-center">Total Intern</th>
+                <th class="py-3 text-center">Total Mentor</th>
+                <th class="py-3 text-center">Status</th>
+                <th class="py-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              @forelse($divisions as $div)
                 <tr>
                   <td data-label="Kode">
                     <div class="divisions-desktop-code-row">
@@ -303,116 +344,77 @@
                     </div>
                   </td>
                 </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </div>
+              @empty
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-body-secondary">Belum ada data divisi.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        {{-- Mobile Cards --}}
-        <div class="card-body d-md-none">
-          <div class="divisions-mobile-shell">
-            @forelse($divisions as $div)
-              <div class="divisions-mobile-card">
-                <div class="card-body">
-                  <div class="divisions-mobile-head">
-                    <div class="min-w-0">
-                      <div class="divisions-mobile-title-wrap">
-                        <span class="divisions-mobile-title-icon">
-                          <i class="icon-base ri ri-community-line"></i>
-                        </span>
-                        <h6 class="divisions-mobile-title text-truncate">{{ $div->name }}</h6>
-                      </div>
-                      <div class="divisions-mobile-subtitle mt-1">Kode: <strong>{{ $div->code }}</strong></div>
-                      @if($div->description)
-                        <div class="divisions-mobile-desc">{{ $div->description }}</div>
-                      @endif
+      <div class="card-body d-md-none">
+        <div class="divisions-mobile-shell">
+          @forelse($divisions as $div)
+            <div class="divisions-mobile-card">
+              <div class="card-body">
+                <div class="divisions-mobile-head">
+                  <div class="min-w-0">
+                    <div class="divisions-mobile-title-wrap">
+                      <span class="divisions-mobile-title-icon">
+                        <i class="icon-base ri ri-community-line"></i>
+                      </span>
+                      <h6 class="divisions-mobile-title text-truncate">{{ $div->name }}</h6>
                     </div>
-                    <span class="badge divisions-mobile-status-chip bg-label-{{ $div->is_active ? 'success' : 'danger' }}">
-                      {{ $div->is_active ? 'Aktif' : 'Non-aktif' }}
-                    </span>
+                    <div class="divisions-mobile-subtitle mt-1">Kode: <strong>{{ $div->code }}</strong></div>
+                    @if($div->description)
+                      <div class="divisions-mobile-desc">{{ $div->description }}</div>
+                    @endif
                   </div>
+                  <span class="badge divisions-mobile-status-chip bg-label-{{ $div->is_active ? 'success' : 'danger' }}">
+                    {{ $div->is_active ? 'Aktif' : 'Non-aktif' }}
+                  </span>
+                </div>
 
-                  <div class="divisions-mobile-stats">
-                    <span class="badge bg-label-info rounded-pill divisions-mobile-stat">
-                      <i class="icon-base ri ri-user-3-line"></i>
-                      <span>{{ $div->interns_count }} Intern</span>
-                    </span>
-                    <span class="badge bg-label-primary rounded-pill divisions-mobile-stat">
-                      <i class="icon-base ri ri-user-star-line"></i>
-                      <span>{{ $div->mentors_count }} Mentor</span>
-                    </span>
-                  </div>
+                <div class="divisions-mobile-stats">
+                  <span class="badge bg-label-info rounded-pill divisions-mobile-stat">
+                    <i class="icon-base ri ri-user-3-line"></i>
+                    <span>{{ $div->interns_count }} Intern</span>
+                  </span>
+                  <span class="badge bg-label-primary rounded-pill divisions-mobile-stat">
+                    <i class="icon-base ri ri-user-star-line"></i>
+                    <span>{{ $div->mentors_count }} Mentor</span>
+                  </span>
+                </div>
 
-                  <div class="divisions-mobile-actions">
-                    <a href="{{ route('admin.divisions.edit', $div->id) }}" class="btn divisions-mobile-edit ims-theme-edit-btn d-inline-flex align-items-center justify-content-center gap-1">
-                      <i class="ri ri-pencil-line"></i>
-                      <span>Edit</span>
-                    </a>
-                    <form action="{{ route('admin.divisions.destroy', $div->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus divisi ini?')">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn divisions-mobile-delete d-inline-flex align-items-center justify-content-center gap-1">
-                        <i class="ri ri-delete-bin-line"></i>
-                        <span>Hapus</span>
-                      </button>
-                    </form>
-                  </div>
+                <div class="divisions-mobile-actions">
+                  <a href="{{ route('admin.divisions.edit', $div->id) }}" class="btn divisions-mobile-edit ims-theme-edit-btn d-inline-flex align-items-center justify-content-center gap-1">
+                    <i class="ri ri-pencil-line"></i>
+                    <span>Edit</span>
+                  </a>
+                  <form action="{{ route('admin.divisions.destroy', $div->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus divisi ini?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn divisions-mobile-delete d-inline-flex align-items-center justify-content-center gap-1">
+                      <i class="ri ri-delete-bin-line"></i>
+                      <span>Hapus</span>
+                    </button>
+                  </form>
                 </div>
               </div>
-            @empty
-              <div class="divisions-mobile-card text-center p-4">
-                <div class="card-body">
-                  <i class="ri ri-community-line icon-32px text-muted mb-2 d-block"></i>
-                  <p class="mb-0">Belum ada data divisi.</p>
-                </div>
+            </div>
+          @empty
+            <div class="divisions-mobile-card text-center p-4">
+              <div class="card-body">
+                <i class="ri ri-community-line icon-32px text-muted mb-2 d-block"></i>
+                <p class="mb-0">Belum ada data divisi.</p>
               </div>
-            @endforelse
-          </div>
+            </div>
+          @endforelse
         </div>
       </div>
     </div>
   </div>
 </div>
-@endsection
-
-@section('page-script')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const table = $('#tableDivisions').DataTable({
-    dom: '<"row mx-0 my-3 px-3 px-md-4"<"col-12 col-md-6 d-flex align-items-center mb-3 mb-md-0"l><"col-12 col-md-6"f>>t<"row mx-0 my-3 px-3 px-md-4"<"col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0 text-body-secondary text-center text-md-start"i><"col-12 col-md-6"p>>',
-    language: {
-      search: '',
-      searchPlaceholder: 'Cari divisi...',
-      lengthMenu: 'Tampilkan _MENU_ data',
-      info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
-      infoEmpty: 'Menampilkan 0 data',
-      infoFiltered: '(dari _MAX_ total data)',
-      paginate: {
-        next: '&rsaquo;',
-        previous: '&lsaquo;',
-        first: '&laquo;',
-        last: '&raquo;'
-      },
-      emptyTable: 'Belum ada data divisi'
-    },
-    columnDefs: [
-      { orderable: false, targets: [5] }
-    ],
-    order: [[1, 'asc']],
-    drawCallback: function() {
-      // Remove "Search:" text from label securely
-      $('.dataTables_filter label').contents().filter(function() {
-        return this.nodeType === 3;
-      }).remove();
-    }
-  });
-
-  // Filter Status
-  $('#filterStatus').on('change', function () {
-    const val = $(this).val();
-    table.column(4).search(val ? '^' + val + '$' : '', true, false).draw();
-  });
-});
-</script>
 @endsection

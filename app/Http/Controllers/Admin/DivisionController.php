@@ -19,8 +19,12 @@ class DivisionController extends Controller
 
     public function index()
     {
-        $divisions = $this->divisionService->getAllDivisions();
-        return view('pages.admin.divisions.index', compact('divisions'));
+        $status = request('status') ?: null;
+        $search = request('search') ?: null;
+
+        $divisions = $this->divisionService->getAllDivisions($status, $search);
+
+        return view('pages.admin.divisions.index', compact('divisions', 'status', 'search'));
     }
 
     public function create()

@@ -9,6 +9,7 @@
     --attendance-primary-soft: #eef0ff;
     --attendance-border: rgba(85, 91, 120, 0.14);
     --attendance-text-soft: #8b90a7;
+    font-family: var(--bs-body-font-family);
   }
 
   .attendance-page .card {
@@ -122,6 +123,19 @@
     border: 0;
   }
 
+  .attendance-hero-cta .attendance-checkout-btn {
+    color: #fff;
+    background: linear-gradient(180deg, #5968d3 0%, #4453bf 100%);
+    box-shadow: 0 10px 18px rgba(58, 69, 170, 0.18);
+  }
+
+  .attendance-hero-cta .attendance-checkout-btn:hover,
+  .attendance-hero-cta .attendance-checkout-btn:focus {
+    color: #fff;
+    background: linear-gradient(180deg, #6473de 0%, #4c5ed0 100%);
+    box-shadow: 0 12px 22px rgba(58, 69, 170, 0.2);
+  }
+
   .attendance-hero-live-pill {
     display: inline-flex;
     align-items: center;
@@ -129,10 +143,11 @@
     margin-top: 1.4rem;
     padding: 0.8rem 1rem;
     border-radius: 999px;
-    color: rgba(255, 255, 255, 0.88);
-    background: rgba(55, 44, 191, 0.38);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.98);
+    background: rgba(15, 23, 42, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+    font-weight: 700;
   }
 
   .attendance-hero-secondary-actions {
@@ -262,6 +277,12 @@
     background: #fff;
   }
 
+  .attendance-history-card .table,
+  .attendance-history-card .table th,
+  .attendance-history-card .table td {
+    color: var(--bs-body-color);
+  }
+
   .attendance-detail-card {
     padding: 1.55rem;
   }
@@ -275,6 +296,53 @@
     padding: 1.15rem 1.2rem;
     background: linear-gradient(135deg, #f5f6ff 0%, #fbfcff 100%);
     border: 1px solid rgba(92, 99, 146, 0.1);
+  }
+
+  .attendance-progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+  }
+
+  .attendance-progress-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.62rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: linear-gradient(135deg, rgba(69, 82, 210, 0.14), rgba(98, 92, 242, 0.18));
+    color: #eef2ff;
+    box-shadow: 0 12px 24px rgba(58, 69, 170, 0.12);
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+
+  .attendance-progress-chip-icon {
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .attendance-progress-chip-icon i {
+    font-size: 1rem;
+  }
+
+  .attendance-progress-chip-text {
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
   }
 
   .attendance-detail-grid {
@@ -379,6 +447,266 @@
 
   .attendance-history-table tbody tr {
     border-color: rgba(91, 97, 137, 0.1);
+  }
+
+  html[data-bs-theme="dark"] .attendance-section-title,
+  html[data-bs-theme="dark"] .attendance-kpi-card h3,
+  html[data-bs-theme="dark"] .attendance-kpi-label,
+  html[data-bs-theme="dark"] .attendance-detail-item strong,
+  html[data-bs-theme="dark"] .attendance-recent-item .fw-semibold,
+  html[data-bs-theme="dark"] .attendance-recent-time,
+  html[data-bs-theme="dark"] .attendance-history-card .table td strong,
+  html[data-bs-theme="dark"] .attendance-history-card .table td .fw-medium,
+  html[data-bs-theme="dark"] .attendance-history-card .table td,
+  html[data-bs-theme="dark"] .attendance-empty-state h6,
+  html[data-bs-theme="dark"] .attendance-empty-state p {
+    color: #e5e7eb;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-card,
+  html[data-bs-theme="dark"] .attendance-detail-card,
+  html[data-bs-theme="dark"] .attendance-recent-card,
+  html[data-bs-theme="dark"] .attendance-history-card {
+    background: rgba(24, 28, 42, 0.88);
+    border-color: rgba(148, 163, 184, 0.16) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24) !important;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-card p,
+  html[data-bs-theme="dark"] .attendance-soft-text,
+  html[data-bs-theme="dark"] .attendance-kpi-unit,
+  html[data-bs-theme="dark"] .attendance-detail-item small,
+  html[data-bs-theme="dark"] .attendance-recent-time small,
+  html[data-bs-theme="dark"] .attendance-recent-item .text-muted,
+  html[data-bs-theme="dark"] .attendance-empty-state p,
+  html[data-bs-theme="dark"] .attendance-filter-shell label {
+    color: #94a3b8 !important;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-label {
+    color: #cbd5e1;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-card h3 {
+    color: #f8fafc;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-card {
+    border-color: rgba(148, 163, 184, 0.16) !important;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon {
+    border-color: rgba(148, 163, 184, 0.18);
+    box-shadow: none;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon--primary {
+    background: rgba(79, 70, 229, 0.18);
+    color: #a5b4fc;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon--success {
+    background: rgba(34, 197, 94, 0.16);
+    color: #86efac;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon--warning {
+    background: rgba(245, 158, 11, 0.16);
+    color: #fbbf24;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon--info {
+    background: rgba(14, 165, 233, 0.16);
+    color: #7dd3fc;
+  }
+
+  html[data-bs-theme="dark"] .attendance-kpi-icon--secondary {
+    background: rgba(148, 163, 184, 0.14);
+    color: #cbd5e1;
+  }
+
+  html[data-bs-theme="dark"] .attendance-detail-hero {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .attendance-progress-chip {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.24), rgba(99, 102, 241, 0.28));
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #eef2ff;
+    box-shadow: 0 12px 24px rgba(8, 12, 34, 0.2);
+  }
+
+  html[data-bs-theme="dark"] .attendance-progress-chip-icon {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f8fafc;
+  }
+
+  html[data-bs-theme="dark"] .attendance-detail-item,
+  html[data-bs-theme="dark"] .attendance-recent-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .attendance-filter-shell {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .attendance-filter-shell .form-control,
+  html[data-bs-theme="dark"] .attendance-filter-shell .form-select {
+    background: rgba(15, 23, 42, 0.72);
+    border-color: rgba(148, 163, 184, 0.18);
+    color: #e5e7eb;
+  }
+
+  html[data-bs-theme="dark"] .attendance-filter-shell .form-control::placeholder {
+    color: #94a3b8;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .table thead th {
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .table tbody tr:hover > * {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .badge,
+  html[data-bs-theme="dark"] .attendance-history-mobile-card .badge {
+    box-shadow: none;
+  }
+
+  html[data-bs-theme="dark"] .attendance-preview-frame {
+    background: rgba(15, 23, 42, 0.78);
+    border-color: rgba(148, 163, 184, 0.16);
+  }
+
+  html[data-bs-theme="dark"] .attendance-preview-image {
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  html[data-bs-theme="dark"] .attendance-empty-state {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(148, 163, 184, 0.16);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-cta {
+    background: rgba(15, 23, 42, 0.84);
+    color: #e5e7eb;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-cta .btn,
+  html[data-bs-theme="dark"] .attendance-hero-cta button {
+    color: #e5e7eb;
+    background: transparent;
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-cta .attendance-checkout-btn {
+    color: #fff;
+    background: linear-gradient(180deg, #5968d3 0%, #4453bf 100%);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-cta .attendance-checkout-btn:hover,
+  html[data-bs-theme="dark"] .attendance-hero-cta .attendance-checkout-btn:focus {
+    color: #fff;
+    background: linear-gradient(180deg, #6473de 0%, #4c5ed0 100%);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-live-pill {
+    color: #eef2ff;
+    background: rgba(15, 23, 42, 0.34);
+    border-color: rgba(148, 163, 184, 0.22);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-secondary-actions .btn {
+    color: #e5e7eb;
+    border-color: rgba(148, 163, 184, 0.24);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  html[data-bs-theme="dark"] .attendance-hero-live-pill {
+    background: rgba(79, 70, 229, 0.22);
+    border-color: rgba(148, 163, 184, 0.12);
+  }
+
+  html[data-bs-theme="dark"] .attendance-section-link {
+    color: #93c5fd;
+  }
+
+  html[data-bs-theme="dark"] .attendance-section-link:hover {
+    color: #bfdbfe;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card {
+    background: rgba(24, 28, 42, 0.88);
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .table {
+    --bs-table-color: #e5e7eb;
+    --bs-table-bg: transparent;
+    --bs-table-hover-color: #f8fafc;
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+    color: #e5e7eb;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .table th {
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-table tbody tr {
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-card .table td,
+  html[data-bs-theme="dark"] .attendance-history-card .table td .attendance-soft-text,
+  html[data-bs-theme="dark"] .attendance-history-card .table td .text-muted {
+    color: #cbd5e1 !important;
+  }
+
+  html[data-bs-theme="dark"] .attendance-filter-shell {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .attendance-filter-shell label {
+    color: #94a3b8;
+  }
+
+  html[data-bs-theme="dark"] .attendance-preview-frame {
+    background: rgba(15, 23, 42, 0.78);
+    border-color: rgba(148, 163, 184, 0.16);
+  }
+
+  html[data-bs-theme="dark"] .attendance-preview-image {
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  html[data-bs-theme="dark"] .attendance-empty-state {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(148, 163, 184, 0.16);
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-card .card-body,
+  html[data-bs-theme="dark"] .attendance-history-mobile-card .card-header {
+    color: #e5e7eb;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-status,
+  html[data-bs-theme="dark"] .attendance-history-mobile-name,
+  html[data-bs-theme="dark"] .attendance-history-mobile-stat strong,
+  html[data-bs-theme="dark"] .attendance-history-mobile-lines,
+  html[data-bs-theme="dark"] .attendance-history-mobile-meta-item,
+  html[data-bs-theme="dark"] .attendance-history-mobile-line {
+    color: #e5e7eb;
   }
 
   .attendance-detail-button {
@@ -589,14 +917,14 @@
     border: 1px solid rgba(181, 186, 214, 0.38);
     border-radius: 1rem;
     background: #fff;
-    box-shadow: 0 10px 24px rgba(30, 36, 68, 0.06);
+    box-shadow: none;
     overflow: hidden;
   }
 
   html[data-bs-theme="dark"] .attendance-history-mobile-card {
     background: #2a2740;
     border-color: rgba(219, 223, 255, 0.12);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    box-shadow: none;
   }
 
   .attendance-history-mobile-card .card-header {
@@ -673,6 +1001,7 @@
     color: var(--bs-heading-color);
     font-size: 0.82rem;
     font-weight: 600;
+    box-shadow: none;
   }
 
   html[data-bs-theme="dark"] .attendance-history-mobile-meta-item {
@@ -700,11 +1029,16 @@
   .attendance-history-mobile-standalone .attendance-history-mobile-meta-item {
     width: 100%;
     justify-content: flex-start;
-    background: transparent;
-    padding: 0;
+    background: transparent !important;
+    padding: 0 !important;
     color: var(--bs-body-color);
     font-weight: 500;
-    border-radius: 0;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  html[data-bs-theme="dark"] .attendance-history-mobile-standalone .attendance-history-mobile-meta-item {
+    background: transparent !important;
   }
 
   .attendance-history-mobile-stats {
@@ -718,6 +1052,7 @@
     border-radius: 0.95rem;
     padding: 0.9rem 1rem;
     background: rgba(250, 250, 255, 0.8);
+    box-shadow: none;
   }
 
   .attendance-history-mobile-stat--full {
@@ -1062,7 +1397,7 @@
                     <input type="hidden" name="latitude">
                     <input type="hidden" name="longitude">
                     <input type="hidden" name="accuracy">
-                    <button type="submit" class="btn btn-lg w-100">
+                    <button type="submit" class="btn btn-lg w-100 attendance-checkout-btn">
                       <i class="ri ri-logout-box-r-line me-2"></i> Check Out Sekarang
                     </button>
                   </form>
@@ -1116,16 +1451,19 @@
   <div class="col-12 d-md-none">
     <div class="attendance-mobile-shell">
       <div class="attendance-mobile-card">
-        <div class="attendance-mobile-card-head">
-          <div class="attendance-mobile-title min-w-0">
-            <div class="attendance-mobile-avatar">{{ $internInitials }}</div>
-            <div class="min-w-0">
-              <div class="attendance-mobile-name">{{ auth()->user()->name }}</div>
-              <div class="attendance-mobile-email">{{ auth()->user()->email }}</div>
+          <div class="attendance-mobile-card-head">
+            <div class="attendance-mobile-title min-w-0">
+              <div class="attendance-mobile-avatar">{{ $internInitials }}</div>
+              <div class="min-w-0">
+                <div class="attendance-mobile-name">{{ auth()->user()->name }}</div>
+                <div class="attendance-mobile-email">{{ auth()->user()->email }}</div>
+              </div>
             </div>
+          <span class="attendance-badge-soft {{ $todayAttendance && $todayAttendance->check_in_at && ! $todayAttendance->check_out_at && in_array($todayAttendance->status, [\App\Models\Attendance::STATUS_PRESENT, \App\Models\Attendance::STATUS_LATE], true) ? '' : 'is-muted' }} flex-shrink-0">
+            <span class="dot"></span>
+            {{ strtoupper($attendanceStep) }}
+          </span>
           </div>
-          <span class="badge bg-label-{{ $todayStatusBadge }} rounded-pill flex-shrink-0">{{ $attendanceStep }}</span>
-        </div>
 
         <div class="attendance-mobile-body">
           <div class="attendance-mobile-meta">
@@ -1204,7 +1542,10 @@
             <div class="attendance-mobile-name">Ringkasan Hari Ini</div>
             <div class="attendance-mobile-email">{{ $todayLabel }}</div>
           </div>
-          <span class="badge bg-label-{{ $todayStatusBadge }} rounded-pill flex-shrink-0">{{ $attendanceStep }}</span>
+          <span class="attendance-badge-soft {{ $todayAttendance && $todayAttendance->check_in_at && ! $todayAttendance->check_out_at && in_array($todayAttendance->status, [\App\Models\Attendance::STATUS_PRESENT, \App\Models\Attendance::STATUS_LATE], true) ? '' : 'is-muted' }} flex-shrink-0">
+            <span class="dot"></span>
+            {{ strtoupper($attendanceStep) }}
+          </span>
         </div>
         <div class="attendance-mobile-body">
           <div class="attendance-mobile-summary-grid">
@@ -1245,21 +1586,26 @@
         <span class="badge rounded-pill bg-label-{{ $todayStatusBadge }}">{{ $attendanceStep }}</span>
       </div>
 
-      <div class="attendance-detail-hero mb-4">
-        <div class="row g-3 align-items-center">
-          <div class="col-md-8">
-            <small class="text-uppercase fw-semibold attendance-soft-text">Ringkasan Hari Ini</small>
-            <h2 class="mt-2 mb-2">{{ $todayStatusLabel }}</h2>
-            <p class="mb-0 attendance-soft-text">{{ $todayMessage }}</p>
-          </div>
-          <div class="col-md-4">
-            <div class="text-md-end">
-              <small class="attendance-soft-text d-block mb-1">Progress</small>
-              <strong class="fs-3 text-dark">{{ $attendanceStep }}</strong>
+        <div class="attendance-detail-hero mb-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+              <small class="text-uppercase fw-semibold attendance-soft-text">Ringkasan Hari Ini</small>
+              <h2 class="mt-2 mb-2">{{ $todayStatusLabel }}</h2>
+              <p class="mb-0 attendance-soft-text">{{ $todayMessage }}</p>
+            </div>
+            <div class="col-md-4">
+            <div class="text-md-end attendance-progress-wrap">
+              <small class="attendance-soft-text d-block mb-1 attendance-progress-label">Progress Absensi</small>
+              <span class="attendance-progress-chip">
+                <span class="attendance-progress-chip-icon">
+                  <i class="ri ri-time-line"></i>
+                </span>
+                <span class="attendance-progress-chip-text">{{ $attendanceStep }}</span>
+              </span>
+            </div>
             </div>
           </div>
         </div>
-      </div>
 
       @if ($todayAttendance)
         <div class="attendance-detail-grid">

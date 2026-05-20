@@ -148,6 +148,86 @@
     -webkit-line-clamp: 2;
   }
 
+  html[data-bs-theme="dark"] .role-dashboard .card {
+    background: rgba(24, 28, 42, 0.9);
+    border-color: rgba(148, 163, 184, 0.16);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+    color: #e2e8f0;
+  }
+
+  html[data-bs-theme="dark"] .role-hero {
+    background:
+      radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 26%),
+      radial-gradient(circle at bottom left, rgba(125, 115, 255, 0.18), transparent 30%),
+      linear-gradient(135deg, #172554 0%, #1e3a8a 48%, #4338ca 100%);
+  }
+
+  html[data-bs-theme="dark"] .role-hero-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #e2e8f0;
+  }
+
+  html[data-bs-theme="dark"] .role-hero-actions .btn-light {
+    background: #eef2ff;
+    color: #4338ca;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  html[data-bs-theme="dark"] .role-hero-actions .btn-light:hover,
+  html[data-bs-theme="dark"] .role-hero-actions .btn-light:focus {
+    background: #ffffff;
+    color: #312e81;
+  }
+
+  html[data-bs-theme="dark"] .role-hero-actions .btn-outline-light {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #f8fafc;
+  }
+
+  html[data-bs-theme="dark"] .role-hero-actions .btn-outline-light:hover,
+  html[data-bs-theme="dark"] .role-hero-actions .btn-outline-light:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+  }
+
+  html[data-bs-theme="dark"] .role-stat-label,
+  html[data-bs-theme="dark"] .role-list-soft,
+  html[data-bs-theme="dark"] .role-stat-note,
+  html[data-bs-theme="dark"] .role-list-item-meta,
+  html[data-bs-theme="dark"] .role-list-item-sub {
+    color: #94a3b8;
+  }
+
+  html[data-bs-theme="dark"] .role-stat-value,
+  html[data-bs-theme="dark"] .role-list-item-title,
+  html[data-bs-theme="dark"] .role-list-card h5 {
+    color: #f8fafc;
+  }
+
+  html[data-bs-theme="dark"] .role-dashboard .card-subtitle,
+  html[data-bs-theme="dark"] .role-dashboard .text-body-secondary {
+    color: #94a3b8 !important;
+  }
+
+  html[data-bs-theme="dark"] .role-list-item {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  html[data-bs-theme="dark"] .role-list-item .btn {
+    border-color: rgba(99, 102, 241, 0.32);
+    color: #c7d2fe;
+  }
+
+  html[data-bs-theme="dark"] .role-list-item .btn:hover,
+  html[data-bs-theme="dark"] .role-list-item .btn:focus {
+    background: rgba(99, 102, 241, 0.14);
+    color: #fff;
+  }
+
   @media (max-width: 767.98px) {
     .role-dashboard {
       gap: .8rem;

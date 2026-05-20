@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'hasAnyRoleOrPermission' => \App\Http\Middleware\HasAnyRoleOrPermission::class,
             'intern.onboarding' => \App\Http\Middleware\EnsureInternOnboardingComplete::class,
+            'sync.expired.interns' => \App\Http\Middleware\SyncExpiredInterns::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));

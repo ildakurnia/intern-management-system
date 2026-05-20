@@ -20,6 +20,10 @@
   $previousMonthParam = $calendarMonth->copy()->subMonth()->format('Y-m');
   $nextMonthParam = $calendarMonth->copy()->addMonth()->format('Y-m');
   $todayString = now()->format('Y-m-d');
+  $startDateString = $intern?->start_date?->toDateString();
+  $endDateString = $intern?->end_date?->toDateString();
+  $canGoPreviousMonth = ! $startDateString || $calendarMonth->gt($intern->start_date->copy()->startOfMonth());
+  $canGoNextMonth = $calendarMonth->lt(now()->startOfMonth());
   $calendarLogbooks = $logbooksByDate
       ->mapWithKeys(fn ($logbook, $date) => [
           $date => [
@@ -290,6 +294,15 @@
       color: var(--intern-logbook-future);
     }
 
+    .intern-logbook-day.is-disabled-range {
+      background: rgba(var(--bs-secondary-rgb), 0.03);
+    }
+
+    .intern-logbook-day.is-disabled-range .intern-logbook-day-button {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
     .intern-logbook-legend {
       display: flex;
       flex-wrap: wrap;
@@ -308,6 +321,13 @@
     .intern-logbook-mobile-hint {
       display: none;
       margin-bottom: 0.9rem;
+      color: var(--intern-logbook-soft);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .intern-logbook-period-note {
+      margin: 0 0 0.9rem;
       color: var(--intern-logbook-soft);
       font-size: 0.82rem;
       line-height: 1.5;
@@ -530,17 +550,32 @@
 
       <div class="intern-logbook-calendar-wrap">
         <div class="intern-logbook-calendar-toolbar">
-          <a href="{{ route('intern.logbooks.index', ['month' => $previousMonthParam]) }}" class="intern-logbook-month-button" aria-label="Bulan sebelumnya">
-            <i class="ri ri-arrow-left-s-line"></i>
-          </a>
+          @if ($canGoPreviousMonth)
+            <a href="{{ route('intern.logbooks.index', ['month' => $previousMonthParam]) }}" class="intern-logbook-month-button" aria-label="Bulan sebelumnya">
+              <i class="ri ri-arrow-left-s-line"></i>
+            </a>
+          @else
+            <span class="intern-logbook-month-button" aria-label="Bulan sebelumnya" aria-disabled="true" title="Bulan sebelum masa magang dimulai tidak bisa diisi">
+              <i class="ri ri-arrow-left-s-line"></i>
+            </span>
+          @endif
           <div class="intern-logbook-month-label">{{ $calendarMonth->translatedFormat('F Y') }}</div>
-          <a href="{{ route('intern.logbooks.index', ['month' => $nextMonthParam]) }}" class="intern-logbook-month-button" aria-label="Bulan berikutnya">
-            <i class="ri ri-arrow-right-s-line"></i>
-          </a>
+          @if ($canGoNextMonth)
+            <a href="{{ route('intern.logbooks.index', ['month' => $nextMonthParam]) }}" class="intern-logbook-month-button" aria-label="Bulan berikutnya">
+              <i class="ri ri-arrow-right-s-line"></i>
+            </a>
+          @else
+            <span class="intern-logbook-month-button" aria-label="Bulan berikutnya" aria-disabled="true" title="Logbook hanya bisa diisi sampai hari ini">
+              <i class="ri ri-arrow-right-s-line"></i>
+            </span>
+          @endif
         </div>
 
         <p class="intern-logbook-mobile-hint">
           Geser kalender ke samping saat membuka lewat HP untuk melihat semua hari dalam satu minggu.
+        </p>
+        <p class="intern-logbook-period-note">
+          Tanggal sebelum masa magang dimulai dan tanggal setelah hari ini tidak bisa dipilih.
         </p>
 
         <div class="intern-logbook-calendar-board">
@@ -558,16 +593,19 @@
                     $dateString = $date->format('Y-m-d');
                     $isCurrentMonth = $date->month === $calendarMonth->month;
                     $isToday = $dateString === $todayString;
+                    $isBeforeStart = $startDateString && $dateString < $startDateString;
+                    $isAfterEnd = $endDateString && $dateString > $endDateString;
                     $isFuture = $date->isAfter(now()->startOfDay());
+                    $isOutsideAllowedRange = $isBeforeStart || $isAfterEnd || $isFuture;
                     $existingLogbook = $logbooksByDate->get($dateString);
                   @endphp
-                  <div class="intern-logbook-day {{ $isCurrentMonth ? '' : 'is-outside' }} {{ $isToday ? 'is-today' : '' }} {{ $existingLogbook ? 'is-filled' : '' }} {{ $isFuture ? 'is-future' : '' }}">
+                  <div class="intern-logbook-day {{ $isCurrentMonth ? '' : 'is-outside' }} {{ $isToday ? 'is-today' : '' }} {{ $existingLogbook ? 'is-filled' : '' }} {{ $isFuture ? 'is-future' : '' }} {{ $isOutsideAllowedRange ? 'is-disabled-range' : '' }}">
                     <button
                       type="button"
                       class="intern-logbook-day-button"
                       data-logbook-date="{{ $dateString }}"
                       data-logbook-id="{{ $existingLogbook?->id }}"
-                      {{ $isFuture ? 'disabled' : '' }}>
+                      {{ $isOutsideAllowedRange ? 'disabled' : '' }}>
                       <span class="intern-logbook-day-number">{{ $date->day }}</span>
                       <span class="intern-logbook-day-dot"></span>
                     </button>
@@ -607,7 +645,7 @@
           <div class="modal-body px-4 pb-2">
             <div class="mb-4">
               <label for="calendar_tanggal" class="form-label intern-logbook-form-label">Tanggal</label>
-              <input type="date" id="calendar_tanggal" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{ old('tanggal') }}" max="{{ now()->toDateString() }}" required>
+              <input type="date" id="calendar_tanggal" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{ old('tanggal') }}" min="{{ $startDateString }}" max="{{ now()->toDateString() }}" required>
               @error('tanggal')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror

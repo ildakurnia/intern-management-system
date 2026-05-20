@@ -379,8 +379,11 @@
       </div>
 
       {{-- Footer count --}}
-      <div class="card-footer text-body-secondary small py-2 px-3">
-        Menampilkan <strong>{{ $users->count() }}</strong> pengguna
+      <div class="card-footer text-body-secondary small py-2 px-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <span>Menampilkan <strong>{{ $users->count() }}</strong> dari <strong>{{ $users->total() }}</strong> pengguna</span>
+        @if($users->hasPages())
+          <div>{{ $users->links('pagination::bootstrap-5') }}</div>
+        @endif
       </div>
     </div>
   </div>

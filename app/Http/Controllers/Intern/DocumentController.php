@@ -8,6 +8,8 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Services\NotificationService;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 class DocumentController extends Controller
 {
@@ -16,6 +18,44 @@ class DocumentController extends Controller
         return view('pages.intern.documents.edit', [
             'intern' => $request->user()->intern,
         ]);
+    }
+
+    public function preview(Request $request, string $field): Response
+    {
+        $intern = $request->user()->intern;
+
+        $documents = [
+            'ktp' => [
+                'path' => $intern->ktp_path,
+                'title' => 'KTP',
+            ],
+            'student_card' => [
+                'path' => $intern->student_card_path,
+                'title' => 'Kartu Siswa/Mahasiswa',
+            ],
+            'bpjs' => [
+                'path' => $intern->bpjs_path,
+                'title' => 'BPJS Ketenagakerjaan',
+            ],
+            'recommendation_letter' => [
+                'path' => $intern->recommendation_letter_path,
+                'title' => 'Surat Pengantar',
+            ],
+        ];
+
+        abort_unless(isset($documents[$field]), 404);
+
+        $documentPath = $documents[$field]['path'];
+        abort_unless($documentPath && Storage::disk('public')->exists($documentPath), 404);
+
+        $disk = Storage::disk('public');
+        $mimeType = $disk->mimeType($documentPath) ?: 'application/octet-stream';
+
+        return $disk->response(
+            $documentPath,
+            basename($documentPath),
+            ['Content-Type' => $mimeType]
+        );
     }
 
     public function update(Request $request): RedirectResponse

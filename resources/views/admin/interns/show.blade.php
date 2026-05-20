@@ -2,6 +2,238 @@
 
 @section('title', 'Detail Profil Intern')
 
+@section('page-style')
+<style>
+    .intern-location-card {
+        overflow: hidden;
+    }
+
+    .intern-location-header {
+        padding: 1.2rem 1.25rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .intern-location-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--bs-heading-color);
+    }
+
+    .intern-location-subtitle {
+        margin-top: 0.25rem;
+        color: var(--bs-secondary-color);
+        font-size: 0.9rem;
+    }
+
+    .intern-location-badges {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .intern-location-badges .badge {
+        border-radius: 999px;
+    }
+
+    .intern-location-mobile-shell {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .intern-location-mobile-card {
+        padding: 1rem;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 1rem;
+        background: var(--bs-card-bg);
+        box-shadow: 0 0.45rem 1.1rem rgba(15, 23, 42, 0.06);
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .intern-location-mobile-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .intern-location-mobile-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        margin-bottom: 0.35rem;
+        color: var(--bs-secondary-color);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+    }
+
+    .intern-location-mobile-icon {
+        width: 1.8rem;
+        height: 1.8rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bs-tertiary-bg);
+        color: var(--bs-primary);
+        flex-shrink: 0;
+    }
+
+    .intern-location-mobile-name {
+        margin: 0;
+        color: var(--bs-heading-color);
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .intern-location-mobile-sub {
+        color: var(--bs-secondary-color);
+        font-size: 0.875rem;
+        word-break: break-word;
+    }
+
+    .intern-location-mobile-controls {
+        display: grid;
+        gap: 0.65rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid rgba(17, 24, 39, 0.1);
+    }
+
+    .intern-location-mobile-control-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.8rem 0.85rem;
+        border: 1px solid rgba(17, 24, 39, 0.14);
+        border-radius: 0.9rem;
+        background: #fff;
+    }
+
+    .intern-location-mobile-control-row .form-check {
+        margin: 0;
+        min-height: 1rem;
+        padding-left: 1.5rem;
+    }
+
+    .intern-location-mobile-control-row .form-check-input {
+        margin-top: 0.15rem;
+    }
+
+    .intern-location-mobile-control-row .form-check-label {
+        color: #111827;
+        font-weight: 500;
+    }
+
+    .intern-location-mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+    }
+
+    .intern-location-mobile-pill {
+        padding: 0.75rem 0.8rem;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(17, 24, 39, 0.14);
+        background: #fff;
+        min-width: 0;
+    }
+
+    .intern-location-mobile-pill span,
+    .intern-location-mobile-note-label {
+        display: block;
+        color: #111827;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+    }
+
+    .intern-location-mobile-pill strong {
+        display: block;
+        margin-top: 0.25rem;
+        color: #111827;
+        font-size: 0.9rem;
+        font-weight: 500;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+
+    .intern-location-mobile-note {
+        padding: 0.9rem;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(17, 24, 39, 0.14);
+        background: #fff;
+    }
+
+    .intern-location-mobile-note-value {
+        display: block;
+        margin-top: 0.25rem;
+        color: #111827;
+        font-size: 0.94rem;
+        font-weight: 500;
+        line-height: 1.45;
+        word-break: break-word;
+    }
+
+    .intern-location-mobile-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+
+    .intern-location-mobile-actions .btn,
+    .intern-location-mobile-actions form {
+        width: 100%;
+    }
+
+    .intern-location-mobile-actions .btn {
+        min-height: 2.75rem;
+        border-radius: 0.85rem;
+    }
+
+    .intern-location-mobile-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.55rem;
+        padding-top: 0.1rem;
+    }
+
+    .intern-location-mobile-foot .badge {
+        border-radius: 999px;
+    }
+
+    .intern-location-mobile-foot-text {
+        color: #111827;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 600;
+    }
+
+    @media (max-width: 767.98px) {
+        .intern-location-desktop-shell {
+            display: none;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .intern-location-mobile-shell {
+            display: none;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4 ims-mobile-toolbar">
   <div>
@@ -74,7 +306,7 @@
             </tr>
             <tr>
               <td class="text-body-secondary py-2">Status Magang</td>
-              <td class="py-2"><span class="badge bg-label-info rounded-pill">{{ ucfirst($intern->status ?? 'Active') }}</span></td>
+              <td class="py-2"><span class="badge bg-label-{{ $intern->status_badge_class }} rounded-pill">{{ $intern->status_label }}</span></td>
             </tr>
             <tr>
               <td class="text-body-secondary py-2">Akun Login</td>
@@ -255,16 +487,21 @@
   </div>
 
   <div class="col-12">
-    <div class="card shadow-sm">
-      <div class="card-header border-bottom d-flex flex-column flex-lg-row justify-content-between gap-3">
-        <div>
-          <h5 class="mb-1">Lokasi Absensi Intern</h5>
-          <small class="text-body-secondary">Admin dapat mengaktifkan lebih dari satu lokasi agar perpindahan site tetap mudah dikelola.</small>
+    <div class="card shadow-sm intern-location-card">
+      <div class="card-header border-bottom intern-location-header">
+        <div class="min-w-0">
+          <h5 class="intern-location-title mb-1">Lokasi Absensi Intern</h5>
+          <div class="intern-location-subtitle">Admin dapat menghubungkan lebih dari satu lokasi agar perpindahan site tetap fleksibel.</div>
         </div>
-        <a href="{{ route('admin.attendance-locations.index') }}" class="btn btn-outline-primary btn-sm align-self-lg-center">
-          <i class="ri ri-map-pin-2-line me-1"></i> Buka Master Lokasi
-        </a>
+        <div class="intern-location-badges">
+          <span class="badge bg-label-primary">{{ $attendanceLocations->count() }} Lokasi</span>
+          <span class="badge bg-label-success">{{ $attendanceLocations->where('is_active', true)->count() }} Aktif</span>
+          <a href="{{ route('admin.attendance-locations.index') }}" class="btn btn-outline-primary btn-sm">
+            <i class="ri ri-map-pin-2-line me-1"></i> Master Lokasi
+          </a>
+        </div>
       </div>
+
       <div class="card-body">
         <form action="{{ route('admin.interns.attendance-locations.update', $intern) }}" method="POST">
           @csrf
@@ -275,7 +512,7 @@
               Belum ada master lokasi absensi. Tambahkan lokasi dulu sebelum menghubungkannya ke intern ini.
             </div>
           @else
-            <div class="table-responsive ims-card-table-wrap">
+            <div class="intern-location-desktop-shell table-responsive ims-card-table-wrap d-none d-md-block">
               <table class="table align-middle ims-card-table">
                 <thead class="table-light">
                   <tr>
@@ -326,6 +563,83 @@
                   @endforeach
                 </tbody>
               </table>
+            </div>
+
+            <div class="intern-location-mobile-shell d-md-none">
+              @foreach($attendanceLocations as $index => $location)
+                @php
+                  $isChecked = in_array($location->id, $oldLocationIds, true);
+                  $selectedPrimary = (int) old('primary_location_id', $primaryLocationId);
+                @endphp
+                <article class="intern-location-mobile-card">
+                  <div class="intern-location-mobile-head">
+                    <div class="min-w-0">
+                      <div class="intern-location-mobile-eyebrow">
+                        <span class="intern-location-mobile-icon">
+                          <i class="ri ri-map-pin-line"></i>
+                        </span>
+                        <span>Lokasi {{ $index + 1 }}</span>
+                      </div>
+                      <h6 class="intern-location-mobile-name">{{ $location->name }}</h6>
+                      <div class="intern-location-mobile-sub">{{ $location->latitude }}, {{ $location->longitude }}</div>
+                    </div>
+                    <span class="badge bg-label-{{ $isChecked ? 'success' : 'secondary' }} rounded-pill flex-shrink-0">
+                      {{ $isChecked ? 'Terhubung' : 'Tidak Aktif' }}
+                    </span>
+                  </div>
+
+                  <div class="intern-location-mobile-controls">
+                    <div class="intern-location-mobile-control-row">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="location_ids[]"
+                          value="{{ $location->id }}"
+                          id="mobile_location_{{ $location->id }}"
+                          @checked($isChecked)>
+                        <label class="form-check-label" for="mobile_location_{{ $location->id }}">Aktifkan lokasi</label>
+                      </div>
+                      <span class="badge bg-label-info rounded-pill">{{ $location->radius_meters }} m</span>
+                    </div>
+
+                    <div class="intern-location-mobile-control-row">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="primary_location_id"
+                          value="{{ $location->id }}"
+                          id="mobile_primary_location_{{ $location->id }}"
+                          @checked($selectedPrimary === $location->id)>
+                        <label class="form-check-label" for="mobile_primary_location_{{ $location->id }}">Jadikan utama</label>
+                      </div>
+                      <span class="badge bg-label-primary rounded-pill">Primary</span>
+                    </div>
+                  </div>
+
+                  <div class="intern-location-mobile-grid">
+                    <div class="intern-location-mobile-pill">
+                      <span>Radius</span>
+                      <strong>{{ $location->radius_meters }} meter</strong>
+                    </div>
+                    <div class="intern-location-mobile-pill">
+                      <span>Status</span>
+                      <strong>{{ $location->is_active ? 'Aktif' : 'Nonaktif' }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="intern-location-mobile-note">
+                    <span class="intern-location-mobile-note-label">Keterangan</span>
+                    <strong class="intern-location-mobile-note-value">{{ $location->notes ?: 'Belum ada catatan tambahan.' }}</strong>
+                  </div>
+
+                  <div class="intern-location-mobile-foot">
+                    <span class="badge bg-label-info rounded-pill">{{ $location->active_interns_count }} intern aktif</span>
+                    <span class="intern-location-mobile-foot-text">Siap dipakai untuk absensi hari ini</span>
+                  </div>
+                </article>
+              @endforeach
             </div>
 
             @error('location_ids')

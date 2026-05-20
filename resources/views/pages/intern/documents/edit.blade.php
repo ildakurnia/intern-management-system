@@ -107,20 +107,21 @@
     }
 
     .intern-document-item {
-      border: 1px solid rgba(67, 89, 113, 0.12);
+      border: 1px solid var(--bs-border-color);
       border-radius: 1.5rem;
       padding: 1.5rem;
-      background: #fff;
+      background: var(--bs-card-bg);
       box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+      color: var(--bs-body-color);
     }
 
     .intern-document-panel {
-      border: 1px solid rgba(67, 89, 113, 0.12);
+      border: 1px solid var(--bs-border-color);
       border-radius: 1.65rem;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.97));
+      background: var(--bs-card-bg);
       box-shadow: 0 14px 32px rgba(15, 23, 42, 0.05);
       overflow: hidden;
+      color: var(--bs-body-color);
     }
 
     .intern-document-panel .card-body {
@@ -130,17 +131,111 @@
     .intern-document-panel-header {
       padding-bottom: 1.5rem;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      border-bottom: 1px solid var(--bs-border-color);
     }
 
     .intern-document-list .form-control {
       min-height: 3.25rem;
     }
 
+    .intern-document-list {
+      display: grid;
+      gap: 1rem;
+    }
+
     .intern-document-row + .intern-document-row {
       margin-top: 1.5rem;
       padding-top: 1.5rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.2);
+      border-top: 1px solid var(--bs-border-color);
+    }
+
+    .intern-documents-title {
+      color: var(--bs-heading-color);
+    }
+
+    .intern-documents-subtitle,
+    .intern-document-panel p.text-body-secondary {
+      color: var(--bs-secondary-color) !important;
+    }
+
+    .intern-document-row h5,
+    .intern-document-row .form-label {
+      color: var(--bs-heading-color);
+    }
+
+    .intern-document-panel .form-control {
+      background-color: var(--bs-body-bg);
+      border-color: var(--bs-border-color);
+      color: var(--bs-body-color);
+    }
+
+    .intern-document-panel .form-control::file-selector-button {
+      background-color: var(--bs-tertiary-bg);
+      color: var(--bs-body-color);
+      border: 0;
+      padding: 0.55rem 0.9rem;
+      margin-inline-end: 0.9rem;
+      border-radius: 0.75rem;
+    }
+
+    .intern-document-panel .form-control:hover::file-selector-button {
+      filter: brightness(0.98);
+    }
+
+    .intern-document-panel .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.12);
+    }
+
+    .intern-document-view-btn {
+      border: 0;
+      color: #fff;
+      box-shadow: none;
+      background: linear-gradient(180deg, #4f46e5 0%, #2563eb 100%);
+    }
+
+    .intern-document-view-btn:hover,
+    .intern-document-view-btn:focus {
+      color: #fff;
+      box-shadow: none;
+      filter: brightness(1.02);
+    }
+
+    html[data-bs-theme="dark"] .intern-document-view-btn {
+      background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    }
+
+    html[data-bs-theme="dark"] .intern-document-item,
+    html[data-bs-theme="dark"] .intern-document-panel {
+      border-color: rgba(148, 163, 184, 0.18);
+      background: rgba(17, 24, 39, 0.88);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+    }
+
+    html[data-bs-theme="dark"] .intern-documents-title,
+    html[data-bs-theme="dark"] .intern-document-row h5,
+    html[data-bs-theme="dark"] .intern-document-row .form-label {
+      color: #f8fafc;
+    }
+
+    html[data-bs-theme="dark"] .intern-documents-subtitle,
+    html[data-bs-theme="dark"] .intern-document-panel p.text-body-secondary {
+      color: #cbd5e1 !important;
+    }
+
+    html[data-bs-theme="dark"] .intern-document-panel-header,
+    html[data-bs-theme="dark"] .intern-document-row + .intern-document-row {
+      border-color: rgba(148, 163, 184, 0.16);
+    }
+
+    html[data-bs-theme="dark"] .intern-document-panel .form-control {
+      background-color: rgba(15, 23, 42, 0.72);
+      border-color: rgba(148, 163, 184, 0.22);
+      color: #e5e7eb;
+    }
+
+    html[data-bs-theme="dark"] .intern-document-panel .form-control::file-selector-button {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #e5e7eb;
     }
 
     @media (max-width: 767.98px) {
@@ -167,6 +262,10 @@
         padding: 1.1rem;
       }
 
+      .intern-document-list {
+        gap: 1.15rem;
+      }
+
       .intern-document-panel-header {
         padding-bottom: 1.15rem;
         margin-bottom: 1.15rem;
@@ -175,6 +274,15 @@
       .intern-document-row + .intern-document-row {
         margin-top: 1.15rem;
         padding-top: 1.15rem;
+      }
+
+      .intern-document-row .row {
+        --bs-gutter-x: 1rem;
+        --bs-gutter-y: 1rem;
+      }
+
+      .intern-document-item {
+        padding: 1.2rem;
       }
     }
   </style>
@@ -210,10 +318,10 @@
 
         <div class="intern-document-list">
           @foreach ($documentFields as $field)
-            @php
-              $hasDocument = filled($field['path']);
-              $documentUrl = $hasDocument ? \Illuminate\Support\Facades\Storage::disk('public')->url($field['path']) : null;
-            @endphp
+    @php
+      $hasDocument = filled($field['path']);
+      $documentUrl = $hasDocument ? route('intern.documents.preview', ['field' => $field['name']]) : null;
+    @endphp
 
             <div class="intern-document-row">
               <div class="row g-4 align-items-center">
@@ -236,9 +344,14 @@
 
                     @if ($documentUrl)
                       <div>
-                        <a href="{{ $documentUrl }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                        <button
+                          type="button"
+                          class="btn btn-sm intern-document-view-btn"
+                          data-document-preview
+                          data-document-url="{{ $documentUrl }}"
+                          data-document-title="{{ $field['label'] }}">
                           <i class="icon-base ri ri-eye-line me-1"></i> Lihat Dokumen
-                        </a>
+                        </button>
                       </div>
                     @endif
                   </div>
@@ -276,4 +389,56 @@
       </form>
     </div>
   </div>
+
+  <div class="modal fade" id="internDocumentPreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="internDocumentPreviewTitle">Preview Dokumen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" style="height: 80vh; background: #f8f9fa;">
+          <iframe id="internDocumentPreviewFrame" src="" style="width: 100%; height: 100%; border: none;" title="Preview Dokumen"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@section('page-script')
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const modalEl = document.getElementById('internDocumentPreviewModal');
+      const modal = modalEl ? new bootstrap.Modal(modalEl) : null;
+      const frameEl = document.getElementById('internDocumentPreviewFrame');
+      const titleEl = document.getElementById('internDocumentPreviewTitle');
+
+      document.querySelectorAll('[data-document-preview]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          const url = button.dataset.documentUrl;
+          const title = button.dataset.documentTitle || 'Dokumen';
+
+          if (!url) {
+            return;
+          }
+
+          if (titleEl) {
+            titleEl.textContent = 'Preview Dokumen: ' + title;
+          }
+
+          if (frameEl) {
+            frameEl.src = url;
+          }
+
+          modal?.show();
+        });
+      });
+
+      modalEl?.addEventListener('hidden.bs.modal', function () {
+        if (frameEl) {
+          frameEl.src = '';
+        }
+      });
+    });
+  </script>
 @endsection
